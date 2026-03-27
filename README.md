@@ -15,5 +15,20 @@ uv sync
 ## Running the app
 
 ```bash
-uv run streamlit run app.py
+just run
+```
+
+## Docker
+
+Build the image and run a smoke test with:
+
+```bash
+just docker-build
+just docker-smoke
+```
+
+Run the app from Docker with:
+
+```bash
+just docker-run
 ```
