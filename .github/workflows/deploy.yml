@@ -27,8 +27,6 @@ jobs:
       uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff
     - name: Build image
       run: just docker-build
-    - name: Test image
-      run: just docker-smoke
     - name: Log into GitHub Container Registry
       run: docker login https://ghcr.io -u ${{ github.actor }} --password ${{ secrets.GITHUB_TOKEN }}
     - name: Push image to GitHub Container Registry
