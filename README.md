@@ -58,4 +58,6 @@ dokku apps:create openprescribing-streamlit
 dokku domains:add openprescribing-streamlit streamlit.openprescribing.net
 dokku letsencrypt:enable openprescribing-streamlit
 dokku ports:set openprescribing-streamlit http:80:8501 https:443:8501
+dokku storage:mount openprescribing-streamlit /var/lib/dokku/data/storage/openprescribing:/storage
+dokku config:set openprescribing-streamlit DUCKDB_PATH=/storage/prescribing.duckdb
 ```

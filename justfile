@@ -1,3 +1,5 @@
+set dotenv-load := true
+
 image_name := env_var_or_default("IMAGE_NAME", "openprescribing-streamlit")
 host_port := env_var_or_default("HOST_PORT", "8501")
 
