@@ -1,0 +1,61 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  APP_NAME: openprescribing-streamlit
+  IMAGE_NAME: openprescribing-streamlit
+  IMAGE_ID: ghcr.io/bennettoxford/openprescribing-streamlit
+  HOST: dokku5.ebmdatalab.net
+  SSH_AUTH_SOCK: /tmp/agent.sock
+
+permissions:
+  packages: write
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    name: Deploy
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+    - name: Set up Just
+      uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff
+    - name: Build image
+      run: just docker-build
+    - name: Test image
+      run: just docker-smoke
+    - name: Log into GitHub Container Registry
+      run: docker login https://ghcr.io -u ${{ github.actor }} --password ${{ secrets.GITHUB_TOKEN }}
+    - name: Push image to GitHub Container Registry
+      run: |
+        docker tag "$IMAGE_NAME" "$IMAGE_ID:latest"
+        docker push "$IMAGE_ID:latest"
+    - name: Deploy image
+      run: |
+        set -euo pipefail
+
+        # Find the full qualified "repo digest" for this image
+        IMAGE_DIGEST="$(
+          docker inspect --format='{{join .RepoDigests "\n"}}' "$IMAGE_ID:latest" \
+            | grep --fixed-strings "$IMAGE_ID" || true
+        )"
+        # Fail if we have none or more than one (as indicated by the presence of whitespace)
+        if [[ -z "$IMAGE_DIGEST" || "$IMAGE_DIGEST" =~ [[:space:]] ]]; then
+          echo "Expected exactly one value in IMAGE_DIGEST, got: $IMAGE_DIGEST"
+          echo
+          echo "Debug info:"
+          set -x
+          docker inspect --format='{{join .RepoDigests "\n"}}' "$IMAGE_ID:latest"
+          exit 1
+        fi
+
+        echo "Deploying to $HOST"
+        echo "dokku git:from-image $APP_NAME $IMAGE_DIGEST"
+        ssh-agent -a "$SSH_AUTH_SOCK" > /dev/null
+        ssh-add - <<< "${{ secrets.DOKKU5_DEPLOY_SSH_KEY }}"
+        ssh -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" dokku@"$HOST" git:from-image "$APP_NAME" "$IMAGE_DIGEST"
