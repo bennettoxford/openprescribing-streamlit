@@ -8,7 +8,7 @@ DUCKDB_PATH_ENV_VAR = "DUCKDB_PATH"
 
 
 @st.cache_data(ttl=3600)
-def get_dashboard_data(duckdb_path: str) -> tuple[int, list[tuple[object, object]]]:
+def get_dashboard_data(duckdb_path):
     with duckdb.connect(duckdb_path, read_only=True) as connection:
         prescribing_count = connection.execute("SELECT COUNT(*) FROM prescribing").fetchone()[0]
         items_by_date = connection.execute(
