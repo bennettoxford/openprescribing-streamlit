@@ -14,6 +14,9 @@ dependencies:
 uv sync
 ```
 
+Copy `.env.sample` to `.env`, and replace the value of `DUCKDB_PATH` with the path to a
+local copy of the prescribing database.
+
 ## Running the app
 
 ```bash
