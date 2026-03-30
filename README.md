@@ -17,8 +17,10 @@ uv sync
 ## Running the app
 
 ```bash
-just run
+uv run streamlit run app.py
 ```
+
+(or `just run`)
 
 ## Docker
 
