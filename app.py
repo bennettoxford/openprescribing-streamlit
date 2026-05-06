@@ -48,3 +48,28 @@ chart = (
     )
 )
 st.altair_chart(chart, use_container_width=True)
+
+oral_antibiotics = query(
+    """
+    WITH oral_form_route_ids AS (
+        SELECT list(cd) AS ids
+        FROM ont_form_route
+        WHERE descr LIKE '%.oral'
+    ),
+    oral_bnf_codes AS (
+        SELECT DISTINCT medications.bnf_code
+        FROM medications, oral_form_route_ids
+        WHERE medications.bnf_code IS NOT NULL
+          AND list_has_any(medications.form_route_ids, oral_form_route_ids.ids)
+    )
+    SELECT prescribing.date, SUM(prescribing.items) AS items
+    FROM prescribing
+    JOIN oral_bnf_codes USING (bnf_code)
+    WHERE prescribing.bnf_code LIKE '0502%'
+    GROUP BY prescribing.date
+    ORDER BY prescribing.date
+    """
+)
+
+st.subheader("Oral antibiotics, items over time")
+st.line_chart(oral_antibiotics, x="date", y="items")
