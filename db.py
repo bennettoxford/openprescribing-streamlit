@@ -5,11 +5,26 @@ import duckdb
 import streamlit as st
 
 
-data_dir = os.getenv("OPENPRESCRIBING_STREAMLIT_DATA_DIR", "data")
-duckdb_path = Path(data_dir) / "prescribing.duckdb"
+data_dir = Path(os.getenv("OPENPRESCRIBING_STREAMLIT_DATA_DIR", "data")).expanduser()
+duckdb_path = data_dir / "prescribing.duckdb"
+sqlite_path = data_dir / "data.sqlite"
 
 
 @st.cache_data(ttl=3600)
 def query(sql):
-    with duckdb.connect(duckdb_path, read_only=True) as connection:
+    with duckdb.connect() as connection:
+        connection.execute(
+            f"""
+            ATTACH {_escape(duckdb_path)} AS duckdb_db (TYPE DUCKDB, READ_ONLY);
+            ATTACH {_escape(sqlite_path)} AS sqlite_db (TYPE SQLITE, READ_ONLY);
+            """
+        )
+        connection.execute("SET enable_external_access = false")
+        connection.execute("SET search_path = 'memory,sqlite_db,duckdb_db'")
         return connection.execute(sql).df()
+
+
+def _escape(value):
+    # DuckDB doesn't accept parameter placeholders for filenames in queries so we have
+    # to escape them manually.
+    return "'" + str(value).replace("'", "''") + "'"

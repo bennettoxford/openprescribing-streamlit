@@ -14,9 +14,9 @@ dependencies:
 uv sync
 ```
 
-By default, the app reads `prescribing.duckdb` from the `data/` directory. To use
-a different directory, set `OPENPRESCRIBING_STREAMLIT_DATA_DIR` to the directory
-containing the database.
+By default, the app reads `prescribing.duckdb` and `data.sqlite` from the `data/`
+directory. To use a different directory, set `OPENPRESCRIBING_STREAMLIT_DATA_DIR` to the
+directory containing the databases.
 
 ## Running the app
 
