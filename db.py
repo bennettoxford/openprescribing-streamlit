@@ -12,4 +12,4 @@ duckdb_path = Path(data_dir) / "prescribing.duckdb"
 @st.cache_data(ttl=3600)
 def query(sql):
     with duckdb.connect(duckdb_path, read_only=True) as connection:
-        return connection.execute(sql).fetchall()
+        return connection.execute(sql).df()
