@@ -5,7 +5,7 @@ WORKDIR /app
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev --no-install-project
 
-COPY app.py README.md ./
+COPY *.py README.md ./
 RUN uv sync --frozen --no-dev
 
 ENV PYTHONUNBUFFERED=1

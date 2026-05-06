@@ -14,8 +14,9 @@ dependencies:
 uv sync
 ```
 
-Copy `.env.sample` to `.env`, and replace the value of `DUCKDB_PATH` with the path to a
-local copy of the prescribing database.
+By default, the app reads `prescribing.duckdb` and `data.sqlite` from the `data/`
+directory. To use a different directory, set `OPENPRESCRIBING_STREAMLIT_DATA_DIR` to the
+directory containing the databases.
 
 ## Running the app
 
@@ -64,5 +65,5 @@ dokku domains:add openprescribing-streamlit streamlit.openprescribing.net
 dokku letsencrypt:enable openprescribing-streamlit
 dokku ports:set openprescribing-streamlit http:80:8501 https:443:8501
 dokku storage:mount openprescribing-streamlit /var/lib/dokku/data/storage/openprescribing:/storage
-dokku config:set openprescribing-streamlit DUCKDB_PATH=/storage/prescribing.duckdb
+dokku config:set openprescribing-streamlit OPENPRESCRIBING_STREAMLIT_DATA_DIR=/storage
 ```
