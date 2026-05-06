@@ -28,11 +28,7 @@ st.title("OpenPrescribing Streamlit")
 
 st.caption(f"Database: {duckdb_path}")
 
-try:
-    prescribing_count, items_by_date = get_dashboard_data()
-except Exception as exc:
-    st.error(f"Query failed: {exc}")
-    st.stop()
+prescribing_count, items_by_date = get_dashboard_data()
 
 st.metric("Prescribing rows", f"{prescribing_count:,}")
 
