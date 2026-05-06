@@ -1,34 +1,21 @@
-import os
-from pathlib import Path
-
-import duckdb
 import streamlit as st
 
-data_dir = os.getenv("OPENPRESCRIBING_STREAMLIT_DATA_DIR", "data")
-duckdb_path = Path(data_dir) / "prescribing.duckdb"
-
-
-@st.cache_data(ttl=3600)
-def get_dashboard_data():
-    with duckdb.connect(duckdb_path, read_only=True) as connection:
-        prescribing_count = connection.execute("SELECT COUNT(*) FROM prescribing").fetchone()[0]
-        items_by_date = connection.execute(
-            """
-            SELECT date, SUM(items) AS items
-            FROM prescribing
-            GROUP BY date
-            ORDER BY date
-            """
-        ).fetchall()
-
-    return prescribing_count, items_by_date
+from db import duckdb_path, query
 
 
 st.title("OpenPrescribing Streamlit")
 
 st.caption(f"Database: {duckdb_path}")
 
-prescribing_count, items_by_date = get_dashboard_data()
+prescribing_count = query("SELECT COUNT(*) FROM prescribing")[0][0]
+items_by_date = query(
+    """
+    SELECT date, SUM(items) AS items
+    FROM prescribing
+    GROUP BY date
+    ORDER BY date
+    """
+)
 
 st.metric("Prescribing rows", f"{prescribing_count:,}")
 
