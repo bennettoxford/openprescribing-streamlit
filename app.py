@@ -1,10 +1,8 @@
 import os
+from pathlib import Path
 
 import duckdb
 import streamlit as st
-
-
-DUCKDB_PATH_ENV_VAR = "DUCKDB_PATH"
 
 
 @st.cache_data(ttl=3600)
@@ -25,11 +23,8 @@ def get_dashboard_data(duckdb_path):
 
 st.title("OpenPrescribing Streamlit")
 
-duckdb_path = os.getenv(DUCKDB_PATH_ENV_VAR)
-
-if not duckdb_path:
-    st.error(f"Set the {DUCKDB_PATH_ENV_VAR} environment variable to a DuckDB database path.")
-    st.stop()
+data_dir = os.getenv("OPENPRESCRIBING_STREAMLIT_DATA_DIR", "data")
+duckdb_path = Path(data_dir) / "prescribing.duckdb"
 
 st.caption(f"Database: {duckdb_path}")
 
