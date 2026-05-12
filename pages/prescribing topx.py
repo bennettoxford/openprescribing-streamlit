@@ -6,8 +6,13 @@ from db import duckdb_path, query
 
 st.set_page_config(layout="wide")
 
-st.title("OpenPrescribing Top 20 prescribing by items in 2025")
+st.title("OpenPrescribing Top 20 prescribing in 2025")
 
+st.markdown("""
+<style>
+[data-testid="stDataFrame"] td { border: none !important; }
+</style>
+""", unsafe_allow_html=True)
 
 df_region = query(
     """
@@ -75,11 +80,18 @@ with st.sidebar:
 
     selected_practice_codes = df_selected["practice_code"].unique().tolist()
 
+    top_n = st.slider("Top N items", min_value=5, max_value=100, value=20)
+    sort_by = st.radio("Sort by", ["Cost", "Items"], horizontal=True)
+
+sort_col = "actual_cost" if sort_by == "Cost" else "items"
+
 df_topx = query(
     """
     SELECT
+        med.vtm_id AS vtm,
         vtm.nm AS name,
-        sum(items) as items
+        sum(items) as items,
+        sum(actual_cost/100) as actual_cost
     from prescribing AS rx
     inner join
     medications as med
@@ -93,11 +105,49 @@ df_topx = query(
       ON rx.practice_code = s.practice_code
     WHERE
     date between '2025-01-01' and '2025-12-01'
-    GROUP BY vtm.nm
-    ORDER BY sum(items)DESC
-    LIMIT 20
+    GROUP BY vtm.nm, med.vtm_id
 """, 
 dfs={"_selected_practices": pd.DataFrame({"practice_code": selected_practice_codes})}
 )
 
-st.dataframe(df_topx)
+df_topx_detail = query(
+    """
+    SELECT
+        med.vtm_id AS vtm,
+        med.name AS name,
+        sum(items) as items,
+        sum(actual_cost/100) as actual_cost
+    from prescribing AS rx
+    inner join
+    medications as med
+    ON
+    rx.snomed_code = med.id
+    INNER JOIN _selected_practices AS s
+      ON rx.practice_code = s.practice_code
+    WHERE
+    date between '2025-01-01' and '2025-12-01'
+    GROUP BY med.vtm_id, med.name
+""", 
+dfs={"_selected_practices": pd.DataFrame({"practice_code": selected_practice_codes})}
+)
+
+df_topx_ranked = (
+    df_topx.groupby(["name", "vtm"])[["items", "actual_cost"]]
+    .sum().reset_index()
+    .nlargest(top_n, sort_col)
+)
+
+
+for _, row in df_topx_ranked.iterrows():
+    label = f"{row['name']} — £{row['actual_cost']:,.2f} ({row['items']:,.0f} items)"
+    vtm_breakdown = df_topx_detail[df_topx_detail["vtm"] == row["vtm"]]
+    
+    with st.expander(label):
+        st.dataframe(
+            vtm_breakdown[["name", "actual_cost", "items"]]
+            .sort_values(sort_col, ascending=False)
+            .assign(actual_cost=lambda d: d["actual_cost"].map("£{:,.2f}".format))
+            .rename(columns={"name": "Presentation", "actual_cost": "Cost", "items": "Items"}),
+            hide_index=True,
+        )
+
