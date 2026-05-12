@@ -6,10 +6,11 @@ COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev --no-install-project
 
 COPY *.py *.sql README.md ./
+COPY pages/ ./pages/
 RUN uv sync --frozen --no-dev
 
 ENV PYTHONUNBUFFERED=1
 
 EXPOSE 8501
 
-CMD ["sh", "-c", "uv run streamlit run app.py --server.address=0.0.0.0 --server.port=${PORT:-8501} --server.headless=true --browser.gatherUsageStats=false"]
+CMD ["sh", "-c", "uv run streamlit run hello.py --server.address=0.0.0.0 --server.port=${PORT:-8501} --server.headless=true --browser.gatherUsageStats=false"]
