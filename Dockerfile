@@ -5,7 +5,8 @@ WORKDIR /app
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev --no-install-project
 
-COPY pages *.py *.sql README.md ./
+COPY *.py *.sql README.md ./
+COPY pages/ ./pages/
 RUN uv sync --frozen --no-dev
 
 ENV PYTHONUNBUFFERED=1
