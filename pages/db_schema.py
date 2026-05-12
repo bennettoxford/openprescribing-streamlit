@@ -3,34 +3,19 @@ from db import query
 
 st.title("DuckDB Schema Explorer")
 
-for db_label, db_name in [("🦆 DuckDB", "duckdb_db"), ("🗃️ SQLite", "sqlite_db")]:
-    st.subheader(db_label)
+# These views are created by DuckDB internally and always available
+tables = query("SELECT * FROM duckdb_tables()")
+columns = query("SELECT * FROM duckdb_columns()")
 
-    tables = query(f"""
-        SELECT table_name
-        FROM {db_name}.information_schema.tables
-        WHERE table_schema = 'main'
-        ORDER BY table_name
-    """)
+st.caption(f"Found {len(tables)} tables")
 
-    if tables.empty:
-        st.caption("No tables found.")
-        continue
+for _, row in tables.iterrows():
+    table_name = row["table_name"]
+    db_name = row["database_name"]
 
-    st.caption(f"{len(tables)} tables")
+    table_cols = columns[columns["table_name"] == table_name][
+        ["column_name", "column_type"]
+    ]
 
-    for table_name in tables["table_name"]:
-        columns = query(f"""
-            SELECT column_name, data_type
-            FROM {db_name}.information_schema.columns
-            WHERE table_schema = 'main'
-              AND table_name = '{table_name}'
-            ORDER BY ordinal_position
-        """)
-
-        with st.expander(f"📋 {table_name}"):
-            st.dataframe(
-                columns,
-                use_container_width=True,
-                hide_index=True,
-            )
+    with st.expander(f"📋 {table_name} — {db_name}"):
+        st.dataframe(table_cols, use_container_width=True, hide_index=True)
