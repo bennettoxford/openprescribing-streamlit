@@ -7,7 +7,7 @@ default:
     @just --list
 
 run:
-    uv run streamlit run app.py
+    uv run streamlit run hello.py
 
 docker-build:
     #!/usr/bin/env bash
@@ -19,7 +19,7 @@ docker-smoke:
     #!/usr/bin/env bash
     set -euo pipefail
 
-    docker run --rm "{{ image_name }}" uv run python -c "import app"
+    docker run --rm "{{ image_name }}" uv run python -c "import hello"
 
 docker-run:
     #!/usr/bin/env bash
