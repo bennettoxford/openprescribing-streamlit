@@ -1,31 +1,27 @@
-import duckdb
 import streamlit as st
-
-DB_PATH = "data/prescribing.duckdb"  # update this
+from db import query
 
 st.title("DuckDB Schema Explorer")
 
-try:
-    con = duckdb.connect(DB_PATH, read_only=True)
+# Get all tables from both attached databases
+tables_duckdb = query("SHOW ALL TABLES FROM duckdb_db")
+tables_sqlite = query("SHOW ALL TABLES FROM sqlite_db")
 
-    tables = con.execute("SHOW TABLES").fetchdf()
+for db_label, tables in [("🦆 DuckDB", tables_duckdb), ("🗃️ SQLite", tables_sqlite)]:
+    st.subheader(db_label)
 
     if tables.empty:
-        st.warning("No tables found in database.")
-    else:
-        st.caption(f"Found **{len(tables)}** tables")
+        st.caption("No tables found.")
+        continue
 
-        for table_name in tables["name"]:
-            columns = con.execute(f"DESCRIBE {table_name}").fetchdf()
+    st.caption(f"{len(tables)} tables")
 
-            with st.expander(f"📋 {table_name}"):
-                st.dataframe(
-                    columns[["column_name", "column_type"]],
-                    use_container_width=True,
-                    hide_index=True,
-                )
+    for table_name in tables["name"]:
+        columns = query(f"DESCRIBE {table_name}")
 
-    con.close()
-
-except Exception as e:
-    st.error(f"Could not connect to database: {e}")
+        with st.expander(f"📋 {table_name}"):
+            st.dataframe(
+                columns[["column_name", "column_type"]],
+                use_container_width=True,
+                hide_index=True,
+            )
