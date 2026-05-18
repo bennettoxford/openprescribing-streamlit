@@ -1,8 +1,9 @@
 import altair as alt
 import streamlit as st
 import pandas as pd
+import duckdb
 
-from db import duckdb_path, query
+from db import duckdb_path, query, build_agg, agg_path
 
 st.set_page_config(layout="wide")
 
@@ -13,33 +14,6 @@ st.markdown("""
 [data-testid="stDataFrame"] td { border: none !important; }
 </style>
 """, unsafe_allow_html=True)
-
-df_region = query(
-    """
-    SELECT
-    org.id AS id, org.name AS name
-    FROM org
-    WHERE org.org_type = 'reg'
-    """
-)
-
-df_icb = query(
-    """
-    SELECT
-    org.id AS id, org.name AS name
-    FROM org
-    WHERE org.org_type = 'icb'
-    """
-)
-
-df_pcn = query(
-    """
-    SELECT
-    org.id AS id, org.name AS name
-    FROM org
-    WHERE org.org_type = 'pcn'
-    """
-)
 
 df_practice = query(
     """
@@ -58,6 +32,25 @@ df_practice = query(
     WHERE p.org_type = 'pra'
     AND p.inactive = 0
     GROUP BY p.id, p.name
+    """
+)
+
+build_agg(
+    table_name="prescribing_agg",
+    sql="""
+        SELECT
+            rx.practice_code as practice_code,
+            med.vtm_id AS vtm_id,
+            vtm.nm AS vtm_name,
+            med.id AS snomed_code,
+            med.name AS pres_name,
+            SUM(rx.items) AS items,
+            SUM(rx.actual_cost) AS actual_cost
+        FROM prescribing rx
+        JOIN medications med ON rx.snomed_code = med.id
+        JOIN vtm vtm ON med.vtm_id = vtm.vtmid
+        WHERE rx.date BETWEEN '2025-01-01' AND '2025-12-01'
+        GROUP BY rx.practice_code, med.vtm_id, vtm.nm, med.id, med.name
     """
 )
 
@@ -88,66 +81,42 @@ sort_col = "actual_cost" if sort_by == "Cost" else "items"
 df_topx = query(
     """
     SELECT
-        med.vtm_id AS vtm,
-        vtm.nm AS name,
+        vtm_id,
+        vtm_name,
+        pres_name,
         sum(items) as items,
         sum(actual_cost/100) as actual_cost
-    from prescribing AS rx
-    inner join
-    medications as med
-    ON
-    rx.snomed_code = med.id
-    inner join
-    vtm AS vtm
-    ON
-    med.vtm_id = vtm.vtmid
+    from prescribing_agg AS rx
     INNER JOIN _selected_practices AS s
       ON rx.practice_code = s.practice_code
-    WHERE
-    date between '2025-01-01' and '2025-12-01'
-    GROUP BY vtm.nm, med.vtm_id
+    GROUP BY GROUPING SETS (
+    (vtm_name,vtm_id, pres_name),
+    (vtm_name,vtm_id)
+    )
 """, 
 dfs={"_selected_practices": pd.DataFrame({"practice_code": selected_practice_codes})}
 )
 
-df_topx_detail = query(
-    """
-    SELECT
-        med.vtm_id AS vtm,
-        med.name AS name,
-        sum(items) as items,
-        sum(actual_cost/100) as actual_cost
-    from prescribing AS rx
-    inner join
-    medications as med
-    ON
-    rx.snomed_code = med.id
-    INNER JOIN _selected_practices AS s
-      ON rx.practice_code = s.practice_code
-    WHERE
-    date between '2025-01-01' and '2025-12-01'
-    GROUP BY med.vtm_id, med.name
-""", 
-dfs={"_selected_practices": pd.DataFrame({"practice_code": selected_practice_codes})}
-)
+df_topx_vtm  = df_topx[df_topx["pres_name"].isna()]   # VTM-level rows
+df_topx_detail = df_topx[df_topx["pres_name"].notna()]   # presentation-level rows
 
 df_topx_ranked = (
-    df_topx.groupby(["name", "vtm"])[["items", "actual_cost"]]
+    df_topx_vtm.groupby(["vtm_name", "vtm_id"])[["items", "actual_cost"]]
     .sum().reset_index()
     .nlargest(top_n, sort_col)
 )
 
 
 for _, row in df_topx_ranked.iterrows():
-    label = f"{row['name']} — £{row['actual_cost']:,.2f} ({row['items']:,.0f} items)"
-    vtm_breakdown = df_topx_detail[df_topx_detail["vtm"] == row["vtm"]]
+    label = f"{row['vtm_name']} — £{row['actual_cost']:,.2f} ({row['items']:,.0f} items)"
+    vtm_breakdown = df_topx_detail[df_topx_detail["vtm_id"] == row["vtm_id"]]
     
     with st.expander(label):
         st.dataframe(
-            vtm_breakdown[["name", "actual_cost", "items"]]
+            vtm_breakdown[["pres_name", "actual_cost", "items"]]
             .sort_values(sort_col, ascending=False)
             .assign(actual_cost=lambda d: d["actual_cost"].map("£{:,.2f}".format))
-            .rename(columns={"name": "Presentation", "actual_cost": "Cost", "items": "Items"}),
+            .rename(columns={"pres_name": "Presentation", "actual_cost": "Cost", "items": "Items"}),
             hide_index=True,
         )
 
