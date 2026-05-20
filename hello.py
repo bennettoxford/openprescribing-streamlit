@@ -1,10 +1,9 @@
 import streamlit as st
 
-st.set_page_config(
-    page_title="Hello",
-    page_icon="👋",
-)
+pages = st.navigation([
+    st.Page("pages/home.py", title="Home page"),
+    st.Page("pages/tariff_price_changes.py", title="Tariff Price Changes"),
+    st.Page("pages/prescribing_topx.py", title="Top x Prescribing"),
+])
 
-st.write("# Welcome to Streamlit! 👋")
-
-st.sidebar.success("Select a demo above.")
+pages.run()
