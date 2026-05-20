@@ -1,5 +1,4 @@
 import altair as alt
-import duckdb
 import pandas as pd
 import streamlit as st
 
