@@ -6,6 +6,7 @@ COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev --no-install-project
 
 COPY *.py *.sql README.md ./
+COPY materialised_views/ ./materialised_views/
 COPY pages/ ./pages/
 RUN uv sync --frozen --no-dev
 
