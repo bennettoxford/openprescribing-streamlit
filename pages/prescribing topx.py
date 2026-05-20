@@ -18,25 +18,6 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-df_practice = query(
-    """
-    SELECT
-        p.id AS practice_code,
-        p.name AS practice_name,
-        MAX(CASE WHEN anc.org_type = 'pcn' THEN anc.id END) AS pcn_code,
-        MAX(CASE WHEN anc.org_type = 'pcn' THEN anc.name END) AS pcn_name,
-        MAX(CASE WHEN anc.org_type = 'icb' THEN anc.id END) AS icb_code,
-        MAX(CASE WHEN anc.org_type = 'icb' THEN anc.name END) AS icb_name,
-        MAX(CASE WHEN anc.org_type = 'reg' THEN anc.id END) AS region_code,
-        MAX(CASE WHEN anc.org_type = 'reg' THEN anc.name END) AS region_name
-    FROM org p
-    INNER JOIN org_relation rel ON p.id = rel.child_id
-    INNER JOIN org anc ON rel.parent_id = anc.id
-    WHERE p.org_type = 'pra'
-    AND p.inactive = 0
-    GROUP BY p.id, p.name
-    """
-)
 
 build_agg(
     table_name="prescribing_agg",
@@ -55,6 +36,27 @@ build_agg(
         WHERE rx.date BETWEEN '2025-01-01' AND '2025-12-01'
         GROUP BY rx.practice_code, med.vtm_id, vtm.nm, med.id, med.name
     """,
+)
+
+
+df_practice = query(
+    """
+    SELECT
+        p.id AS practice_code,
+        p.name AS practice_name,
+        MAX(CASE WHEN anc.org_type = 'pcn' THEN anc.id END) AS pcn_code,
+        MAX(CASE WHEN anc.org_type = 'pcn' THEN anc.name END) AS pcn_name,
+        MAX(CASE WHEN anc.org_type = 'icb' THEN anc.id END) AS icb_code,
+        MAX(CASE WHEN anc.org_type = 'icb' THEN anc.name END) AS icb_name,
+        MAX(CASE WHEN anc.org_type = 'reg' THEN anc.id END) AS region_code,
+        MAX(CASE WHEN anc.org_type = 'reg' THEN anc.name END) AS region_name
+    FROM org p
+    INNER JOIN org_relation rel ON p.id = rel.child_id
+    INNER JOIN org anc ON rel.parent_id = anc.id
+    WHERE p.org_type = 'pra'
+    AND p.inactive = 0
+    GROUP BY p.id, p.name
+    """
 )
 
 
