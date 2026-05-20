@@ -1,6 +1,6 @@
 import altair as alt
-import streamlit as st
 import pandas as pd
+import streamlit as st
 
 from db import duckdb_path, query
 
@@ -74,8 +74,7 @@ We can then separate them using Python to create different data sets.
     (vtm.nm,med.vtm_id, med.name),
     (vtm.nm,med.vtm_id)
 ```
-"""
-)
+""")
 
 df_topx = query(
     """
@@ -114,9 +113,9 @@ st.markdown(
 
     We can then separate them out using:
 
-    `df_summary = df_topx_example[df_topx_example["name"].isna()].drop(columns="name")` 
+    `df_summary = df_topx_example[df_topx_example["name"].isna()].drop(columns="name")`
 
-    `df_detail = df_topx_example[df_topx_example["name"].notna()]`  
+    `df_detail = df_topx_example[df_topx_example["name"].notna()]`
     """
 )
 

@@ -3,7 +3,6 @@ import streamlit as st
 
 from db import duckdb_path, query
 
-
 st.title("OpenPrescribing Streamlit")
 
 st.caption(f"Database: {duckdb_path}")
