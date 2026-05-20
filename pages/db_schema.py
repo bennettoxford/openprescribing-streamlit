@@ -36,12 +36,16 @@ for _, row in all_tables.iterrows():
     else:
         try:
             empty = query(f"SELECT * FROM {table_name} LIMIT 0")
-            table_cols = pd.DataFrame({
-                "column_name": empty.columns.tolist(),
-                "data_type": [str(dt) for dt in empty.dtypes],
-            })
+            table_cols = pd.DataFrame(
+                {
+                    "column_name": empty.columns.tolist(),
+                    "data_type": [str(dt) for dt in empty.dtypes],
+                }
+            )
         except Exception as e:
-            table_cols = pd.DataFrame({"column_name": [f"Error: {e}"], "data_type": [""]})
+            table_cols = pd.DataFrame(
+                {"column_name": [f"Error: {e}"], "data_type": [""]}
+            )
 
     with st.expander(f"{icons[kind]} {table_name} — {db_name} ({kind})"):
         st.dataframe(table_cols, use_container_width=True, hide_index=True)

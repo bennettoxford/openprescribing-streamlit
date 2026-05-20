@@ -1,19 +1,25 @@
 import altair as alt
-import streamlit as st
 import pandas as pd
-import duckdb
+import streamlit as st
 
-from db import duckdb_path, query, build_agg, agg_path
+from db import create_materialised_view, query
 
 st.set_page_config(layout="wide")
 
 st.title("OpenPrescribing Top 20 prescribing in 2025")
 
-st.markdown("""
+st.markdown(
+    """
 <style>
 [data-testid="stDataFrame"] td { border: none !important; }
 </style>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
+
+
+create_materialised_view(name="prescribing_2025")
+
 
 df_practice = query(
     """
@@ -35,24 +41,6 @@ df_practice = query(
     """
 )
 
-build_agg(
-    table_name="prescribing_agg",
-    sql="""
-        SELECT
-            rx.practice_code as practice_code,
-            med.vtm_id AS vtm_id,
-            vtm.nm AS vtm_name,
-            med.id AS snomed_code,
-            med.name AS pres_name,
-            SUM(rx.items) AS items,
-            SUM(rx.actual_cost) AS actual_cost
-        FROM prescribing rx
-        JOIN medications med ON rx.snomed_code = med.id
-        JOIN vtm vtm ON med.vtm_id = vtm.vtmid
-        WHERE rx.date BETWEEN '2025-01-01' AND '2025-12-01'
-        GROUP BY rx.practice_code, med.vtm_id, vtm.nm, med.id, med.name
-    """
-)
 
 def cascading_filter(df, col, label, key):
     opts = sorted(df[col].dropna().unique().tolist())
@@ -60,16 +48,16 @@ def cascading_filter(df, col, label, key):
     sel = st.multiselect(label, opts, default=sel, key=key)
     return df if not sel else df[df[col].isin(sel)]
 
+
 # --- Sidebar filters ---
 with st.sidebar:
-
     st.header("Organisation Filter")
     st.info("Select an organisation at any level.")
 
-    df_region   = cascading_filter(df_practice, "region_name",   "Region",   "sel_region")
-    df_icb      = cascading_filter(df_region,    "icb_name",      "ICB",      "sel_icb")
-    df_pcn      = cascading_filter(df_icb,       "pcn_name",      "PCN",      "sel_pcn")
-    df_selected = cascading_filter(df_pcn,       "practice_name", "Practice", "sel_practice")
+    df_region = cascading_filter(df_practice, "region_name", "Region", "sel_region")
+    df_icb = cascading_filter(df_region, "icb_name", "ICB", "sel_icb")
+    df_pcn = cascading_filter(df_icb, "pcn_name", "PCN", "sel_pcn")
+    df_selected = cascading_filter(df_pcn, "practice_name", "Practice", "sel_practice")
 
     selected_practice_codes = df_selected["practice_code"].unique().tolist()
 
@@ -86,37 +74,47 @@ df_topx = query(
         pres_name,
         sum(items) as items,
         sum(actual_cost/100) as actual_cost
-    from prescribing_agg AS rx
+    from prescribing_2025 AS rx
     INNER JOIN _selected_practices AS s
       ON rx.practice_code = s.practice_code
     GROUP BY GROUPING SETS (
     (vtm_name,vtm_id, pres_name),
     (vtm_name,vtm_id)
     )
-""", 
-dfs={"_selected_practices": pd.DataFrame({"practice_code": selected_practice_codes})}
+""",
+    dfs={
+        "_selected_practices": pd.DataFrame({"practice_code": selected_practice_codes})
+    },
 )
 
-df_topx_vtm  = df_topx[df_topx["pres_name"].isna()]   # VTM-level rows
-df_topx_detail = df_topx[df_topx["pres_name"].notna()]   # presentation-level rows
+df_topx_vtm = df_topx[df_topx["pres_name"].isna()]  # VTM-level rows
+df_topx_detail = df_topx[df_topx["pres_name"].notna()]  # presentation-level rows
 
 df_topx_ranked = (
     df_topx_vtm.groupby(["vtm_name", "vtm_id"])[["items", "actual_cost"]]
-    .sum().reset_index()
+    .sum()
+    .reset_index()
     .nlargest(top_n, sort_col)
 )
 
 
 for _, row in df_topx_ranked.iterrows():
-    label = f"{row['vtm_name']} — £{row['actual_cost']:,.2f} ({row['items']:,.0f} items)"
+    label = (
+        f"{row['vtm_name']} — £{row['actual_cost']:,.2f} ({row['items']:,.0f} items)"
+    )
     vtm_breakdown = df_topx_detail[df_topx_detail["vtm_id"] == row["vtm_id"]]
-    
+
     with st.expander(label):
         st.dataframe(
             vtm_breakdown[["pres_name", "actual_cost", "items"]]
             .sort_values(sort_col, ascending=False)
             .assign(actual_cost=lambda d: d["actual_cost"].map("£{:,.2f}".format))
-            .rename(columns={"pres_name": "Presentation", "actual_cost": "Cost", "items": "Items"}),
+            .rename(
+                columns={
+                    "pres_name": "Presentation",
+                    "actual_cost": "Cost",
+                    "items": "Items",
+                }
+            ),
             hide_index=True,
         )
-

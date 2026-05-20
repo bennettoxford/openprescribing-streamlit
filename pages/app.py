@@ -1,12 +1,11 @@
 import altair as alt
 import streamlit as st
 
-from db import duckdb_path, query
-
+from db import prescribing_db_path, query
 
 st.title("OpenPrescribing Streamlit")
 
-st.caption(f"Database: {duckdb_path}")
+st.caption(f"Database: {prescribing_db_path}")
 
 prescribing_count = query("SELECT COUNT(*) FROM prescribing").iat[0, 0]
 items_by_chapter = query(
