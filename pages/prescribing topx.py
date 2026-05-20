@@ -2,7 +2,7 @@ import altair as alt
 import pandas as pd
 import streamlit as st
 
-from db import agg_path, build_agg, duckdb_path, query
+from db import create_materialised_view, query
 
 st.set_page_config(layout="wide")
 
@@ -18,8 +18,8 @@ st.markdown(
 )
 
 
-build_agg(
-    table_name="prescribing_agg",
+create_materialised_view(
+    table_name="prescribing_2025",
     sql="""
         SELECT
             rx.practice_code as practice_code,
@@ -91,7 +91,7 @@ df_topx = query(
         pres_name,
         sum(items) as items,
         sum(actual_cost/100) as actual_cost
-    from prescribing_agg AS rx
+    from prescribing_2025 AS rx
     INNER JOIN _selected_practices AS s
       ON rx.practice_code = s.practice_code
     GROUP BY GROUPING SETS (

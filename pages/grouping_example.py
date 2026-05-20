@@ -2,7 +2,7 @@ import altair as alt
 import pandas as pd
 import streamlit as st
 
-from db import duckdb_path, query
+from db import prescribing_db_path, query
 
 st.set_page_config(layout="wide")
 
