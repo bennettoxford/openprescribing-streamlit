@@ -15,7 +15,7 @@ def recreate_materialised_views():
         materialised_views_db_path.unlink()
 
     logging.debug("Creating all materialised views")
-    for f in materialised_views_dir.iterdir():
+    for f in sorted(materialised_views_dir.iterdir()):
         short_name = f.name.removesuffix(".sql")
         logging.debug(f"Creating materialised view {short_name}")
         create_materialised_view(short_name, force=True)
