@@ -1,8 +1,10 @@
-import streamlit as st
-import pandas as pd
 from datetime import datetime
-import yaml
 from pathlib import Path
+
+import pandas as pd
+import streamlit as st
+import yaml
+
 from db import create_materialised_view, query
 from org_filter import org_filter_sidebar
 from page_formatting import gbp
@@ -15,7 +17,7 @@ create_materialised_view(
     name="tariff_price_changes_01_price_changes"
 )  # create main price change table
 create_materialised_view(
-    name="tariff_price_02_changes_vmpp"
+    name="tariff_price_changes_02_vmpp"
 )  # create vmpp detail table
 create_materialised_view(
     name="tariff_price_changes_03_prescribing"
@@ -45,13 +47,14 @@ def build_price_change_df(vmpp_df):
     df.loc[df["price"] < df["prev_price"], "price_change"] = "decrease"
     return df
 
+
 def render_summary(df):
     """Render a per-category increase/decrease/unchanged summary."""
     summary = (
         df.groupby(["tariff_category", "price_change"])
-          .size()
-          .unstack(fill_value=0)
-          .reset_index()
+        .size()
+        .unstack(fill_value=0)
+        .reset_index()
     )
     for _, row in summary.iterrows():
         st.markdown(f"**Category: {row['tariff_category']}**")
@@ -59,6 +62,7 @@ def render_summary(df):
         c1.write(f"Increases: {row.get('increase', 0)}")
         c2.write(f"Decreases: {row.get('decrease', 0)}")
         c3.write(f"No change: {row.get('unchanged', 0)}")
+
 
 def render_pagination(sorted_df):
     """Render paginated expanders for each BNF presentation."""
@@ -70,11 +74,11 @@ def render_pagination(sorted_df):
         st.session_state.page = 0
 
     page = st.session_state.page
-    page20 = sorted_df.iloc[page * 20:(page + 1) * 20]
+    page20 = sorted_df.iloc[page * 20 : (page + 1) * 20]
 
     for _, row in page20.iterrows():
         colour = "red" if row["price_difference"] > 0 else "green"
-        label = f":{colour}[{row['name']}: {gbp(row['price_difference'],2)}]"
+        label = f":{colour}[{row['name']}: {gbp(row['price_difference'], 2)}]"
         vmpp_details = vmpp_df[vmpp_df["vpid"] == row["snomed_code"]].copy()
         with st.expander(label):
             display_df = vmpp_details[
@@ -104,11 +108,11 @@ def render_pagination(sorted_df):
             st.session_state.page += 1
             st.rerun()
 
+
 max_rx_date = query("SELECT MAX(date) FROM date")["max(date)"][0]
 max_tariff_date = query("SELECT MAX(date) FROM data_tariffprice")["max(date)"][0]
-tariff_month = max_tariff_date.strftime('%B %Y')
-rx_month = max_rx_date.strftime('%B %Y')
-
+tariff_month = max_tariff_date.strftime("%B %Y")
+rx_month = max_rx_date.strftime("%B %Y")
 
 
 # App
@@ -116,14 +120,16 @@ rx_month = max_rx_date.strftime('%B %Y')
 # Header
 st.image(Path("content/OpenPrescribing.svg"))
 st.info(
-"""##### Hello!  This is a **very** early prototype of estimating the impact of drug tariff changes.  
+    """##### Hello!  This is a **very** early prototype of estimating the impact of drug tariff changes.
 Please let us know what you think, and what you'd like to see.  Email us at [bennett@phc.ox.ac.uk](mailto:bennett@phc.ox.ac.uk)"""
 )
 
-with st.expander("Click here to read our methodology", icon=":material/quick_reference:"):
+with st.expander(
+    "Click here to read our methodology", icon=":material/quick_reference:"
+):
     with open(Path("content/tariff_price_changes/methodology.md")) as f:
         st.markdown(f.read())
-        
+
 # Sidebar filters
 with st.sidebar:
     st.markdown(f"### Drug Tariff month: {tariff_month}")
@@ -136,8 +142,8 @@ with st.sidebar:
     sel_tariff_cat = st.multiselect(
         "DT Category",
         ["(All)"] + sorted(tariff_cat_df),
-       key="sel_tariff_cat",
-   )
+        key="sel_tariff_cat",
+    )
 
     sort_option = st.radio(
         "Sort by",
@@ -150,7 +156,7 @@ st.markdown(f"#### Total changes for {tariff_month}")
 render_summary(build_price_change_df(vmpp_df))
 
 # Filter rx query
-filtered_df = query(   
+filtered_df = query(
     f"""
     SELECT
         rx.snomed_code,
@@ -160,27 +166,31 @@ filtered_df = query(
     FROM tariff_price_changes_prescribing AS rx
     INNER JOIN tariff_price_changes_price_changes AS dt ON rx.snomed_code = dt.vpid
     INNER JOIN medications AS med ON rx.snomed_code = med.id
-    WHERE practice_code IN {selected_practice_codes} 
-    GROUP BY 
-        rx.snomed_code, 
+    WHERE practice_code IN {selected_practice_codes}
+    GROUP BY
+        rx.snomed_code,
         med.name,
         dt.tariff_cat
-    """)
+    """
+)
 
 if sel_tariff_cat:
     filtered_df = filtered_df[filtered_df["tariff_cat"].isin(sel_tariff_cat)]
 
 # Show results
 total_difference = filtered_df["price_difference"].sum()
-st.markdown(f"### Total estimated monthly price difference: {gbp(total_difference,2)}")
+st.markdown(f"### Total estimated monthly price difference: {gbp(total_difference, 2)}")
 
 st.markdown("### Breakdown by presentation")
 st.info("ℹ️ To see details on changes to individual packs, click on the arrow")
-st.markdown("""
+st.markdown(
+    """
 <style>
 details { border: none !important; box-shadow: none !important; }
 </style>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 sorted_df = filtered_df.sort_values(
     "price_difference", ascending=(sort_option != "Largest Increases")
 )
