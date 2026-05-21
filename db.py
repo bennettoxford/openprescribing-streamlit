@@ -7,7 +7,7 @@ import streamlit as st
 data_dir = Path(os.getenv("OPENPRESCRIBING_STREAMLIT_DATA_DIR", "data")).expanduser()
 prescribing_db_path = data_dir / "prescribing.duckdb"
 sqlite_path = data_dir / "data.sqlite"
-materialised_views_db_path = data_dir / "materalised_views.duckdb"
+materialised_views_db_path = data_dir / "materialised_views.duckdb"
 materialised_views_dir = Path(__file__).parent / "materialised_views"
 create_views_sql = (Path(__file__).parent / "create_views.sql").read_text()
 
@@ -27,21 +27,21 @@ def attach_materialised_views_db(connection, read_write=True):
     if read_write:
         connection.execute(
             f"""
-            ATTACH {_escape(materialised_views_db_path)} AS materalised_views_db (TYPE DUCKDB, READ_WRITE);
+            ATTACH {_escape(materialised_views_db_path)} AS materialised_views_db (TYPE DUCKDB, READ_WRITE);
             """
         )
         connection.execute(
-            "SET search_path = 'materalised_views_db,memory,sqlite_db,prescribing_db'"
+            "SET search_path = 'materialised_views_db,memory,sqlite_db,prescribing_db'"
         )
 
     else:
         connection.execute(
             f"""
-            ATTACH {_escape(materialised_views_db_path)} AS materalised_views_db (TYPE DUCKDB, READ_ONLY);
+            ATTACH {_escape(materialised_views_db_path)} AS materialised_views_db (TYPE DUCKDB, READ_ONLY);
             """
         )
         connection.execute(
-            "SET search_path = 'memory,sqlite_db,prescribing_db,materalised_views_db'"
+            "SET search_path = 'memory,sqlite_db,prescribing_db,materialised_views_db'"
         )
 
 
@@ -68,22 +68,25 @@ def _escape(value):
     return "'" + str(value).replace("'", "''") + "'"
 
 
-def create_materialised_view(name, max_age_hours=168):
+def create_materialised_view(name, max_age_hours=168, force=False):
     sql = (materialised_views_dir / f"{name}.sql").read_text()
 
     with duckdb.connect() as connection:
         attach_prescribing_and_sqlite_dbs(connection)
         attach_materialised_views_db(connection, read_write=True)
 
-        try:
-            result = connection.execute(f"""
-                SELECT (NOW() - MAX(created_at)) < INTERVAL '{max_age_hours} hours'
-                FROM {name}_meta
-            """).fetchone()
-            if result and result[0]:
-                return
-        except Exception:
-            pass
+        if not force:
+            try:
+                result = connection.execute(f"""
+                    SELECT (NOW() - MAX(created_at)) < INTERVAL '{max_age_hours} hours'
+                    FROM {name}_meta
+                """).fetchone()
+
+                if result and result[0]:
+                    return
+
+            except Exception:
+                pass
 
         connection.execute(f"CREATE OR REPLACE TABLE {name} AS {sql}")
         connection.execute(f"""
