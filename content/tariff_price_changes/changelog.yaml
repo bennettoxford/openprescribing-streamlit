@@ -1,0 +1,19 @@
+- date: 2026-01-22
+  change: Initial prototype deployed
+  person: Richard Croker
+
+- date: 2026-03-26
+  change: Rebuilt using DuckDB and refactored all code
+  person: Richard Croker
+
+- date: 2026-03-27
+  change: Fixed page issue when filtering
+  person: Richard Croker
+
+- date: 2026-03-27
+  change: Add methodology expander
+  person: Richard Croker
+
+- date: 2026-05-20
+  change: Ported to local streamlit environment
+  person: Richard Croker
