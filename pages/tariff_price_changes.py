@@ -11,13 +11,28 @@ st.set_page_config(layout="wide")
 
 # Get data sources
 
-create_materialised_view(name="tariff_price_changes_price_changes") # create main price change table
-create_materialised_view(name="tariff_price_changes_vmpp") # create vmpp detail table
-create_materialised_view(name="tariff_price_changes_prescribing") # create prescribing table
-vmpp_df = query("SELECT * FROM tariff_price_changes_vmpp") # creates vmpp df
-tariff_df = query("SELECT * FROM tariff_price_changes_price_changes") # create main table df
-tariff_cat_df = query("SELECT DISTINCT tariff_cat FROM tariff_price_changes_price_changes ORDER BY tariff_cat")["tariff_cat"].dropna().tolist()
-tariff_prescribing_df = query("SELECT * FROM tariff_price_changes_prescribing")
+create_materialised_view(
+    name="tariff_price_changes_01_price_changes"
+)  # create main price change table
+create_materialised_view(
+    name="tariff_price_02_changes_vmpp"
+)  # create vmpp detail table
+create_materialised_view(
+    name="tariff_price_changes_03_prescribing"
+)  # create prescribing table
+vmpp_df = query("SELECT * FROM tariff_price_changes_02_vmpp")  # creates vmpp df
+tariff_df = query(
+    "SELECT * FROM tariff_price_changes_01_price_changes"
+)  # create main table df
+tariff_cat_df = (
+    query(
+        "SELECT DISTINCT tariff_cat FROM tariff_price_changes_01_price_changes ORDER BY tariff_cat"
+    )["tariff_cat"]
+    .dropna()
+    .tolist()
+)
+tariff_prescribing_df = query("SELECT * FROM tariff_price_changes_03_prescribing")
+
 
 def build_price_change_df(vmpp_df):
     """Add numeric price columns and a price_change label to vmpp_df."""
