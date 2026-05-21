@@ -5,7 +5,7 @@ WORKDIR /app
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev --no-install-project
 
-COPY *.py *.sql README.md ./
+COPY *.py *.sql README.md Procfile ./
 COPY materialised_views/ ./materialised_views/
 COPY pages/ ./pages/
 COPY content/ ./content/
