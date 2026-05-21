@@ -8,6 +8,7 @@ RUN uv sync --frozen --no-dev --no-install-project
 COPY *.py *.sql README.md ./
 COPY materialised_views/ ./materialised_views/
 COPY pages/ ./pages/
+COPY content/ ./content/
 RUN uv sync --frozen --no-dev
 
 ENV PYTHONUNBUFFERED=1
