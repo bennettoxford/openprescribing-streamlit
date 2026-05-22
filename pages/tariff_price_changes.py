@@ -164,7 +164,7 @@ filtered_df = query(
         dt.tariff_cat,
         SUM(rx.quantity * dt.price_diff_pu * dt.is_max_price_diff_pu) AS price_difference
     FROM tariff_price_changes_03_prescribing AS rx
-    INNER JOIN tariff_price_changes_price_changes AS dt ON rx.snomed_code = dt.vpid
+    INNER JOIN tariff_price_changes_01_price_changes AS dt ON rx.snomed_code = dt.vpid
     INNER JOIN medications AS med ON rx.snomed_code = med.id
     WHERE practice_code IN {selected_practice_codes}
     GROUP BY
