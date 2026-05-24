@@ -1,13 +1,13 @@
 SELECT
-DATE(date) as date,
-nm,
-vpid,
-vmpp_id,
-tariff_category,
-price_pence,
-prev_price AS previous_price_pence,
-DATE(prev_date) AS previous_date,
-prev_tariff_category
+    DATE(date) as date,
+    nm,
+    vpid,
+    vmpp_id,
+    tariff_category,
+    price_pence,
+    prev_price AS previous_price_pence,
+    DATE(prev_date) AS previous_date,
+    prev_tariff_category
 FROM (
 SELECT
     date,

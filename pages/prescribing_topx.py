@@ -1,10 +1,10 @@
 import altair as alt
 import pandas as pd
 import streamlit as st
-from org_filter import org_filter_sidebar
 from pathlib import Path
-import yaml1
+import yaml
 
+from utils import sidebar_logo, sidebar_nav, org_filter_sidebar
 from db import create_materialised_view, query
 
 st.set_page_config(layout="wide")

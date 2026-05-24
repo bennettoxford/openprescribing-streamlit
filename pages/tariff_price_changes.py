@@ -6,8 +6,8 @@ import streamlit as st
 import yaml
 
 from db import create_materialised_view, query
-from org_filter import org_filter_sidebar
-from page_formatting import gbp
+from utils import sidebar_logo, sidebar_nav, org_filter_sidebar,gbp
+
 
 st.set_page_config(layout="wide")
 
@@ -117,43 +117,55 @@ rx_month = max_rx_date.strftime("%B %Y")
 
 # App
 
+
 # Header
-st.image(Path("content/OpenPrescribing.svg"))
+
+sidebar_logo()
+
 st.info(
     """##### Hello!  This is a **very** early prototype of estimating the impact of drug tariff changes.
 Please let us know what you think, and what you'd like to see.  Email us at [bennett@phc.ox.ac.uk](mailto:bennett@phc.ox.ac.uk)"""
 )
 
 with st.expander(
+    "Click here to learn more about different Drug Tariff categories", icon=":material/question_mark:"
+):
+    with open(Path("content/tariff_price_changes/questions.md")) as f:
+        st.markdown(f.read())
+with st.expander(
     "Click here to read our methodology", icon=":material/quick_reference:"
 ):
     with open(Path("content/tariff_price_changes/methodology.md")) as f:
         st.markdown(f.read())
-
 # Sidebar filters
+
 with st.sidebar:
-    st.markdown(f"### Drug Tariff month: {tariff_month}")
-    st.markdown(f"### Prescribing data used for estimate: {rx_month}")
+    st.info(f"""
+    **Drug Tariff month:** {tariff_month}
+    \n**Prescribing data used for estimate:** {rx_month}
+    """)
 
 selected_practice_codes = org_filter_sidebar()
 
 with st.sidebar:
-    st.header("Tariff Filter")
-    sel_tariff_cat = st.multiselect(
-        "DT Category",
-        ["(All)"] + sorted(tariff_cat_df),
-        key="sel_tariff_cat",
-    )
+    with st.expander("Tariff Filter", expanded=False, icon=":material/book_ribbon:"):
+        sel_tariff_cat = st.multiselect(
+            "DT Category",
+            ["(All)"] + sorted(tariff_cat_df),
+            key="sel_tariff_cat",
+        )
 
-    sort_option = st.radio(
-        "Sort by",
-        ["Largest Increases", "Largest Reductions"],
-        key="sort_option",
-    )
+    with st.expander("Sort Options", expanded=False, icon=":material/sort:"):
+        sort_option = st.radio(
+            "Sort by",
+            ["Largest Increases", "Largest Reductions"],
+            key="sort_option",
+        )
 
-# Show summary
-st.markdown(f"#### Total changes for {tariff_month}")
-render_summary(build_price_change_df(vmpp_df))
+
+
+sidebar_nav()
+
 
 # Filter rx query
 filtered_df = query(
@@ -179,9 +191,9 @@ if sel_tariff_cat:
 
 # Show results
 total_difference = filtered_df["price_difference"].sum()
-st.markdown(f"### Total estimated monthly price difference: {gbp(total_difference, 2)}")
+st.info(f"#### Total estimated monthly price difference for {tariff_month}: {gbp(total_difference, 2)}")
 
-st.markdown("### Breakdown by presentation")
+st.markdown("#### Breakdown by presentation")
 st.info("ℹ️ To see details on changes to individual packs, click on the arrow")
 st.markdown(
     """
@@ -196,6 +208,11 @@ sorted_df = filtered_df.sort_values(
 )
 render_pagination(sorted_df)
 
+# Show summary
+with st.expander(f"See total number of national Drug Tariff changes for {tariff_month}"):
+    render_summary(build_price_change_df(vmpp_df))
+
+
 # Methodology and changelog
 
 st.divider()
@@ -206,3 +223,4 @@ with open(Path("content/tariff_price_changes/changelog.yaml")) as f:
 with st.expander("Click to see changelog", icon=":material/history:"):
     for entry in reversed(changelog):
         st.markdown(f"**{entry['date']}** — {entry['change']} *({entry['person']})*")
+
