@@ -4,7 +4,7 @@ import streamlit as st
 from pathlib import Path
 import yaml
 
-from utils import sidebar_logo, sidebar_nav, org_filter_sidebar, gbp
+from utils import sidebar_logo, sidebar_nav, org_filter_sidebar, gbp, global_styles, changelog
 from db import create_materialised_view, query
 
 # This makes Streamlit use whole page -t his has to be the first line of code, and inserts the OP logo into the browser
@@ -26,6 +26,9 @@ create_materialised_view(name="prescribing_2025", tool_name=tool_name, app_file=
 
 # inserts logo into sidebar
 sidebar_logo()
+
+# applies CSS for navigation bar
+global_styles()
 
 # Header
 st.info(
@@ -136,12 +139,6 @@ for _, row in df_topx_ranked.iterrows():
             hide_index=True,
         )
 
-st.divider()
 
 # show changelog
-with open(Path(__file__).parent / "content/changelog.yaml") as f:
-    changelog = yaml.safe_load(f)
-
-with st.expander("Click to see changelog", icon=":material/history:"):
-    for entry in reversed(changelog):
-        st.markdown(f"**{entry['date']}** — {entry['change']} *({entry['person']})*")
+changelog(Path(__file__).parent)

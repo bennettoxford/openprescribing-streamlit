@@ -4,7 +4,7 @@ import pandas as pd
 import yaml
 
 from db import create_materialised_view, query
-from utils import sidebar_logo, sidebar_nav, org_filter_sidebar,gbp, render_pagination
+from utils import sidebar_logo, sidebar_nav, org_filter_sidebar,gbp, render_pagination, global_styles, changelog
 
 # This makes Streamlit use whole page -t his has to be the first line of code, and inserts the OP logo into the browser
 st.set_page_config(layout="wide", page_icon="content/OpenPrescribing.svg")
@@ -101,6 +101,9 @@ max_rx_date = query("SELECT MAX(date) FROM date")["max(date)"][0] # returns late
 
 # inserts logo into sidebar
 sidebar_logo()
+
+# applies CSS for navigation bar
+global_styles()
 
 # welcome banner
 st.info(
@@ -225,14 +228,5 @@ with st.expander(f"See total number of national Drug Tariff changes for {selecte
     render_summary(vmpp_df)
 
 
-# Methodology and changelog
-
-st.divider()
-
 # show changelog
-with open(Path(__file__).parent / "content/changelog.yaml") as f:
-    changelog = yaml.safe_load(f)
-
-with st.expander("Click to see changelog", icon=":material/history:"):
-    for entry in reversed(changelog):
-        st.markdown(f"**{entry['date']}** — {entry['change']} *({entry['person']})*")
+changelog(Path(__file__).parent)

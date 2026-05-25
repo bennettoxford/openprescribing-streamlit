@@ -3,6 +3,7 @@ import pandas as pd
 from pathlib import Path
 import re
 from db import query 
+import yaml
 
 
 
@@ -28,7 +29,7 @@ def sidebar_logo():
         """, unsafe_allow_html=True)
 
 
-def sidebar_nav():
+def global_styles():
     st.markdown("""
         <style>
         @import url('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap');
@@ -37,35 +38,50 @@ def sidebar_nav():
             font-family: 'Public Sans', sans-serif !important;
         }
 
-        /* Hide default nav and replace with expander */
         [data-testid="stSidebarNav"] {display: none;}
 
-        /* Remove sidebar padding globally */
         [data-testid="stSidebar"] > div:first-child {
             padding-left: 0rem !important;
             padding-right: 0rem !important;
             padding-top: 0rem !important;
         }
 
-        /* Remove expander content indent */
         [data-testid="stExpanderDetails"] {
             padding-left: 0rem !important;
             padding-right: 0rem !important;
         }
 
-        /* Remove expander label indent */
         [data-testid="stExpander"] summary {
             padding-left: 0rem !important;
         }
 
-        /* Bigger expander label text */
         [data-testid="stExpander"] summary p {
             font-size: 1.1rem !important;
             font-weight: 500 !important;
         }
+
+        details {
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        [data-testid="stSidebar"] [data-testid="stExpander"] details {
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        [data-testid="stSidebar"] [data-testid="stExpander"] summary {
+            border-radius: 0.5rem !important;
+        }
+
+        [data-testid="stDataFrame"] td {
+            border: none !important;
+        }
         </style>
     """, unsafe_allow_html=True)
 
+
+def sidebar_nav():
     with st.sidebar:
         st.markdown("&nbsp;" * 3, unsafe_allow_html=True)
         st.divider()
@@ -186,3 +202,13 @@ def render_pagination(sorted_df, render_row, page_size=20):
         if st.button("Next →", disabled=page >= total_pages - 1):
             st.session_state.page += 1
             st.rerun()
+    
+def changelog(base_path: Path):
+    st.divider()
+
+    with open(base_path / "content/changelog.yaml") as f:
+        data = yaml.safe_load(f)
+
+    with st.expander("Click to see changelog", icon=":material/history:"):
+        for entry in reversed(data):
+            st.markdown(f"**{entry['date']}** — {entry['change']} *({entry['person']})*")
