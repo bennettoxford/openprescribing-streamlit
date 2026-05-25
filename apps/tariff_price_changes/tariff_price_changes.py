@@ -6,8 +6,8 @@ import yaml
 from db import create_materialised_view, query
 from utils import sidebar_logo, sidebar_nav, org_filter_sidebar,gbp, render_pagination
 
-# This makes Streamlit use whole page -t his has to be the first line of code
-st.set_page_config(layout="wide") 
+# This makes Streamlit use whole page -t his has to be the first line of code, and inserts the OP logo into the browser
+st.set_page_config(layout="wide", page_icon="content/OpenPrescribing.svg")
 
 # --- Constants ---
 
