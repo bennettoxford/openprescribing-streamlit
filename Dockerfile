@@ -8,6 +8,7 @@ RUN uv sync --frozen --no-dev --no-install-project
 COPY *.py *.sql README.md Procfile ./
 COPY materialised_views/ ./materialised_views/
 COPY pages/ ./pages/
+COPY apps/ ./apps/
 COPY content/ ./content/
 RUN uv sync --frozen --no-dev
 
