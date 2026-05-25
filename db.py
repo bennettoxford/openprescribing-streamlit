@@ -8,7 +8,6 @@ data_dir = Path(os.getenv("OPENPRESCRIBING_STREAMLIT_DATA_DIR", "data")).expandu
 prescribing_db_path = data_dir / "prescribing.duckdb"
 sqlite_path = data_dir / "data.sqlite"
 materialised_views_db_path = data_dir / "materialised_views.duckdb"
-materialised_views_dir = Path(__file__).parent / "materialised_views"
 create_views_sql = (Path(__file__).parent / "create_views.sql").read_text()
 
 
@@ -67,9 +66,11 @@ def _escape(value):
     # to escape them manually.
     return "'" + str(value).replace("'", "''") + "'"
 
-
-def create_materialised_view(name, max_age_hours=168, force=False):
+@st.cache_data
+def create_materialised_view(name, app_file, tool_name, max_age_hours=168, force=False):
+    materialised_views_dir = Path(app_file).parent / "materialised_views"
     sql = (materialised_views_dir / f"{name}.sql").read_text()
+    full_name = f"{tool_name}_{name}"
 
     with duckdb.connect() as connection:
         attach_prescribing_and_sqlite_dbs(connection)
@@ -79,7 +80,7 @@ def create_materialised_view(name, max_age_hours=168, force=False):
             try:
                 result = connection.execute(f"""
                     SELECT (NOW() - MAX(created_at)) < INTERVAL '{max_age_hours} hours'
-                    FROM {name}_meta
+                    FROM {full_name}_meta
                 """).fetchone()
 
                 if result and result[0]:
@@ -88,8 +89,8 @@ def create_materialised_view(name, max_age_hours=168, force=False):
             except Exception:
                 pass
 
-        connection.execute(f"CREATE OR REPLACE TABLE {name} AS {sql}")
+        connection.execute(f"CREATE OR REPLACE TABLE {full_name} AS {sql}")
         connection.execute(f"""
-            CREATE OR REPLACE TABLE {name}_meta AS
+            CREATE OR REPLACE TABLE {full_name}_meta AS
             SELECT NOW() AS created_at
         """)

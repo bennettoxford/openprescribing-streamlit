@@ -21,3 +21,7 @@
 - date: 2026-05-24
   change: Significant changes, including expander filters and removal of views querying other view
   person: Richard Croker 
+
+- date: 2026-05-25
+  change: Multiple months available, optimised filters and code
+  person: Richard Croker 

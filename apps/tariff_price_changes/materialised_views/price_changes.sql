@@ -19,10 +19,15 @@ FROM (
     FROM data_tariffprice
 )
 WHERE price_in_pence IS DISTINCT FROM prev_price
-    AND date = (SELECT MAX(date) FROM data_tariffprice)
+    AND date >= DATE_TRUNC('month',
+        CASE
+            WHEN MONTH(CURRENT_DATE) < 4
+            THEN MAKE_DATE(YEAR(CURRENT_DATE) - 2, 4, 1)
+            ELSE MAKE_DATE(YEAR(CURRENT_DATE) - 1, 4, 1)
+        END
+    )
 ORDER BY vmpp_id, drug_tariff_category_id
 ),
-
 
 agg_price_changes AS (
 SELECT
@@ -59,11 +64,10 @@ bnf_code_price_changes AS (
 SELECT
     *,
     CASE 
-        WHEN ROW_NUMBER() OVER (PARTITION BY vpid ORDER BY ABS(price_diff_pu) DESC) = 1
+        WHEN ROW_NUMBER() OVER (PARTITION BY vpid, date ORDER BY ABS(price_diff_pu) DESC) = 1
         THEN 1 
         ELSE 0
     END AS is_max_price_diff_pu
 FROM agg_price_changes
 )
-SELECT
-* FROM bnf_code_price_changes
+SELECT * FROM bnf_code_price_changes

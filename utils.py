@@ -71,13 +71,12 @@ def sidebar_nav():
         st.divider()
         with st.expander("More Tools", expanded=False, icon=":material/handyman:"):
             st.page_link("pages/home.py", label="Home page")
-            st.page_link("pages/tariff_price_changes.py", label="Tariff Price Changes")
+            st.page_link("apps/tariff_price_changes/tariff_price_changes.py", label="Tariff Price Changes")
             st.page_link("pages/prescribing_topx.py", label="Top x Prescribing")
 
 
 
 @st.cache_data
-
 def load_practice_df():
     df = query("""
         SELECT
@@ -135,7 +134,7 @@ def org_filter_sidebar():
     df = load_practice_df()
 
     with st.sidebar:
-        with st.expander("Organisation Filter", expanded=False, icon=":material/corporate_fare:" ):
+        with st.expander("Organisation Filter", expanded=False, icon=":material/corporate_fare:"):
             st.info("Select an organisation at any level.")
 
             df = _cascading_filter(df, "region_name",   "Region",   "sel_region")
@@ -143,13 +142,11 @@ def org_filter_sidebar():
             df = _cascading_filter(df, "pcn_name",      "PCN",      "sel_pcn")
             df = _cascading_filter(df, "practice_name", "Practice", "sel_practice")
 
-    selected_practices = df["practice_code"].drop_duplicates().tolist()
-
-    if len(selected_practices) == 1:
-        return f"('{selected_practices[0]}')"
-
-    return str(tuple(selected_practices))
-
+    practice_codes = df["practice_code"].drop_duplicates().tolist()
+    
+    sql_in = "(" + ",".join(f"'{c}'" for c in practice_codes) + ")"
+    
+    return practice_codes, sql_in
 
 def gbp(x, dp=0):
     """Format a value as GBP."""
@@ -160,3 +157,32 @@ def gbp(x, dp=0):
     sign = "-" if x < 0 else ""
 
     return f"{sign}£{abs(x):,.{dp}f}"
+
+def render_pagination(sorted_df, render_row, page_size=20):
+    if "page" not in st.session_state:
+        st.session_state.page = 0
+
+    total_pages = max(1, (len(sorted_df) - 1) // page_size + 1)
+    if st.session_state.page >= total_pages:
+        st.session_state.page = 0
+
+    page = st.session_state.page
+    page_df = sorted_df.iloc[page * page_size : (page + 1) * page_size]
+
+    for _, row in page_df.iterrows():
+        render_row(row)
+
+    col_prev, col_info, col_next = st.columns([1, 2, 1])
+    with col_prev:
+        if st.button("← Previous", disabled=page == 0):
+            st.session_state.page -= 1
+            st.rerun()
+    with col_info:
+        st.markdown(
+            f"<div style='text-align:center'>Page {page + 1} of {total_pages}</div>",
+            unsafe_allow_html=True,
+        )
+    with col_next:
+        if st.button("Next →", disabled=page >= total_pages - 1):
+            st.session_state.page += 1
+            st.rerun()
