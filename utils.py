@@ -72,7 +72,7 @@ def sidebar_nav():
         with st.expander("More Tools", expanded=False, icon=":material/handyman:"):
             st.page_link("pages/home.py", label="Home page")
             st.page_link("apps/tariff_price_changes/tariff_price_changes.py", label="Tariff Price Changes")
-            st.page_link("pages/prescribing_topx.py", label="Top x Prescribing")
+            st.page_link("apps/prescribing_topx/prescribing_topx.py", label="Top x Prescribing")
 
 
 

@@ -104,7 +104,8 @@ sidebar_logo()
 
 # welcome banner
 st.info(
-"""##### Hello!  This is a **very** early prototype of estimating the impact of drug tariff changes.
+"""
+##### Hello!  This is a **very** early prototype of estimating the impact of drug tariff changes.
 Please let us know what you think, and what you'd like to see.  Email us at [bennett@phc.ox.ac.uk](mailto:bennett@phc.ox.ac.uk)
 """
 )
@@ -125,7 +126,11 @@ with st.expander(
 
 # Sidebar 
 
-# date selector
+# header
+with st.sidebar:
+    st.markdown("## **Drug Tariff changes estimator**")
+
+# date selector   
 with st.sidebar:
     st.header("Filters")
     selected_date = st.selectbox(
