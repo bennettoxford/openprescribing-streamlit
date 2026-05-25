@@ -7,7 +7,7 @@ from db import query
 
 
 def sidebar_logo():
-    st.logo(Path("content/OpenPrescribing.svg"))
+    st.logo(Path("content/OpenPrescribing_workbench.svg"))
     st.markdown("""
         <style>
         [data-testid="stLogoLink"] {
