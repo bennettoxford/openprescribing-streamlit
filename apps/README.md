@@ -1,0 +1,1 @@
+This is just a holding place for the correct folder structure.
