@@ -89,6 +89,11 @@ def sidebar_nav():
             st.page_link("pages/home.py", label="Home page")
             st.page_link("apps/tariff_price_changes/tariff_price_changes.py", label="Tariff Price Changes")
             st.page_link("apps/prescribing_topx/prescribing_topx.py", label="Top x Prescribing")
+            st.page_link("apps/measure_aware/measure_aware.py", label="aWaRe")
+        st.divider()
+        with st.expander("Developer Tools", expanded=False, icon=":material/build:"):
+            st.page_link("pages/db_schema.py", label="Database schema")
+            st.page_link("pages/sql_checker.py", label="Code tests")
 
 
 
@@ -203,12 +208,19 @@ def render_pagination(sorted_df, render_row, page_size=20):
             st.session_state.page += 1
             st.rerun()
     
-def changelog(base_path: Path):
+def changelog(base_path: Path, expanded: bool = False):
     st.divider()
 
     with open(base_path / "content/changelog.yaml") as f:
         data = yaml.safe_load(f)
 
-    with st.expander("Click to see changelog", icon=":material/history:"):
+    with st.expander("Click to see changelog", icon=":material/history:", expanded=expanded):
         for entry in reversed(data):
             st.markdown(f"**{entry['date']}** — {entry['change']} *({entry['person']})*")
+
+def why_it_matters(base_path: Path, expanded: bool = True):
+    with st.expander(
+        "Why It Matters", icon=":material/admin_meds:", expanded=expanded
+    ):
+        with open(base_path / "content/why_it_matters.md") as f:
+            st.markdown(f.read())

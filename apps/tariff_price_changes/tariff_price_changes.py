@@ -13,6 +13,8 @@ st.set_page_config(layout="wide", page_icon="content/OpenPrescribing.svg")
 
 tool_name = "tariff_price_changes" # defines the tool name
 
+app_path = Path(__file__).parent # defines the path for content
+
 # --- Functions ---
 
 # creates filtered prescribing table, based on selected date - puts into cache so only run if selected date changes
@@ -117,14 +119,14 @@ Please let us know what you think, and what you'd like to see.  Email us at [ben
 with st.expander(
     "Click here to learn more about different Drug Tariff categories", icon=":material/question_mark:"
 ):
-    with open(Path(__file__).parent / "content/questions.md") as f:
+    with open(app_path  / "content/questions.md") as f:
         st.markdown(f.read())
 
 # Methodology explainer
 with st.expander(
     "Click here to read our methodology", icon=":material/quick_reference:"
 ):
-    with open(Path(__file__).parent / "content/methodology.md") as f:
+    with open(app_path  / "content/methodology.md") as f:
         st.markdown(f.read())
 
 # Sidebar 
@@ -229,4 +231,4 @@ with st.expander(f"See total number of national Drug Tariff changes for {selecte
 
 
 # show changelog
-changelog(Path(__file__).parent)
+changelog(app_path)

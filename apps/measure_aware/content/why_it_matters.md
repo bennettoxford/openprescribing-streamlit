@@ -1,0 +1,8 @@
+
+The UK Health Security Agency (UKHSA) have developed the [UK-AWaRe antibiotic classification](https://www.gov.uk/government/publications/uk-aware-antibiotic-classification/uk-access-watch-reserve-and-other-classification-for-antibiotics-uk-aware-antibiotic-classification) adapted from the [World Health Organization’s (WHO) AWaRe classification](https://www.who.int/publications/i/item/WHO-MHP-HPS-EML-2023.04), taking into account antibiotic resistance profiles, antibiotic prescribing and stewardship practice in the UK. The classification groups antibiotics into four categories: *Access**, *Watch*, *Reserve* and *Other*, to support appropriate prescribing and promote effective antimicrobial stewardship.
+
+- *Access* antibiotics are generally narrow-spectrum and associated with a lower risk of resistance. They are recommended as first or second choice options for common infections and should be readily available.
+- *Watch* antibiotics are broader-spectrum with a higher resistance potential. Their use should be limited to specific indications and monitored closely.
+- *Reserve* antibiotics are last-line treatments, often reserved for severe infections caused by multidrug-resistant organisms. These medicines require strict oversight to maintain their effectiveness.
+
+Monitoring the use of *Watch* and *Reserve* antibiotics can help identify areas to improve prescribing, encouraging the appropriate use of *Access* antibiotics where clinically suitable, and ensuring that higher-risk antibiotics are used only when necessary.

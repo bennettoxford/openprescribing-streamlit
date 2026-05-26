@@ -14,6 +14,8 @@ st.set_page_config(layout="wide", page_icon="content/OpenPrescribing.svg")
 
 tool_name = "prescribing_topx" # defines the tool name
 
+app_path = Path(__file__).parent # defines the path for content
+
 # --- Functions ---
 
 # --- Initialisation ---
@@ -141,4 +143,4 @@ for _, row in df_topx_ranked.iterrows():
 
 
 # show changelog
-changelog(Path(__file__).parent)
+changelog(app_path)
