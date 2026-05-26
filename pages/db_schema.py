@@ -24,6 +24,15 @@ st.caption(f"Found {len(all_tables)} tables/views")
 
 icons = {"table": "📋", "view": "👁️"}
 
+
+@st.cache_data
+def get_sample_data(table_name: str) -> pd.DataFrame:
+    try:
+        return query(f"SELECT * FROM {table_name} LIMIT 5")
+    except Exception as e:
+        return pd.DataFrame({"Error": [str(e)]})
+
+
 for _, row in all_tables.iterrows():
     table_name = row["table_name"]
     db_name = row["database_name"]
@@ -49,3 +58,5 @@ for _, row in all_tables.iterrows():
 
     with st.expander(f"{icons[kind]} {table_name} — {db_name} ({kind})"):
         st.dataframe(table_cols, use_container_width=True, hide_index=True)
+        st.markdown("**Sample data**")
+        st.dataframe(get_sample_data(table_name), use_container_width=True, hide_index=True)
