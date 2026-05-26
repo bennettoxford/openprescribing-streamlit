@@ -98,7 +98,7 @@ df_topx = query(
         pres_name,
         sum(items) as items,
         sum(actual_cost/100) as actual_cost
-    FROM prescribing_2025 AS rx
+    FROM {tool_name}_prescribing_2025 AS rx
     WHERE practice_code IN {selected_practice_codes} 
     GROUP BY GROUPING SETS (
     (vtm_name,vtm_id, pres_name),
