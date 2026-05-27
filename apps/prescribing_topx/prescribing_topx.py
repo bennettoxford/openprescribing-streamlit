@@ -64,7 +64,7 @@ with st.sidebar:
 
 
 # shows cascading organisation filter
-selected_practice_codes, _ = org_filter_sidebar()
+selected_practice_codes, _, _ = org_filter_sidebar()
 
 with st.sidebar:
 

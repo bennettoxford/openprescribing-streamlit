@@ -163,11 +163,167 @@ def org_filter_sidebar():
             df = _cascading_filter(df, "pcn_name",      "PCN",      "sel_pcn")
             df = _cascading_filter(df, "practice_name", "Practice", "sel_practice")
 
+            level = "national"  # default when nothing selected
+            for lvl, key in [
+                ("practice", "sel_practice"),
+                ("pcn",      "sel_pcn"),
+                ("icb",      "sel_icb"),
+                ("region",   "sel_region"),
+            ]:
+                if st.session_state.get(key):
+                    level = lvl
+                    break
+
     practice_codes = df["practice_code"].drop_duplicates().tolist()
-    
     sql_in = "(" + ",".join(f"'{c}'" for c in practice_codes) + ")"
-    
-    return practice_codes, sql_in
+
+    return practice_codes, sql_in, level
+
+
+@st.cache_data
+def load_proportion_rates(table_name, value_col, numerator_condition):
+    return query(f"""
+        WITH orgs AS (
+            SELECT
+                prac.id AS practice_code,
+                MAX(CASE WHEN par.org_type = 'pcn' THEN par.id END) AS pcn_code,
+                MAX(CASE WHEN par.org_type = 'icb' THEN par.id END) AS icb_code,
+                MAX(CASE WHEN par.org_type = 'reg' THEN par.id END) AS region_code
+            FROM org AS prac
+            INNER JOIN org_relation AS rel ON prac.id = rel.child_id
+            INNER JOIN org AS par ON rel.parent_id = par.id
+            WHERE prac.org_type = 'pra'
+            AND prac.inactive = 0
+            GROUP BY prac.id
+        )
+        SELECT
+            date,
+            o.practice_code,
+            o.pcn_code,
+            o.icb_code,
+            o.region_code,
+            CASE 
+                WHEN o.practice_code IS NOT NULL THEN 'practice'
+                WHEN o.pcn_code      IS NOT NULL THEN 'pcn'
+                WHEN o.icb_code      IS NOT NULL THEN 'icb'
+                WHEN o.region_code   IS NOT NULL THEN 'region'
+            END AS org_type,
+            SUM(CASE WHEN {numerator_condition} THEN {value_col} ELSE 0 END) AS numerator,
+            SUM({value_col}) AS denominator,
+            numerator / NULLIF(denominator, 0) AS rate
+        FROM {table_name} AS rx
+        JOIN orgs AS o ON rx.practice_code = o.practice_code
+        GROUP BY GROUPING SETS (
+            (date, o.practice_code),
+            (date, o.pcn_code),
+            (date, o.icb_code),
+            (date, o.region_code)
+        )
+    """)
+
+
+@st.cache_data
+def load_per1000_rates(table_name, value_col, denom_table, denom_col):
+    return query(f"""
+        WITH orgs AS (
+            SELECT
+                prac.id AS practice_code,
+                MAX(CASE WHEN par.org_type = 'pcn' THEN par.id END) AS pcn_code,
+                MAX(CASE WHEN par.org_type = 'icb' THEN par.id END) AS icb_code,
+                MAX(CASE WHEN par.org_type = 'reg' THEN par.id END) AS region_code
+            FROM org AS prac
+            INNER JOIN org_relation AS rel ON prac.id = rel.child_id
+            INNER JOIN org AS par ON rel.parent_id = par.id
+            WHERE prac.org_type = 'pra'
+            AND prac.inactive = 0
+            GROUP BY prac.id
+        )
+        SELECT
+            rx.date,
+            o.practice_code,
+            o.pcn_code,
+            o.icb_code,
+            o.region_code,
+            CASE 
+                WHEN o.practice_code IS NOT NULL THEN 'practice'
+                WHEN o.pcn_code      IS NOT NULL THEN 'pcn'
+                WHEN o.icb_code      IS NOT NULL THEN 'icb'
+                WHEN o.region_code   IS NOT NULL THEN 'region'
+            END AS org_type,
+            SUM(rx.{value_col})                AS numerator,
+            SUM(d.{denom_col}) / 1000.0        AS denominator,
+            numerator / NULLIF(denominator, 0) AS rate
+        FROM {table_name} AS rx
+        JOIN orgs AS o ON rx.practice_code = o.practice_code
+        JOIN {denom_table} AS d
+            ON rx.practice_code = d.practice_code
+            AND rx.date = d.date
+        GROUP BY GROUPING SETS (
+            (rx.date, o.practice_code),
+            (rx.date, o.pcn_code),
+            (rx.date, o.icb_code),
+            (rx.date, o.region_code)
+        )
+    """)
+
+
+def load_deciles(rates_df):
+    return (
+        rates_df
+        .groupby(["date", "org_type"])["rate"]
+        .quantile([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.25, 0.75])
+        .unstack()
+        .reset_index()
+        .rename(columns={
+            0.1:  "d1",
+            0.2:  "d2",
+            0.3:  "d3",
+            0.4:  "d4",
+            0.5:  "d5",
+            0.6:  "d6",
+            0.7:  "d7",
+            0.8:  "d8",
+            0.9:  "d9",
+            1.0:  "d10",
+            0.25: "q25",
+            0.75: "q75",
+        })
+    )
+
+
+def filter_rates(rates_df, level, selected_practice_codes, practice_df):
+    if level == "national":
+        return None  # or an empty df — nothing to overlay
+
+    level_col = {
+        "practice": "practice_code",
+        "pcn":      "pcn_code",
+        "icb":      "icb_code",
+        "region":   "region_code",
+    }[level]
+
+    selected_orgs = (
+        practice_df[practice_df["practice_code"].isin(selected_practice_codes)]
+        [level_col]
+        .dropna()
+        .unique()
+        .tolist()
+    )
+
+    return rates_df[
+        (rates_df["org_type"] == level) &
+        (rates_df[level_col].isin(selected_orgs))
+    ]
+
+
+
+
+
+
+
+
+
+
 
 def gbp(x, dp=0):
     """Format a value as GBP."""

@@ -72,6 +72,9 @@ def create_materialised_view(name, app_file, tool_name, max_age_hours=168, force
     sql = (materialised_views_dir / f"{name}.sql").read_text()
     full_name = f"{tool_name}_{name}"
 
+    data_dir = Path(app_file).parent / "data" # allows csvs stored in `data` to be used
+    sql = sql.replace('{data_dir}', str(data_dir))
+
     with duckdb.connect() as connection:
         attach_prescribing_and_sqlite_dbs(connection)
         attach_materialised_views_db(connection, read_write=True)

@@ -152,7 +152,7 @@ with st.sidebar:
     st.info(f"**Prescribing data used for estimate:** {prescribing_date.strftime('%B %Y')}")
 
 # shows cascading organisation filter
-selected_practice_codes, _ = org_filter_sidebar()
+selected_practice_codes, _, _ = org_filter_sidebar()
 
 with st.sidebar:
 
