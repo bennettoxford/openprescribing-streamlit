@@ -112,17 +112,19 @@ aware_df = query(
 
 #st.dataframe(aware_df)
 
-chart = (
-    alt.Chart(aware_df)   
-    .mark_area()           
-    .encode(
-        x='date:T',          # x axis is date, :T means temporal (date/time) type
-        y=alt.Y('items:Q', stack=True),  # y axis is sum of items, :Q means quantitative (numeric) type
-        color='aware_2024:N' # one colour per aware category, :N means nominal (categorical) type
+with st.expander(
+    "Click here to see a stacked time series", icon=":material/quick_reference:"
+):
+    chart = (
+        alt.Chart(aware_df)   
+        .mark_area()           
+        .encode(
+            x='date:T',          # x axis is date, :T means temporal (date/time) type
+            y=alt.Y('items:Q', stack=True),  # y axis is sum of items, :Q means quantitative (numeric) type
+            color='aware_2024:N' # one colour per aware category, :N means nominal (categorical) type
+        )
     )
-)
-
-st.altair_chart(chart, use_container_width=True)
+    st.altair_chart(chart, use_container_width=True)
 
 aware_donut_df = query(
     f"""
@@ -210,9 +212,12 @@ def render_chart(data_df, details_df, value_col, category_col, chart_type="donut
         st.dataframe(details_df[details_df[category_col] == selected_category])
 
 
-st.radio("Chart type", ["donut", "bar"], horizontal=True, key="chart_type")
 
-render_chart(aware_donut_df, aware_donut_details_df, 'items', 'vtm_name', st.session_state.chart_type)
+with st.expander(
+    "Click here to see a breakdown", icon=":material/quick_reference:"
+):
+    st.radio("Chart type", ["donut", "bar"], horizontal=True, key="chart_type")
+    render_chart(aware_donut_df, aware_donut_details_df, 'items', 'vtm_name', st.session_state.chart_type)
 
 
 test_org_df = query(
