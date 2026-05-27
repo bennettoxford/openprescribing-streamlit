@@ -1,3 +1,7 @@
 - date: 2026-05-26
   change: Initial prototype deployed
   person: Richard Croker
+
+- date: 2026-05-27
+  change: Tidied code, added combine filter
+  person: Richard Croker

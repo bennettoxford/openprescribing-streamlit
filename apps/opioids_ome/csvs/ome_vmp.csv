@@ -1,0 +1,350 @@
+ingredient_id,ingredient,vmp_id,bnf_code,vmp,simplified_form_route,dose_form,unit_dose_form_size,unit_dose_form_units,ntr_strength,ntr_strength_unit,dtr_strength,dtr_strength_unit,strength_mg_per_ml,ntr_strength_mg,ome,extra_multiplier,weighting
+387560008,Alfentanil,35896711000001102,1501043A0AAADAD,Alfentanil 5mg/1ml solution for injection ampoules,injection,Discrete,1,ml,5,mg,1,ml,5,5,30,1,150
+387560008,Alfentanil,34682211000001109,1501043A0AAAHAH,Alfentanil 25mg/50ml solution for injection vials,injection,Discrete,50,ml,500,microgram,1,ml,0.5,0.5,30,1,15
+387560008,Alfentanil,35896411000001108,1501043A0AAABAB,Alfentanil 1mg/2ml solution for injection ampoules,injection,Discrete,2,ml,500,microgram,1,ml,0.5,0.5,30,1,15
+387560008,Alfentanil,35896611000001106,1501043A0AAACAC,Alfentanil 5mg/10ml solution for injection ampoules,injection,Discrete,10,ml,500,microgram,1,ml,0.5,0.5,30,1,15
+387560008,Alfentanil,35896511000001107,1501043A0AAAFAF,Alfentanil 500micrograms/1ml solution for injection ampoules,injection,Discrete,1,ml,500,microgram,1,ml,0.5,0.5,30,1,15
+387173000,Buprenorphine,35913611000001107,0407020B0AAAAAA,Buprenorphine 300micrograms/1ml solution for injection ampoules,injection,Discrete,1,ml,300,microgram,1,ml,0.3,0.3,100,1,30
+387173000,Buprenorphine,42009211000001102,0407020B0AAADAD,Buprenorphine 400microgram sublingual tablets sugar free,oromucosal,Discrete,1,tablet,400,microgram,,,,0.4,60,1,24
+387173000,Buprenorphine,42009011000001107,0407020B0AAABAB,Buprenorphine 200microgram sublingual tablets sugar free,oromucosal,Discrete,1,tablet,200,microgram,,,,0.2,60,1,12
+387173000,Buprenorphine,35913911000001101,0407020B0AAAGAG,Buprenorphine 70micrograms/hour transdermal patches,transdermal,Discrete,1,patch,70,microgram,1,hour,,0.07,100,96,672
+387173000,Buprenorphine,35913811000001106,0407020B0AAAFAF,Buprenorphine 52.5micrograms/hour transdermal patches,transdermal,Discrete,1,patch,52.5,microgram,1,hour,,0.0525,100,96,504
+387173000,Buprenorphine,4.27551E+16,0407020B0AAANAN,Buprenorphine 40micrograms/hour transdermal patches,transdermal,Discrete,1,patch,40,microgram,1,hour,,0.04,100,96,384
+387173000,Buprenorphine,35913711000001103,0407020B0AAAEAE,Buprenorphine 35micrograms/hour transdermal patches,transdermal,Discrete,1,patch,35,microgram,1,hour,,0.035,100,96,336
+387173000,Buprenorphine,9567311000001107,0407020B0AAAJAJ,Buprenorphine 20micrograms/hour transdermal patches,transdermal,Discrete,1,patch,20,microgram,1,hour,,0.02,100,168,336
+387173000,Buprenorphine,42755011000001101,0407020B0AAAMAM,Buprenorphine 30micrograms/hour transdermal patches,transdermal,Discrete,1,patch,30,microgram,1,hour,,0.03,100,96,288
+387173000,Buprenorphine,32038411000001102,0407020B0AAAKAK,Buprenorphine 15micrograms/hour transdermal patches,transdermal,Discrete,1,patch,15,microgram,1,hour,,0.015,100,168,252
+387173000,Buprenorphine,42754911000001101,0407020B0AAALAL,Buprenorphine 25micrograms/hour transdermal patches,transdermal,Discrete,1,patch,25,microgram,1,hour,,0.025,100,96,240
+387173000,Buprenorphine,9.56741E+15,0407020B0AAAIAI,Buprenorphine 10micrograms/hour transdermal patches,transdermal,Discrete,1,patch,10,microgram,1,hour,,0.01,100,168,168
+387173000,Buprenorphine,9567211000001104,0407020B0AAAHAH,Buprenorphine 5micrograms/hour transdermal patches,transdermal,Discrete,1,patch,5,microgram,1,hour,,0.005,100,168,84
+261000,Codeine phosphate,36090011000001104,0407020C0AAAAAA,Codeine 60mg/1ml solution for injection ampoules,injection,Discrete,1,ml,60,mg,1,ml,60,60,0.1,1,6
+261000,Codeine phosphate,12388811000001109,0407020C0AAAHAH,Codeine 30mg/1ml solution for injection ampoules,injection,Discrete,1,ml,30,mg,1,ml,30,30,0.1,1,3
+261000,Codeine phosphate,42010511000001109,0407020C0AAAFAF,Codeine 60mg tablets,oral,Discrete,1,tablet,60,mg,,,,60,0.1,1,6
+261000,Codeine phosphate,42009911000001106,0407010F0AAARAR,Co-codamol 60mg/1000mg effervescent powder sachets sugar free,oral,Discrete,1,sachet,60,mg,,,,60,0.1,1,6
+261000,Codeine phosphate,34625311000001101,0407010F0AAAYAY,Co-codamol 60mg/1000mg tablets,oral,Discrete,1,tablet,60,mg,,,,60,0.1,1,6
+261000,Codeine phosphate,42010411000001105,0407020C0AAAEAE,Codeine 30mg tablets,oral,Discrete,1,tablet,30,mg,,,,30,0.1,1,3
+261000,Codeine phosphate,42009811000001101,0407010F0AAAHAH,Co-codamol 30mg/500mg tablets,oral,Discrete,1,tablet,30,mg,,,,30,0.1,1,3
+261000,Codeine phosphate,4.20096E+16,0407010F0AAAQAQ,Co-codamol 30mg/500mg effervescent powder sachets sugar free,oral,Discrete,1,sachet,30,mg,,,,30,0.1,1,3
+261000,Codeine phosphate,42009711000001109,0407010F0AAAFAF,Co-codamol 30mg/500mg effervescent tablets,oral,Discrete,1,tablet,30,mg,,,,30,0.1,1,3
+261000,Codeine phosphate,42009511000001104,0407010F0AAADAD,Co-codamol 30mg/500mg capsules,oral,Discrete,1,capsule,30,mg,,,,30,0.1,1,3
+261000,Codeine phosphate,44159611000001106,0407010F0AABBBB,Co-codamol 30mg/500mg effervescent tablets sugar free,oral,Discrete,1,tablet,30,mg,,,,30,0.1,1,3
+261000,Codeine phosphate,36045211000001108,1001010J0AAARAR,Ibuprofen 300mg modified-release / Codeine 20mg tablets,oral,Discrete,1,tablet,20,mg,,,,20,0.1,1,2
+261000,Codeine phosphate,42010311000001103,0407020C0AAADAD,Codeine 15mg tablets,oral,Discrete,1,tablet,15,mg,,,,15,0.1,1,1.5
+261000,Codeine phosphate,3805611000001109,0407010F0AAAKAK,Co-codamol 15mg/500mg tablets,oral,Discrete,1,tablet,15,mg,,,,15,0.1,1,1.5
+261000,Codeine phosphate,19200211000001107,0407010F0AAAVAV,Co-codamol 15mg/500mg capsules,oral,Discrete,1,capsule,15,mg,,,,15,0.1,1,1.5
+261000,Codeine phosphate,19230711000001108,0407010F0AAAWAW,Co-codamol 15mg/500mg effervescent tablets sugar free,oral,Discrete,1,tablet,15,mg,,,,15,0.1,1,1.5
+261000,Codeine phosphate,42009411000001103,0407010F0AAAPAP,Co-codamol 12.8mg/500mg tablets,oral,Discrete,1,tablet,12.8,mg,,,,12.8,0.1,1,1.28
+261000,Codeine phosphate,42104611000001105,1001010J0AAAYAY,Ibuprofen 200mg / Codeine 12.8mg tablets,oral,Discrete,1,tablet,12.8,mg,,,,12.8,0.1,1,1.28
+261000,Codeine phosphate,18084511000001109,0407010X0BMADA0,Generic Solpadeine Max soluble tablets sugar free,oral,Discrete,1,tablet,12.8,mg,,,,12.8,0.1,1,1.28
+261000,Codeine phosphate,4777011000001101,0407010X0BKABA0,Generic Propain caplets,oral,Discrete,1,tablet,10,mg,,,,10,0.1,1,1
+261000,Codeine phosphate,42010211000001106,0407010F0AAAAAA,Co-codamol 8mg/500mg tablets,oral,Discrete,1,tablet,8,mg,,,,8,0.1,1,0.8
+261000,Codeine phosphate,42010011000001101,0407010F0AAABAB,Co-codamol 8mg/500mg capsules,oral,Discrete,1,capsule,8,mg,,,,8,0.1,1,0.8
+261000,Codeine phosphate,4.20101E+16,0407010F0AAACAC,Co-codamol 8mg/500mg effervescent tablets,oral,Discrete,1,tablet,8,mg,,,,8,0.1,1,0.8
+261000,Codeine phosphate,10075411000001104,0407010X0BMABA0,Generic Solpadeine Plus soluble tablets sugar free,oral,Discrete,1,tablet,8,mg,,,,8,0.1,1,0.8
+261000,Codeine phosphate,1.17621E+16,0407010M0AAAAAA,Co-codaprin 8mg/400mg tablets,oral,Discrete,1,tablet,8,mg,,,,8,0.1,1,0.8
+261000,Codeine phosphate,3546911000001102,0407041A0AAAGAG,Generic Migraleve Pink tablets,oral,Discrete,1,tablet,8,mg,,,,8,0.1,1,0.8
+261000,Codeine phosphate,38555211000001104,0407010F0AABABA,Co-codamol 8mg/500mg effervescent tablets sugar free,oral,Discrete,1,tablet,8,mg,,,,8,0.1,1,0.8
+261000,Codeine phosphate,38555311000001107,0407010X0AABNBN,Generic Codasolve 8mg/500mg/30mg effervescent tablets sugar free,oral,Discrete,1,tablet,8,mg,,,,8,0.1,1,0.8
+261000,Codeine phosphate,4009611000001106,0407010X0AAAYAY,Generic Ultramol Soluble tablets sugar free,oral,Discrete,1,tablet,8,mg,,,,8,0.1,1,0.8
+261000,Codeine phosphate,4934411000001109,0407010X0AAAJAJ,Generic Syndol Headache Relief tablets,oral,Discrete,1,tablet,8,mg,,,,8,0.1,1,0.8
+261000,Codeine phosphate,39695111000001108,0407010M0AAABAB,Co-codaprin 8mg/400mg dispersible tablets,oral,Discrete,1,tablet,8,mg,,,,8,0.1,1,0.8
+261000,Codeine phosphate,4956111000001107,0407010W0AAADAD,Aspirin 500mg / Codeine 8mg dispersible tablets sugar free,oral,Discrete,1,tablet,8,mg,,,,8,0.1,1,0.8
+261000,Codeine phosphate,3.80639E+16,0407010F0AAAZAZ,Co-codamol 30mg/500mg/5ml oral solution sugar free,oral,Discrete,5,ml,6,mg,1,ml,6,6,0.1,1,0.6
+261000,Codeine phosphate,3.65661E+16,0407020C0AAABAB,Codeine 25mg/5ml oral solution,oral,Discrete,5,ml,5,mg,1,ml,5,5,0.1,1,0.5
+261000,Codeine phosphate,4957811000001103,0309020X0AAAAAA,Terpin 32.5mg/5ml / Codeine 16mg/5ml linctus,oral,Discrete,5,ml,3.2,mg,1,ml,3.2,3.2,0.1,1,0.32
+261000,Codeine phosphate,3.88964E+16,0309010C0AAADAD,Codeine 15mg/5ml linctus sugar free,oral,Discrete,5,ml,3,mg,1,ml,3,3,0.1,1,0.3
+261000,Codeine phosphate,15065911000001106,0309010C0AAAAAA,Codeine 15mg/5ml linctus,oral,Discrete,5,ml,3,mg,1,ml,3,3,0.1,1,0.3
+261000,Codeine phosphate,4651111000001102,0309020U0AAAAAA,Generic Dimotane Co oral solution sugar free,oral,Discrete,5,ml,2,mg,1,ml,2,2,0.1,1,0.2
+261000,Codeine phosphate,8087411000001101,0407020C0AABABA,Codeine 6.75mg/5ml oral solution,oral,Discrete,5,ml,1.35,mg,1,ml,1.35,1.35,0.1,1,0.135
+261000,Codeine phosphate,9117311000001103,030902040BBACA0,Generic Benylin with Codeine oral solution,oral,Discrete,5,ml,1.14,mg,1,ml,1.14,1.14,0.1,1,0.114
+261000,Codeine phosphate,39707511000001103,0104020D0AAABAB,Kaolin light 1.5g/5ml / Codeine 5mg/5ml oral suspension sugar free,oral,Discrete,5,ml,1,mg,1,ml,1,1,0.1,1,0.1
+261000,Codeine phosphate,35370211000001104,0309010C0AAACAC,Codeine 3mg/5ml linctus paediatric,oral,Discrete,5,ml,600,microgram,1,ml,0.6,0.6,0.1,1,0.06
+261000,Codeine phosphate,3.33631E+15,0309010C0AAAEAE,Codeine 3mg/5ml linctus paediatric sugar free,oral,Discrete,5,ml,600,microgram,1,ml,0.6,0.6,0.1,1,0.06
+261000,Codeine phosphate,4660711000001101,0309020U0AAABAB,Generic Dimotane Co oral solution paediatric sugar free,oral,Discrete,5,ml,600,microgram,1,ml,0.6,0.6,0.1,1,0.06
+261000,Codeine phosphate,20454511000001107,0407020C0AAASAS,Codeine 30mg suppositories,rectal,Discrete,1,suppository,30,mg,,,,30,0.1,1,3
+261000,Codeine phosphate,20122011000001107,0407020C0AABBBB,Codeine 20mg suppositories,rectal,Discrete,1,suppository,20,mg,,,,20,0.1,1,2
+261000,Codeine phosphate,2.12902E+16,0407020C0AAAQAQ,Codeine 15mg suppositories,rectal,Discrete,1,suppository,15,mg,,,,15,0.1,1,1.5
+261000,Codeine phosphate,18519311000001102,0407020C0AAALAL,Codeine 10mg suppositories,rectal,Discrete,1,suppository,10,mg,,,,10,0.1,1,1
+261000,Codeine phosphate,21148311000001103,0407020C0AAAMAM,Codeine 6mg suppositories,rectal,Discrete,1,suppository,6,mg,,,,6,0.1,1,0.6
+261000,Codeine phosphate,21148211000001106,0407020C0AAAKAK,Codeine 5mg suppositories,rectal,Discrete,1,suppository,5,mg,,,,5,0.1,1,0.5
+261000,Codeine phosphate,2.11481E+16,0407020C0AABCBC,Codeine 1mg suppositories,rectal,Discrete,1,suppository,1,mg,,,,1,0.1,1,0.1
+387561007,Dextromoramide,42010911000001102,0407020D0AAAEAE,Dextromoramide 10mg tablets,oral,Discrete,1,tablet,10,mg,,,,10,2,1,20
+387561007,Dextromoramide,42011011000001105,0407020D0AAADAD,Dextromoramide 5mg tablets,oral,Discrete,1,tablet,5,mg,,,,5,2,1,10
+387042001,Dextropropoxyphene,42011111000001106,0407020E0AAAAAA,Dextropropoxyphene 60mg capsules,oral,Discrete,1,capsule,60,mg,,,,60,0.1,1,6
+396019002,Diamorphine hydrochloride,12291911000001104,0407020K0AAEVEV,Diamorphine 120mg impregnated cigarettes,inhalation,Discrete,1,cigarette,120,mg,,,,120,1,1,120
+396019002,Diamorphine hydrochloride,12291811000001109,0407020K0AABCBC,Diamorphine 100mg impregnated cigarettes,inhalation,Discrete,1,cigarette,100,mg,,,,100,1,1,100
+396019002,Diamorphine hydrochloride,12292511000001103,0407020K0AACGCG,Diamorphine 60mg impregnated cigarettes,inhalation,Discrete,1,cigarette,60,mg,,,,60,1,1,60
+396019002,Diamorphine hydrochloride,12292311000001109,0407020K0AADLDL,Diamorphine 50mg impregnated cigarettes,inhalation,Discrete,1,cigarette,50,mg,,,,50,1,1,50
+396019002,Diamorphine hydrochloride,12292211000001101,0407020K0AADCDC,Diamorphine 40mg impregnated cigarettes,inhalation,Discrete,1,cigarette,40,mg,,,,40,1,1,40
+396019002,Diamorphine hydrochloride,12292111000001107,0407020K0AABFBF,Diamorphine 30mg impregnated cigarettes,inhalation,Discrete,1,cigarette,30,mg,,,,30,1,1,30
+396019002,Diamorphine hydrochloride,12292011000001106,0407020K0AAEUEU,Diamorphine 20mg impregnated cigarettes,inhalation,Discrete,1,cigarette,20,mg,,,,20,1,1,20
+396019002,Diamorphine hydrochloride,16073711000001103,0407020K0AAEIEI,Diamorphine 500mg powder for solution for injection vials,injection,Discrete,1,vial,500,mg,,,,500,3.3,1,1650
+396019002,Diamorphine hydrochloride,42011611000001103,0407020K0AAAGAG,Diamorphine 500mg powder for solution for injection ampoules,injection,Discrete,1,ampoule,500,mg,,,,500,3.3,1,1650
+396019002,Diamorphine hydrochloride,16073411000001109,0407020K0AAEHEH,Diamorphine 100mg powder for solution for injection vials,injection,Discrete,1,vial,100,mg,,,,100,3.3,1,330
+396019002,Diamorphine hydrochloride,4.20112E+16,0407020K0AAAFAF,Diamorphine 100mg powder for solution for injection ampoules,injection,Discrete,1,ampoule,100,mg,,,,100,3.3,1,330
+396019002,Diamorphine hydrochloride,16073611000001107,0407020K0AAEMEM,Diamorphine 30mg powder for solution for injection vials,injection,Discrete,1,vial,30,mg,,,,30,3.3,1,99
+396019002,Diamorphine hydrochloride,42011511000001102,0407020K0AAAEAE,Diamorphine 30mg powder for solution for injection ampoules,injection,Discrete,1,ampoule,30,mg,,,,30,3.3,1,99
+396019002,Diamorphine hydrochloride,12389011000001108,0407020K0AAACAC,Diamorphine 15mg powder for solution for injection ampoules,injection,Discrete,1,ampoule,15,mg,,,,15,3.3,1,49.5
+396019002,Diamorphine hydrochloride,16073511000001108,0407020K0AAEGEG,Diamorphine 10mg powder for solution for injection vials,injection,Discrete,1,vial,10,mg,,,,10,3.3,1,33
+396019002,Diamorphine hydrochloride,42011311000001108,0407020K0AAABAB,Diamorphine 10mg powder for solution for injection ampoules,injection,Discrete,1,ampoule,10,mg,,,,10,3.3,1,33
+396019002,Diamorphine hydrochloride,16073811000001106,0407020K0AAEFEF,Diamorphine 5mg powder for solution for injection vials,injection,Discrete,1,vial,5,mg,,,,5,3.3,1,16.5
+396019002,Diamorphine hydrochloride,34819611000001105,0407020K0AAAAAA,Diamorphine 5mg powder for solution for injection ampoules,injection,Discrete,1,ampoule,5,mg,,,,5,3.3,1,16.5
+396019002,Diamorphine hydrochloride,42477011000001103,0407020K0AAFQFQ,Diamorphine 500mg oral powder sachets,oral,Discrete,1,sachet,500,mg,,,,500,1,1,500
+396019002,Diamorphine hydrochloride,12388911000001104,0407020K0AACZCZ,Diamorphine 100mg capsules,oral,Discrete,1,capsule,100,mg,,,,100,1,1,100
+396019002,Diamorphine hydrochloride,42011411000001101,0407020K0AACBCB,Diamorphine 10mg tablets,oral,Discrete,1,tablet,10,mg,,,,10,1,1,10
+396019002,Diamorphine hydrochloride,12389111000001109,0407020K0AACUCU,Diamorphine 5mg suppositories,rectal,Discrete,1,suppository,5,mg,,,,5,1,1,5
+322538006,Dihydrocodeine tartrate,36069111000001106,0407020G0AAABAB,Dihydrocodeine 50mg/1ml solution for injection ampoules,injection,Discrete,1,ml,50,mg,1,ml,50,50,0.1,1,5
+322538006,Dihydrocodeine tartrate,39112611000001107,0407020G0AAAFAF,Dihydrocodeine 120mg modified-release tablets,oral,Discrete,1,tablet,120,mg,,,,120,0.1,1,12
+322538006,Dihydrocodeine tartrate,39112511000001108,0407020G0AAAEAE,Dihydrocodeine 90mg modified-release tablets,oral,Discrete,1,tablet,90,mg,,,,90,0.1,1,9
+322538006,Dihydrocodeine tartrate,39112411000001109,0407020G0AAADAD,Dihydrocodeine 60mg modified-release tablets,oral,Discrete,1,tablet,60,mg,,,,60,0.1,1,6
+322538006,Dihydrocodeine tartrate,39708711000001109,0407020G0AAAIAI,Dihydrocodeine 40mg tablets,oral,Discrete,1,tablet,40,mg,,,,40,0.1,1,4
+322538006,Dihydrocodeine tartrate,39708511000001104,0407020G0AAACAC,Dihydrocodeine 30mg tablets,oral,Discrete,1,tablet,30,mg,,,,30,0.1,1,3
+322538006,Dihydrocodeine tartrate,42010811000001107,0407010N0AAAIAI,Co-dydramol 30mg/500mg tablets,oral,Discrete,1,tablet,30,mg,,,,30,0.1,1,3
+322538006,Dihydrocodeine tartrate,42010711000001104,0407010N0AAAHAH,Co-dydramol 20mg/500mg tablets,oral,Discrete,1,tablet,20,mg,,,,20,0.1,1,2
+322538006,Dihydrocodeine tartrate,42010611000001108,0407010N0AAAAAA,Co-dydramol 10mg/500mg tablets,oral,Discrete,1,tablet,10,mg,,,,10,0.1,1,1
+322538006,Dihydrocodeine tartrate,9553311000001107,0407010N0AAAKAK,Co-dydramol 7.46mg/500mg effervescent tablets sugar free,oral,Discrete,1,tablet,7.46,mg,,,,7.46,0.1,1,0.746
+322538006,Dihydrocodeine tartrate,4660511000001106,0407010N0AAAJAJ,Co-dydramol 7.46mg/500mg tablets,oral,Discrete,1,tablet,7.46,mg,,,,7.46,0.1,1,0.746
+322538006,Dihydrocodeine tartrate,36098611000001109,0407020G0AAAAAA,Dihydrocodeine 10mg/5ml oral solution,oral,Discrete,5,ml,2,mg,1,ml,2,2,0.1,1,0.2
+322554009,Dipipanone hydrochloride,39689711000001107,0407020H0AAABAB,Dipipanone 10mg / Cyclizine 30mg tablets,oral,Discrete,1,tablet,10,mg,,,,10,0.5,1,5
+373492002,Fentanyl,14973711000001102,0407020A0AABGBG,Fentanyl 800microgram buccal tablets sugar free,buccal,Discrete,1,tablet,800,microgram,,,,0.8,130,1,104
+373492002,Fentanyl,14973611000001106,0407020A0AABFBF,Fentanyl 600microgram buccal tablets sugar free,buccal,Discrete,1,tablet,600,microgram,,,,0.6,130,1,78
+373492002,Fentanyl,14973511000001107,0407020A0AABEBE,Fentanyl 400microgram buccal tablets sugar free,buccal,Discrete,1,tablet,400,microgram,,,,0.4,130,1,52
+373492002,Fentanyl,14973411000001108,0407020A0AABDBD,Fentanyl 200microgram buccal tablets sugar free,buccal,Discrete,1,tablet,200,microgram,,,,0.2,130,1,26
+373492002,Fentanyl,14973311000001101,0407020A0AABCBC,Fentanyl 100microgram buccal tablets sugar free,buccal,Discrete,1,tablet,100,microgram,,,,0.1,130,1,13
+373492002,Fentanyl,36119811000001108,1501043F0AAAAAA,Fentanyl 100micrograms/2ml solution for injection ampoules,injection,Discrete,2,ml,50,microgram,1,ml,0.05,0.05,150,1,7.5
+373492002,Fentanyl,3.61201E+16,1501043F0AAABAB,Fentanyl 500micrograms/10ml solution for injection ampoules,injection,Discrete,10,ml,50,microgram,1,ml,0.05,0.05,150,1,7.5
+373492002,Fentanyl,17071311000001104,1502010Z0AAACAC,Bupivacaine 500mg/500ml (0.1%) / Fentanyl 1mg/500ml infusion bags,injection,Discrete,500,ml,2,microgram,1,ml,0.002,0.002,150,1,0.3
+373492002,Fentanyl,17071211000001107,1502010Z0AAABAB,Bupivacaine 250mg/250ml (0.1%) / Fentanyl 500micrograms/250ml infusion bags,injection,Discrete,250,ml,2,microgram,1,ml,0.002,0.002,150,1,0.3
+373492002,Fentanyl,17071111000001101,1502010Z0AAAAAA,Bupivacaine 100mg/100ml (0.1%) / Fentanyl 200micrograms/100ml infusion bags,injection,Discrete,100,ml,2,microgram,1,ml,0.002,0.002,150,1,0.3
+373492002,Fentanyl,17674111000001105,0407020A0AABPBP,Fentanyl 400micrograms/dose nasal spray,nasal,Discrete,1,dose,400,microgram,1,dose,,0.4,160,1,64
+373492002,Fentanyl,16037711000001105,0407020A0AABLBL,Fentanyl 200micrograms/dose nasal spray,nasal,Discrete,1,dose,200,microgram,1,dose,,0.2,160,1,32
+373492002,Fentanyl,16037611000001101,0407020A0AABJBJ,Fentanyl 100micrograms/dose nasal spray,nasal,Discrete,1,dose,100,microgram,1,dose,,0.1,160,1,16
+373492002,Fentanyl,16037811000001102,0407020A0AABHBH,Fentanyl 50micrograms/dose nasal spray,nasal,Discrete,1,dose,50,microgram,1,dose,,0.05,160,1,8
+373492002,Fentanyl,42011811000001104,0407020A0AAAPAP,Fentanyl 1.6mg lozenges,oromucosal,Discrete,1,lozenge,1.6,mg,,,,1.6,130,1,208
+373492002,Fentanyl,42011711000001107,0407020A0AAANAN,Fentanyl 1.2mg lozenges,oromucosal,Discrete,1,lozenge,1.2,mg,,,,1.2,130,1,156
+373492002,Fentanyl,14952411000001102,0407020A0AABBBB,Fentanyl 800microgram sublingual tablets sugar free,oromucosal,Discrete,1,tablet,800,microgram,,,,0.8,130,1,104
+373492002,Fentanyl,42012211000001107,0407020A0AAALAL,Fentanyl 800microgram lozenges,oromucosal,Discrete,1,lozenge,800,microgram,,,,0.8,130,1,104
+373492002,Fentanyl,14952311000001109,0407020A0AABABA,Fentanyl 600microgram sublingual tablets sugar free,oromucosal,Discrete,1,tablet,600,microgram,,,,0.6,130,1,78
+373492002,Fentanyl,42012111000001101,0407020A0AAAKAK,Fentanyl 600microgram lozenges,oromucosal,Discrete,1,lozenge,600,microgram,,,,0.6,130,1,78
+373492002,Fentanyl,24446811000001103,0407020A0AABYBY,Fentanyl 533microgram sublingual tablets sugar free,oromucosal,Discrete,1,tablet,533,microgram,,,,0.533,130,1,69.29
+373492002,Fentanyl,14952211000001101,0407020A0AAAZAZ,Fentanyl 400microgram sublingual tablets sugar free,oromucosal,Discrete,1,tablet,400,microgram,,,,0.4,130,1,52
+373492002,Fentanyl,42012011000001102,0407020A0AAAJAJ,Fentanyl 400microgram lozenges,oromucosal,Discrete,1,lozenge,400,microgram,,,,0.4,130,1,52
+373492002,Fentanyl,14952111000001107,0407020A0AAAYAY,Fentanyl 300microgram sublingual tablets sugar free,oromucosal,Discrete,1,tablet,300,microgram,,,,0.3,130,1,39
+373492002,Fentanyl,24446711000001106,0407020A0AABZBZ,Fentanyl 267microgram sublingual tablets sugar free,oromucosal,Discrete,1,tablet,267,microgram,,,,0.267,130,1,34.71
+373492002,Fentanyl,14952011000001106,0407020A0AAAXAX,Fentanyl 200microgram sublingual tablets sugar free,oromucosal,Discrete,1,tablet,200,microgram,,,,0.2,130,1,26
+373492002,Fentanyl,42011911000001109,0407020A0AAAIAI,Fentanyl 200microgram lozenges,oromucosal,Discrete,1,lozenge,200,microgram,,,,0.2,130,1,26
+373492002,Fentanyl,24446611000001102,0407020A0AABXBX,Fentanyl 133microgram sublingual tablets sugar free,oromucosal,Discrete,1,tablet,133,microgram,,,,0.133,130,1,17.29
+373492002,Fentanyl,14951911000001104,0407020A0AAAWAW,Fentanyl 100microgram sublingual tablets sugar free,oromucosal,Discrete,1,tablet,100,microgram,,,,0.1,130,1,13
+373492002,Fentanyl,42894311000001108,0407020A0AACHCH,Fentanyl 67microgram sublingual tablets sugar free,oromucosal,Discrete,1,tablet,67,microgram,,,,0.067,130,1,8.71
+373492002,Fentanyl,36119911000001103,0407020A0AAAHAH,Fentanyl 100micrograms/hour transdermal patches,transdermal,Discrete,1,patch,100,microgram,1,hour,,0.1,100,72,720
+373492002,Fentanyl,36120311000001103,0407020A0AAAGAG,Fentanyl 75micrograms/hour transdermal patches,transdermal,Discrete,1,patch,75,microgram,1,hour,,0.075,100,72,540
+373492002,Fentanyl,36120211000001106,0407020A0AAAFAF,Fentanyl 50micrograms/hour transdermal patches,transdermal,Discrete,1,patch,50,microgram,1,hour,,0.05,100,72,360
+373492002,Fentanyl,23707711000001107,0407020A0AABWBW,Fentanyl 37.5microgram/hour transdermal patches,transdermal,Discrete,1,patch,37.5,microgram,1,hour,,0.0375,100,72,270
+373492002,Fentanyl,36120011000001101,0407020A0AAAEAE,Fentanyl 25micrograms/hour transdermal patches,transdermal,Discrete,1,patch,25,microgram,1,hour,,0.025,100,72,180
+373492002,Fentanyl,9752311000001101,0407020A0AAAUAU,Fentanyl 12micrograms/hour transdermal patches,transdermal,Discrete,1,patch,12,microgram,1,hour,,0.012,100,72,86.4
+387485001,Hydromorphone hydrochloride,15774711000001101,040702050AAAPAP,Hydromorphone 50mg/1ml solution for injection ampoules,injection,Discrete,1,ml,50,mg,1,ml,50,50,12.5,1,625
+387485001,Hydromorphone hydrochloride,19822311000001101,040702050AAAMAM,Hydromorphone 20mg/1ml solution for injection ampoules,injection,Discrete,1,ml,20,mg,1,ml,20,20,12.5,1,250
+387485001,Hydromorphone hydrochloride,36057111000001108,040702050AAANAN,Hydromorphone 10mg/1ml solution for injection ampoules,injection,Discrete,1,ml,10,mg,1,ml,10,10,12.5,1,125
+387485001,Hydromorphone hydrochloride,36057511000001104,040702050AAALAL,Hydromorphone 2mg/1ml solution for injection ampoules,injection,Discrete,1,ml,2,mg,1,ml,2,2,12.5,1,25
+387485001,Hydromorphone hydrochloride,36057311000001105,040702050AAABAB,Hydromorphone 24mg modified-release capsules,oral,Discrete,1,capsule,24,mg,,,,24,5,1,120
+387485001,Hydromorphone hydrochloride,36057211000001102,040702050AAAAAA,Hydromorphone 16mg modified-release capsules,oral,Discrete,1,capsule,16,mg,,,,16,5,1,80
+387485001,Hydromorphone hydrochloride,36057711000001109,040702050AAACAC,Hydromorphone 8mg modified-release capsules,oral,Discrete,1,capsule,8,mg,,,,8,5,1,40
+387485001,Hydromorphone hydrochloride,3.60576E+16,040702050AAAGAG,Hydromorphone 4mg modified-release capsules,oral,Discrete,1,capsule,4,mg,,,,4,5,1,20
+387485001,Hydromorphone hydrochloride,42012911000001103,040702050AAADAD,Hydromorphone 2.6mg capsules,oral,Discrete,1,capsule,2.6,mg,,,,2.6,5,1,13
+387485001,Hydromorphone hydrochloride,36057411000001103,040702050AAAFAF,Hydromorphone 2mg modified-release capsules,oral,Discrete,1,capsule,2,mg,,,,2,5,1,10
+387485001,Hydromorphone hydrochloride,42012811000001108,040702050AAAEAE,Hydromorphone 1.3mg capsules,oral,Discrete,1,capsule,1.3,mg,,,,1.3,5,1,6.5
+395783008,Meptazinol,39718711000001107,0407020L0AAAAAA,Meptazinol 100mg/1ml solution for injection ampoules,injection,Discrete,1,ml,100,mg,1,ml,100,100,0.03,1,3
+395783008,Meptazinol,39700411000001101,0407020L0AAABAB,Meptazinol 200mg tablets,oral,Discrete,1,tablet,200,mg,,,,200,0.03,1,6
+23883005,Methadone hydrochloride,12299211000001109,0407020M0AAA2A2,Methadone 100mg impregnated cigarettes,inhalation,Discrete,1,cigarette,100,mg,,,,100,3,1,300
+23883005,Methadone hydrochloride,12300311000001103,0407020M0AAAXAX,Methadone 60mg impregnated cigarettes,inhalation,Discrete,1,cigarette,60,mg,,,,60,3,1,180
+23883005,Methadone hydrochloride,12390011000001104,0407020M0AAAGAG,Methadone 40mg impregnated cigarettes,inhalation,Discrete,1,cigarette,40,mg,,,,40,3,1,120
+23883005,Methadone hydrochloride,1.22999E+16,0407020M0AAAJAJ,Methadone 30mg impregnated cigarettes,inhalation,Discrete,1,cigarette,30,mg,,,,30,3,1,90
+23883005,Methadone hydrochloride,5709211000001102,0407020M0AAACAC,Methadone 50mg/1ml solution for injection ampoules,injection,Discrete,1,ml,50,mg,1,ml,50,50,3,1,150
+23883005,Methadone hydrochloride,12390111000001103,0407020M0AABKBK,Methadone 40mg/1ml solution for injection ampoules,injection,Discrete,1,ml,40,mg,1,ml,40,40,3,1,120
+23883005,Methadone hydrochloride,12300011000001101,0407020M0AAAWAW,Methadone 35mg/1ml solution for injection ampoules,injection,Discrete,1,ml,35,mg,1,ml,35,35,3,1,105
+23883005,Methadone hydrochloride,5709011000001107,0407020M0AAA6A6,Methadone 50mg/2ml solution for injection ampoules,injection,Discrete,2,ml,25,mg,1,ml,25,25,3,1,75
+23883005,Methadone hydrochloride,12389611000001101,0407020M0AAA8A8,Methadone 20mg/1ml solution for injection ampoules,injection,Discrete,1,ml,20,mg,1,ml,20,20,3,1,60
+23883005,Methadone hydrochloride,1.23001E+16,0407020M0AABHBH,Methadone 35mg/2ml solution for injection ampoules,injection,Discrete,2,ml,17.5,mg,1,ml,17.5,17.5,3,1,52.5
+23883005,Methadone hydrochloride,36120511000001109,0407020M0AAAVAV,Methadone 10mg/1ml solution for injection ampoules,injection,Discrete,1,ml,10,mg,1,ml,10,10,3,1,30
+23883005,Methadone hydrochloride,36121011000001105,0407020M0AAA3A3,Methadone 20mg/2ml solution for injection ampoules,injection,Discrete,2,ml,10,mg,1,ml,10,10,3,1,30
+23883005,Methadone hydrochloride,36123211000001101,0407020M0AAATAT,Methadone 35mg/3.5ml solution for injection ampoules,injection,Discrete,3.5,ml,10,mg,1,ml,10,10,3,1,30
+23883005,Methadone hydrochloride,36032811000001103,0407020M0AAANAN,Methadone 50mg/5ml solution for injection ampoules,injection,Discrete,5,ml,10,mg,1,ml,10,10,3,1,30
+23883005,Methadone hydrochloride,12299111000001103,0407020M0AABMBM,Methadone 100mg capsules,oral,Discrete,1,capsule,100,mg,,,,100,3,1,300
+23883005,Methadone hydrochloride,12300211000001106,0407020M0AABLBL,Methadone 50mg capsules,oral,Discrete,1,capsule,50,mg,,,,50,3,1,150
+23883005,Methadone hydrochloride,29732211000001108,0407020M0AABVBV,Methadone 50mg tablets,oral,Discrete,1,tablet,50,mg,,,,50,3,1,150
+23883005,Methadone hydrochloride,12389911000001107,0407020M0AABTBT,Methadone 40mg capsules,oral,Discrete,1,capsule,40,mg,,,,40,3,1,120
+23883005,Methadone hydrochloride,12389811000001102,0407020M0AABJBJ,Methadone 30mg tablets,oral,Discrete,1,tablet,30,mg,,,,30,3,1,90
+23883005,Methadone hydrochloride,12299811000001105,0407020M0AABIBI,Methadone 30mg capsules,oral,Discrete,1,capsule,30,mg,,,,30,3,1,90
+23883005,Methadone hydrochloride,12389411000001104,0407020M0AAAKAK,Methadone 10mg capsules,oral,Discrete,1,capsule,10,mg,,,,10,3,1,30
+23883005,Methadone hydrochloride,42385311000001106,0407020M0AAAEAE,Methadone 5mg tablets,oral,Discrete,1,tablet,5,mg,,,,5,3,1,15
+23883005,Methadone hydrochloride,1.97227E+16,0407020M0AABUBU,Methadone 5mg capsules,oral,Discrete,1,capsule,5,mg,,,,5,3,1,15
+23883005,Methadone hydrochloride,36123011000001106,0309010S0AAAAAA,Methadone 2mg/5ml linctus,oral,Discrete,5,ml,400,microgram,1,ml,0.4,0.4,3,1,1.2
+395804007,Morphine hydrochloride,21579211000001106,0407020P0AAAZAZ,Morphine hydrochloride 10mg/10ml solution for injection pre-filled syringes,injection,Discrete,10,ml,1,mg,1,ml,1,1,2,1,2
+395804007,Morphine hydrochloride,21579511000001109,0407020P0AABABA,Morphine hydrochloride 50mg/50ml solution for infusion pre-filled syringes,injection,Discrete,50,ml,1,mg,1,ml,1,1,2,1,2
+395804007,Morphine hydrochloride,21579411000001105,0407020P0AABBBB,Morphine hydrochloride 1mg/1ml solution for injection ampoules,injection,Discrete,1,ml,1,mg,1,ml,1,1,2,1,2
+395804007,Morphine hydrochloride,21579711000001104,0407020P0AABCBC,Morphine hydrochloride 5mg/5ml solution for injection ampoules,injection,Discrete,5,ml,1,mg,1,ml,1,1,2,1,2
+395804007,Morphine hydrochloride,4032811000001105,0104020N0AAACAC,Generic Diocalm Dual Action chewable tablets,oral,Discrete,1,tablet,395,microgram,,,,0.395,1,1,0.395
+395804007,Morphine hydrochloride,4367211000001103,0104020N0AAAFAF,Generic J Collis Browne's tablets,oral,Discrete,1,tablet,350,microgram,,,,0.35,1,1,0.35
+395804007,Morphine hydrochloride,4999811000001103,0104020N0AAAGAG,Generic Opazimes chewable tablets,oral,Discrete,1,tablet,250,microgram,,,,0.25,1,1,0.25
+395804007,Morphine hydrochloride,42015211000001102,0407020P0AAACAC,Morphine hydrochloride 30mg suppositories,rectal,Discrete,1,suppository,30,mg,,,,30,1,1,30
+395804007,Morphine hydrochloride,42015111000001108,0407020P0AAABAB,Morphine hydrochloride 15mg suppositories,rectal,Discrete,1,suppository,15,mg,,,,15,1,1,15
+395804007,Morphine hydrochloride,12390511000001107,0407020P0AAAQAQ,Morphine hydrochloride 10mg suppositories,rectal,Discrete,1,suppository,10,mg,,,,10,1,1,10
+60886004,Morphine sulfate,36128711000001102,0407020Q0AAADAD,Morphine sulfate 30mg/1ml solution for injection ampoules,injection,Discrete,1,ml,30,mg,1,ml,30,30,2,1,60
+60886004,Morphine sulfate,3.61289E+16,0407020Q0AAAMAM,Morphine sulfate 60mg/2ml solution for injection ampoules,injection,Discrete,2,ml,30,mg,1,ml,30,30,2,1,60
+60886004,Morphine sulfate,19723011000001106,0407020Q0AAFKFK,Morphine sulfate 300mg/10ml solution for injection ampoules,injection,Discrete,10,ml,30,mg,1,ml,30,30,2,1,60
+60886004,Morphine sulfate,36128511000001107,0407020Q0AAAFAF,Morphine sulfate 20mg/1ml solution for injection ampoules,injection,Discrete,1,ml,20,mg,1,ml,20,20,2,1,40
+60886004,Morphine sulfate,38895511000001108,0407020Q0AAACAC,Morphine sulfate 15mg/1ml solution for injection ampoules,injection,Discrete,1,ml,15,mg,1,ml,15,15,2,1,30
+60886004,Morphine sulfate,1.00755E+16,0407020Q0AAFCFC,Morphine sulfate 10mg/1ml solution for injection pre-filled syringes,injection,Discrete,1,pre-filled disposable injection,10,mg,1,ml,10,10,2,1,20
+60886004,Morphine sulfate,12391111000001109,0407020Q0AADIDI,Morphine sulfate 20mg/2ml solution for injection ampoules,injection,Discrete,2,ml,10,mg,1,ml,10,10,2,1,20
+60886004,Morphine sulfate,36128211000001109,0407020Q0AAABAB,Morphine sulfate 10mg/1ml solution for injection ampoules,injection,Discrete,1,ml,10,mg,1,ml,10,10,2,1,20
+60886004,Morphine sulfate,21579811000001107,0407020Q0AAFVFV,Morphine sulfate 100mg/10ml solution for injection ampoules,injection,Discrete,10,ml,10,mg,1,ml,10,10,2,1,20
+60886004,Morphine sulfate,21636011000001103,0407020Q0AAFWFW,Morphine sulfate 50mg/5ml solution for injection ampoules,injection,Discrete,5,ml,10,mg,1,ml,10,10,2,1,20
+60886004,Morphine sulfate,12390811000001105,0407020Q0AABCBC,Morphine sulfate 10mg/2ml solution for injection ampoules,injection,Discrete,2,ml,5,mg,1,ml,5,5,2,1,10
+60886004,Morphine sulfate,12391711000001105,0407020Q0AAA2A2,Morphine sulfate 5mg/1ml solution for injection ampoules,injection,Discrete,1,ml,5,mg,1,ml,5,5,2,1,10
+60886004,Morphine sulfate,10189611000001103,0407020Q0AAELEL,Morphine sulfate 100mg/50ml solution for infusion vials,injection,Discrete,50,ml,2,mg,1,ml,2,2,2,1,4
+60886004,Morphine sulfate,20419411000001102,0407020Q0AAFTFT,Morphine sulfate 100mg/50ml solution for infusion pre-filled syringes,injection,Discrete,50,ml,2,mg,1,ml,2,2,2,1,4
+60886004,Morphine sulfate,10189711000001107,0407020Q0AAENEN,Morphine sulfate 50mg/50ml solution for infusion vials,injection,Discrete,50,ml,1,mg,1,ml,1,1,2,1,2
+60886004,Morphine sulfate,12391811000001102,0407020Q0AAFZFZ,Morphine sulfate 5mg/5ml solution for injection ampoules,injection,Discrete,5,ml,1,mg,1,ml,1,1,2,1,2
+60886004,Morphine sulfate,9750511000001106,0407020Q0AAFJFJ,Morphine sulfate 10mg/10ml solution for injection pre-filled syringes,injection,Discrete,10,ml,1,mg,1,ml,1,1,2,1,2
+60886004,Morphine sulfate,18153811000001107,0407020Q0AAFRFR,Morphine sulfate 100mg/100ml infusion bags,injection,Discrete,100,ml,1,mg,1,ml,1,1,2,1,2
+60886004,Morphine sulfate,17236211000001105,0407020Q0AAFPFP,Morphine sulfate 30mg/30ml solution for infusion vials,injection,Discrete,30,ml,1,mg,1,ml,1,1,2,1,2
+60886004,Morphine sulfate,21579911000001102,0407020Q0AAGAGA,Morphine sulfate 10mg/10ml solution for injection ampoules,injection,Discrete,10,ml,1,mg,1,ml,1,1,2,1,2
+60886004,Morphine sulfate,2.24019E+16,0407020Q0AAA4A4,Morphine sulfate 1mg/1ml solution for injection ampoules,injection,Discrete,1,ml,1,mg,1,ml,1,1,2,1,2
+60886004,Morphine sulfate,12391611000001101,0407020Q0AAA8A8,Morphine sulfate 5mg/10ml solution for injection ampoules,injection,Discrete,10,ml,500,microgram,1,ml,0.5,0.5,2,1,1
+60886004,Morphine sulfate,12391011000001108,0407020Q0AAAEAE,Morphine sulfate 2.5mg/5ml solution for injection ampoules,injection,Discrete,5,ml,500,microgram,1,ml,0.5,0.5,2,1,1
+60886004,Morphine sulfate,12391311000001106,0407020Q0AAA3A3,Morphine sulfate 2mg/5ml solution for injection ampoules,injection,Discrete,5,ml,400,microgram,1,ml,0.4,0.4,2,1,0.8
+60886004,Morphine sulfate,12391411000001104,0407020Q0AAA5A5,Morphine sulfate 4mg/10ml solution for injection ampoules,injection,Discrete,10,ml,400,microgram,1,ml,0.4,0.4,2,1,0.8
+60886004,Morphine sulfate,12391211000001103,0407020Q0AAAAAA,Morphine sulfate 2mg/10ml solution for injection ampoules,injection,Discrete,10,ml,200,microgram,1,ml,0.2,0.2,2,1,0.4
+60886004,Morphine sulfate,12390211000001109,0407020Q0AADXDX,Morphine 200mg capsules,oral,Discrete,1,capsule,200,mg,,,,200,1,1,200
+60886004,Morphine sulfate,3.6127E+16,0407020Q0AAAGAG,Morphine 200mg modified-release tablets,oral,Discrete,1,tablet,200,mg,,,,200,1,1,200
+60886004,Morphine sulfate,4110811000001109,0407020Q0AADEDE,Morphine 200mg modified-release granules sachets sugar free,oral,Discrete,1,sachet,200,mg,,,,200,1,1,200
+60886004,Morphine sulfate,36126911000001104,0407020Q0AAEIEI,Morphine 200mg modified-release capsules,oral,Discrete,1,capsule,200,mg,,,,200,1,1,200
+60886004,Morphine sulfate,36126711000001101,0407020Q0AADWDW,Morphine 150mg modified-release capsules,oral,Discrete,1,capsule,150,mg,,,,150,1,1,150
+60886004,Morphine sulfate,36126611000001105,0407020Q0AADVDV,Morphine 120mg modified-release capsules,oral,Discrete,1,capsule,120,mg,,,,120,1,1,120
+60886004,Morphine sulfate,36126211000001108,0407020Q0AAAHAH,Morphine 100mg modified-release tablets,oral,Discrete,1,tablet,100,mg,,,,100,1,1,100
+60886004,Morphine sulfate,36125811000001101,0407020Q0AAEBEB,Morphine 100mg modified-release capsules,oral,Discrete,1,capsule,100,mg,,,,100,1,1,100
+60886004,Morphine sulfate,4110711000001101,0407020Q0AADDDD,Morphine 100mg modified-release granules sachets sugar free,oral,Discrete,1,sachet,100,mg,,,,100,1,1,100
+60886004,Morphine sulfate,36127811000001106,0407020Q0AADUDU,Morphine 90mg modified-release capsules,oral,Discrete,1,capsule,90,mg,,,,90,1,1,90
+60886004,Morphine sulfate,12390411000001108,0407020Q0AADTDT,Morphine 60mg capsules,oral,Discrete,1,capsule,60,mg,,,,60,1,1,60
+60886004,Morphine sulfate,36127711000001103,0407020Q0AAAIAI,Morphine 60mg modified-release tablets,oral,Discrete,1,tablet,60,mg,,,,60,1,1,60
+60886004,Morphine sulfate,4110911000001104,0407020Q0AADCDC,Morphine 60mg modified-release granules sachets sugar free,oral,Discrete,1,sachet,60,mg,,,,60,1,1,60
+60886004,Morphine sulfate,36127611000001107,0407020Q0AAEHEH,Morphine 60mg modified-release capsules,oral,Discrete,1,capsule,60,mg,,,,60,1,1,60
+60886004,Morphine sulfate,42015011000001107,0407020Q0AADRDR,Morphine 50mg tablets,oral,Discrete,1,tablet,50,mg,,,,50,1,1,50
+60886004,Morphine sulfate,36127411000001109,0407020Q0AAEAEA,Morphine 50mg modified-release capsules,oral,Discrete,1,capsule,50,mg,,,,50,1,1,50
+60886004,Morphine sulfate,12390311000001101,0407020Q0AADSDS,Morphine 30mg capsules,oral,Discrete,1,capsule,30,mg,,,,30,1,1,30
+60886004,Morphine sulfate,36127311000001102,0407020Q0AAALAL,Morphine 30mg modified-release tablets,oral,Discrete,1,tablet,30,mg,,,,30,1,1,30
+60886004,Morphine sulfate,36127211000001105,0407020Q0AAEGEG,Morphine 30mg modified-release capsules,oral,Discrete,1,capsule,30,mg,,,,30,1,1,30
+60886004,Morphine sulfate,40492011000001103,0407020Q0AAGIGI,Morphine 30mg orodispersible tablets sugar free,oral,Discrete,1,tablet,30,mg,,,,30,1,1,30
+60886004,Morphine sulfate,4389511000001109,0407020Q0AACPCP,Morphine 30mg modified-release granules sachets sugar free,oral,Discrete,1,sachet,30,mg,,,,30,1,1,30
+60886004,Morphine sulfate,3631411000001108,0407020Q0AACUCU,Morphine sulfate 100mg/5ml oral solution unit dose vials sugar free,oral,Discrete,5,ml,20,mg,1,ml,20,20,1,1,20
+60886004,Morphine sulfate,42014911000001107,0407020Q0AACECE,Morphine 20mg tablets,oral,Discrete,1,tablet,20,mg,,,,20,1,1,20
+60886004,Morphine sulfate,40491911000001105,0407020Q0AAGHGH,Morphine 20mg orodispersible tablets sugar free,oral,Discrete,1,tablet,20,mg,,,,20,1,1,20
+60886004,Morphine sulfate,36127111000001104,0407020Q0AADZDZ,Morphine 20mg modified-release capsules,oral,Discrete,1,capsule,20,mg,,,,20,1,1,20
+60886004,Morphine sulfate,4389411000001105,0407020Q0AACVCV,Morphine 20mg modified-release granules sachets sugar free,oral,Discrete,1,sachet,20,mg,,,,20,1,1,20
+60886004,Morphine sulfate,36126811000001109,0407020Q0AACFCF,Morphine 15mg modified-release tablets,oral,Discrete,1,tablet,15,mg,,,,15,1,1,15
+60886004,Morphine sulfate,42014811000001102,0407020Q0AACDCD,Morphine 10mg tablets,oral,Discrete,1,tablet,10,mg,,,,10,1,1,10
+60886004,Morphine sulfate,36126411000001107,0407020Q0AAEFEF,Morphine 10mg modified-release capsules,oral,Discrete,1,capsule,10,mg,,,,10,1,1,10
+60886004,Morphine sulfate,36126511000001106,0407020Q0AAAKAK,Morphine 10mg modified-release tablets,oral,Discrete,1,tablet,10,mg,,,,10,1,1,10
+60886004,Morphine sulfate,40491611000001104,0407020Q0AAGFGF,Morphine 10mg orodispersible tablets sugar free,oral,Discrete,1,tablet,10,mg,,,,10,1,1,10
+60886004,Morphine sulfate,3631511000001107,0407020Q0AACTCT,Morphine sulfate 30mg/5ml oral solution unit dose vials sugar free,oral,Discrete,5,ml,6,mg,1,ml,6,6,1,1,6
+60886004,Morphine sulfate,36127511000001108,0407020Q0AACGCG,Morphine 5mg modified-release tablets,oral,Discrete,1,tablet,5,mg,,,,5,1,1,5
+60886004,Morphine sulfate,40492111000001102,0407020Q0AAGJGJ,Morphine 5mg orodispersible tablets sugar free,oral,Discrete,1,tablet,5,mg,,,,5,1,1,5
+60886004,Morphine sulfate,4.04918E+16,0407020Q0AAGEGE,Morphine 2.5mg orodispersible tablets sugar free,oral,Discrete,1,tablet,2.5,mg,,,,2.5,1,1,2.5
+60886004,Morphine sulfate,36128311000001101,0407020Q0AACNCN,Morphine sulfate 10mg/5ml oral solution,oral,Discrete,5,ml,2,mg,1,ml,2,2,1,1,2
+60886004,Morphine sulfate,3521311000001108,0407020Q0AAGBGB,Morphine sulfate 10mg/5ml oral solution unit dose vials sugar free,oral,Discrete,5,ml,2,mg,1,ml,2,2,1,1,2
+60886004,Morphine sulfate,40491711000001108,0407020Q0AAGGGG,Morphine 1mg orodispersible tablets sugar free,oral,Discrete,1,tablet,1,mg,,,,1,1,1,1
+60886004,Morphine sulfate,1.2392E+16,0407020Q0AAEPEP,Morphine sulfate 750mg suppositories,rectal,Discrete,1,suppository,750,mg,,,,750,1,1,750
+60886004,Morphine sulfate,12390611000001106,0407020Q0AABPBP,Morphine sulfate 100mg suppositories,rectal,Discrete,1,suppository,100,mg,,,,100,1,1,100
+60886004,Morphine sulfate,12391911000001107,0407020Q0AABNBN,Morphine sulfate 60mg suppositories,rectal,Discrete,1,suppository,60,mg,,,,60,1,1,60
+60886004,Morphine sulfate,1.23915E+16,0407020Q0AABVBV,Morphine sulfate 50mg suppositories,rectal,Discrete,1,suppository,50,mg,,,,50,1,1,50
+60886004,Morphine sulfate,4.20156E+16,0407020Q0AAGCGC,Morphine sulfate 30mg suppositories,rectal,Discrete,1,suppository,30,mg,,,,30,1,1,30
+60886004,Morphine sulfate,42015511000001104,0407020Q0AACRCR,Morphine sulfate 20mg suppositories,rectal,Discrete,1,suppository,20,mg,,,,20,1,1,20
+60886004,Morphine sulfate,42015411000001103,0407020Q0AAGDGD,Morphine sulfate 15mg suppositories,rectal,Discrete,1,suppository,15,mg,,,,15,1,1,15
+60886004,Morphine sulfate,42015311000001105,0407020Q0AACQCQ,Morphine sulfate 10mg suppositories,rectal,Discrete,1,suppository,10,mg,,,,10,1,1,10
+60886004,Morphine sulfate,42015711000001109,0407020Q0AABJBJ,Morphine sulfate 5mg suppositories,rectal,Discrete,1,suppository,5,mg,,,,5,1,1,5
+60886004,Morphine sulfate,1.23909E+16,0407020Q0AAEEEE,Morphine sulfate 2.5mg suppositories,rectal,Discrete,1,suppository,2.5,mg,,,,2.5,1,1,2.5
+442424007,Morphine tartrate,3897411000001102,040702020AAABAB,Morphine tartrate 15mg/1ml / Cyclizine tartrate 50mg/1ml solution for injection ampoules,injection,Discrete,1,ml,15,mg,1,ml,15,15,2,1,30
+442424007,Morphine tartrate,3897311000001109,040702020AAAAAA,Morphine tartrate 10mg/1ml / Cyclizine tartrate 50mg/1ml solution for injection ampoules,injection,Discrete,1,ml,10,mg,1,ml,10,10,2,1,20
+111123003,Nalbuphine hydrochloride,36028811000001103,0407020Y0AAADAD,Nalbuphine 20mg/2ml solution for injection ampoules,injection,Discrete,2,ml,10,mg,1,ml,10,10,1,1,10
+111123003,Nalbuphine hydrochloride,36028711000001106,0407020Y0AAAAAA,Nalbuphine 10mg/1ml solution for injection ampoules,injection,Discrete,1,ml,10,mg,1,ml,10,10,1,1,10
+387024006,Oxycodone hydrochloride,15613611000001105,0407020ADAAANAN,Oxycodone 50mg/1ml solution for injection ampoules,injection,Discrete,1,ml,50,mg,1,ml,50,50,3,1,150
+387024006,Oxycodone hydrochloride,36129811000001103,0407020ADAAALAL,Oxycodone 10mg/1ml solution for injection ampoules,injection,Discrete,1,ml,10,mg,1,ml,10,10,3,1,30
+387024006,Oxycodone hydrochloride,36130611000001105,0407020ADAAAMAM,Oxycodone 20mg/2ml solution for injection ampoules,injection,Discrete,2,ml,10,mg,1,ml,10,10,3,1,30
+387024006,Oxycodone hydrochloride,18645511000001107,0407020ADAAAPAP,Oxycodone 120mg modified-release tablets,oral,Discrete,1,tablet,120,mg,,,,120,1.5,1,180
+387024006,Oxycodone hydrochloride,36131511000001104,0407020ADAAAIAI,Oxycodone 80mg modified-release tablets,oral,Discrete,1,tablet,80,mg,,,,80,1.5,1,120
+387024006,Oxycodone hydrochloride,36131311000001105,0407020ADAAAQAQ,Oxycodone 60mg modified-release tablets,oral,Discrete,1,tablet,60,mg,,,,60,1.5,1,90
+387024006,Oxycodone hydrochloride,15852811000001104,0407020AFAAADAD,Oxycodone 40mg / Naloxone 20mg modified-release tablets,oral,Discrete,1,tablet,40,mg,,,,40,1.5,1,60
+387024006,Oxycodone hydrochloride,36130911000001104,0407020ADAAAHAH,Oxycodone 40mg modified-release tablets,oral,Discrete,1,tablet,40,mg,,,,40,1.5,1,60
+387024006,Oxycodone hydrochloride,36130711000001101,0407020ADAAARAR,Oxycodone 30mg modified-release tablets,oral,Discrete,1,tablet,30,mg,,,,30,1.5,1,45
+387024006,Oxycodone hydrochloride,14985911000001106,0407020AFAAABAB,Oxycodone 20mg / Naloxone 10mg modified-release tablets,oral,Discrete,1,tablet,20,mg,,,,20,1.5,1,30
+387024006,Oxycodone hydrochloride,42015911000001106,0407020ADAAAEAE,Oxycodone 20mg capsules,oral,Discrete,1,capsule,20,mg,,,,20,1.5,1,30
+387024006,Oxycodone hydrochloride,36130411000001107,0407020ADAAAGAG,Oxycodone 20mg modified-release tablets,oral,Discrete,1,tablet,20,mg,,,,20,1.5,1,30
+387024006,Oxycodone hydrochloride,3.87523E+16,0407020ADAAAVAV,Oxycodone 20mg tablets,oral,Discrete,1,tablet,20,mg,,,,20,1.5,1,30
+387024006,Oxycodone hydrochloride,36130211000001108,0407020ADAAASAS,Oxycodone 15mg modified-release tablets,oral,Discrete,1,tablet,15,mg,,,,15,1.5,1,22.5
+387024006,Oxycodone hydrochloride,14985811000001101,0407020AFAAAAAA,Oxycodone 10mg / Naloxone 5mg modified-release tablets,oral,Discrete,1,tablet,10,mg,,,,10,1.5,1,15
+387024006,Oxycodone hydrochloride,36129511000001101,0407020ADAAAFAF,Oxycodone 10mg modified-release tablets,oral,Discrete,1,tablet,10,mg,,,,10,1.5,1,15
+387024006,Oxycodone hydrochloride,42015811000001101,0407020ADAAADAD,Oxycodone 10mg capsules,oral,Discrete,1,capsule,10,mg,,,,10,1.5,1,15
+387024006,Oxycodone hydrochloride,38752211000001108,0407020ADAAAUAU,Oxycodone 10mg tablets,oral,Discrete,1,tablet,10,mg,,,,10,1.5,1,15
+387024006,Oxycodone hydrochloride,15852911000001109,0407020AFAAACAC,Oxycodone 5mg / Naloxone 2.5mg modified-release tablets,oral,Discrete,1,tablet,5,mg,,,,5,1.5,1,7.5
+387024006,Oxycodone hydrochloride,42016011000001103,0407020ADAAACAC,Oxycodone 5mg capsules,oral,Discrete,1,capsule,5,mg,,,,5,1.5,1,7.5
+387024006,Oxycodone hydrochloride,38752411000001107,0407020ADAAATAT,Oxycodone 5mg tablets,oral,Discrete,1,tablet,5,mg,,,,5,1.5,1,7.5
+387024006,Oxycodone hydrochloride,36131011000001107,0407020ADAAAKAK,Oxycodone 5mg modified-release tablets,oral,Discrete,1,tablet,5,mg,,,,5,1.5,1,7.5
+387024006,Oxycodone hydrochloride,36131211000001102,0407020ADAAAAAA,Oxycodone 5mg/5ml oral solution sugar free,oral,Discrete,5,ml,1,mg,1,ml,1,1,1.5,1,1.5
+387024006,Oxycodone hydrochloride,12424911000001109,0407020Z0AAABAB,Oxycodone hydrochloride 60mg suppositories,rectal,Discrete,1,suppository,60,mg,,,,60,1.5,1,90
+387024006,Oxycodone hydrochloride,12392111000001104,0407020Z0AAAAAA,Oxycodone hydrochloride 30mg suppositories,rectal,Discrete,1,suppository,30,mg,,,,30,1.5,1,45
+17632411000001105,Oxycodone pectinate,1.76321E+16,0407020Z0AAAAAA,Oxycodone pectinate 30mg suppositories,rectal,Discrete,1,suppository,30,mg,,,,30,1.5,1,45
+395822005,Papaveretum,12392211000001105,0407020ABAAAKAK,Papaveretum 40mg/1ml solution for injection ampoules,injection,Discrete,1,ml,40,mg,1,ml,40,40,0.67,1,26.8
+395822005,Papaveretum,16110411000001103,0407020ABAAAPAP,Papaveretum 30mg/1ml solution for injection ampoules,injection,Discrete,1,ml,30,mg,1,ml,30,30,0.67,1,20.1
+395822005,Papaveretum,36025411000001105,0407020ABAAAIAI,Papaveretum 15.4mg/1ml / Hyoscine hydrobromide 400micrograms/1ml solution for injection ampoules,injection,Discrete,1,ml,15.4,mg,1,ml,15.4,15.4,0.67,1,10.318
+395822005,Papaveretum,14612711000001102,0407020ABAAABAB,Papaveretum 15.4mg/1ml solution for injection ampoules,injection,Discrete,1,ml,15.4,mg,1,ml,15.4,15.4,0.67,1,10.318
+395822005,Papaveretum,14615911000001108,0407020ABAAAAAA,Papaveretum 7.7mg/1ml solution for injection ampoules,injection,Discrete,1,ml,7.7,mg,1,ml,7.7,7.7,0.67,1,5.159
+387213004,Pentazocine,36027711000001105,0407020U0AAACAC,Pentazocine 60mg/2ml solution for injection ampoules,injection,Discrete,2,ml,30,mg,1,ml,30,30,0.37,1,11.1
+387213004,Pentazocine,36027611000001101,0407020U0AAAAAA,Pentazocine 30mg/1ml solution for injection ampoules,injection,Discrete,1,ml,30,mg,1,ml,30,30,0.37,1,11.1
+387213004,Pentazocine,42016411000001107,0407020U0AAABAB,Pentazocine 50mg suppositories,rectal,Discrete,1,suppository,50,mg,,,,50,0.37,1,18.5
+91013003,Pentazocine hydrochloride,4.20163E+16,0407020T0AAAAAA,Pentazocine 50mg capsules,oral,Discrete,1,capsule,50,mg,,,,50,0.37,1,18.5
+91013003,Pentazocine hydrochloride,42016211000001108,0407020T0AAABAB,Pentazocine 25mg tablets,oral,Discrete,1,tablet,25,mg,,,,25,0.37,1,9.25
+2878005,Pethidine hydrochloride,12392411000001109,0407020V0AAAXAX,Pethidine 100mg/1ml solution for injection ampoules,injection,Discrete,1,ml,100,mg,1,ml,100,100,0.24,1,24
+2878005,Pethidine hydrochloride,36028211000001104,0407020V0AAAEAE,Pethidine 100mg/2ml solution for injection ampoules,injection,Discrete,2,ml,50,mg,1,ml,50,50,0.24,1,12
+2878005,Pethidine hydrochloride,36028311000001107,0407020V0AAAAAA,Pethidine 50mg/1ml solution for injection ampoules,injection,Discrete,1,ml,50,mg,1,ml,50,50,0.24,1,12
+2878005,Pethidine hydrochloride,4026811000001109,0407020V0AAAIAI,Pethidine 100mg/2ml / Promethazine 50mg/2ml solution for injection ampoules,injection,Discrete,2,ml,50,mg,1,ml,50,50,0.24,1,12
+2878005,Pethidine hydrochloride,12392511000001108,0407020V0AAAZAZ,Pethidine 10mg/1ml solution for injection ampoules,injection,Discrete,1,ml,10,mg,1,ml,10,10,0.24,1,2.4
+2878005,Pethidine hydrochloride,36028111000001105,0407020V0AAALAL,Pethidine 100mg/10ml solution for injection ampoules,injection,Discrete,10,ml,10,mg,1,ml,10,10,0.24,1,2.4
+2878005,Pethidine hydrochloride,3.60284E+16,0407020V0AAAPAP,Pethidine 50mg/5ml solution for injection ampoules,injection,Discrete,5,ml,10,mg,1,ml,10,10,0.24,1,2.4
+2878005,Pethidine hydrochloride,12303411000001102,0407020V0AABFBF,Pethidine 50mg capsules,oral,Discrete,1,capsule,50,mg,,,,50,0.1,1,5
+2878005,Pethidine hydrochloride,39702511000001101,0407020V0AAACAC,Pethidine 50mg tablets,oral,Discrete,1,tablet,50,mg,,,,50,0.1,1,5
+441757005,Tapentadol,40777411000001109,0407020AGAAANAN,Tapentadol 250mg modified-release capsules,oral,Discrete,1,capsule,250,mg,,,,250,0.4,1,100
+441757005,Tapentadol,18672111000001109,0407020AGAAAGAG,Tapentadol 250mg modified-release tablets,oral,Discrete,1,tablet,250,mg,,,,250,0.4,1,100
+441757005,Tapentadol,40777311000001102,0407020AGAAAMAM,Tapentadol 200mg modified-release capsules,oral,Discrete,1,capsule,200,mg,,,,200,0.4,1,80
+441757005,Tapentadol,18672011000001108,0407020AGAAAFAF,Tapentadol 200mg modified-release tablets,oral,Discrete,1,tablet,200,mg,,,,200,0.4,1,80
+441757005,Tapentadol,40777211000001105,0407020AGAAALAL,Tapentadol 150mg modified-release capsules,oral,Discrete,1,capsule,150,mg,,,,150,0.4,1,60
+441757005,Tapentadol,18671911000001101,0407020AGAAAEAE,Tapentadol 150mg modified-release tablets,oral,Discrete,1,tablet,150,mg,,,,150,0.4,1,60
+441757005,Tapentadol,40777111000001104,0407020AGAAAKAK,Tapentadol 100mg modified-release capsules,oral,Discrete,1,capsule,100,mg,,,,100,0.4,1,40
+441757005,Tapentadol,45406111000001108,0407020AGAAAPAP,Tapentadol 100mg tablets,oral,Discrete,1,tablet,100,mg,,,,100,0.4,1,40
+441757005,Tapentadol,18671811000001106,0407020AGAAADAD,Tapentadol 100mg modified-release tablets,oral,Discrete,1,tablet,100,mg,,,,100,0.4,1,40
+441757005,Tapentadol,42017611000001107,0407020AGAAABAB,Tapentadol 75mg tablets,oral,Discrete,1,tablet,75,mg,,,,75,0.4,1,30
+441757005,Tapentadol,40777511000001108,0407020AGAAAJAJ,Tapentadol 50mg modified-release capsules,oral,Discrete,1,capsule,50,mg,,,,50,0.4,1,20
+441757005,Tapentadol,18672211000001103,0407020AGAAACAC,Tapentadol 50mg modified-release tablets,oral,Discrete,1,tablet,50,mg,,,,50,0.4,1,20
+441757005,Tapentadol,42017511000001108,0407020AGAAAAAA,Tapentadol 50mg tablets,oral,Discrete,1,tablet,50,mg,,,,50,0.4,1,20
+441757005,Tapentadol,3.98197E+16,0407020AGAAAIAI,Tapentadol 25mg modified-release tablets,oral,Discrete,1,tablet,25,mg,,,,25,0.4,1,10
+108505002,Tramadol hydrochloride,35920411000001105,040702040AAABAB,Tramadol 100mg/2ml solution for injection ampoules,injection,Discrete,2,ml,50,mg,1,ml,50,50,0.2,1,10
+108505002,Tramadol hydrochloride,35921011000001105,040702040AAANAN,Tramadol 400mg modified-release tablets,oral,Discrete,1,tablet,400,mg,,,,400,0.1,1,40
+108505002,Tramadol hydrochloride,35920911000001102,040702040AAAMAM,Tramadol 300mg modified-release tablets,oral,Discrete,1,tablet,300,mg,,,,300,0.1,1,30
+108505002,Tramadol hydrochloride,35920711000001104,040702040AAAJAJ,Tramadol 200mg modified-release capsules,oral,Discrete,1,capsule,200,mg,,,,200,0.1,1,20
+108505002,Tramadol hydrochloride,35920811000001107,040702040AAAEAE,Tramadol 200mg modified-release tablets,oral,Discrete,1,tablet,200,mg,,,,200,0.1,1,20
+108505002,Tramadol hydrochloride,35920511000001109,040702040AAAIAI,Tramadol 150mg modified-release capsules,oral,Discrete,1,capsule,150,mg,,,,150,0.1,1,15
+108505002,Tramadol hydrochloride,35920611000001108,040702040AAADAD,Tramadol 150mg modified-release tablets,oral,Discrete,1,tablet,150,mg,,,,150,0.1,1,15
+108505002,Tramadol hydrochloride,42017711000001103,040702040AAALAL,Tramadol 100mg effervescent powder sachets sugar free,oral,Discrete,1,sachet,100,mg,,,,100,0.1,1,10
+108505002,Tramadol hydrochloride,35920211000001106,040702040AAAHAH,Tramadol 100mg modified-release capsules,oral,Discrete,1,capsule,100,mg,,,,100,0.1,1,10
+108505002,Tramadol hydrochloride,35920311000001103,040702040AAACAC,Tramadol 100mg modified-release tablets,oral,Discrete,1,tablet,100,mg,,,,100,0.1,1,10
+108505002,Tramadol hydrochloride,3.59212E+16,040702040AAAPAP,Tramadol 75mg modified-release tablets,oral,Discrete,1,tablet,75,mg,,,,75,0.1,1,7.5
+108505002,Tramadol hydrochloride,33523811000001102,040702040AABCBC,Tramadol 75mg / Paracetamol 650mg tablets,oral,Discrete,1,tablet,75,mg,,,,75,0.1,1,7.5
+108505002,Tramadol hydrochloride,35029711000001104,040702040AABDBD,Tramadol 75mg / Dexketoprofen 25mg tablets,oral,Discrete,1,tablet,75,mg,,,,75,0.1,1,7.5
+108505002,Tramadol hydrochloride,5.21281E+15,040702040AAATAT,Tramadol 50mg orodispersible tablets sugar free,oral,Discrete,1,tablet,50,mg,,,,50,0.1,1,5
+108505002,Tramadol hydrochloride,12037411000001103,040702040AAAYAY,Tramadol 50mg modified-release tablets,oral,Discrete,1,tablet,50,mg,,,,50,0.1,1,5
+108505002,Tramadol hydrochloride,39714911000001102,040702040AAAFAF,Tramadol 50mg soluble tablets sugar free,oral,Discrete,1,tablet,50,mg,,,,50,0.1,1,5
+108505002,Tramadol hydrochloride,42017911000001101,040702040AAAKAK,Tramadol 50mg effervescent powder sachets sugar free,oral,Discrete,1,sachet,50,mg,,,,50,0.1,1,5
+108505002,Tramadol hydrochloride,35940111000001103,040702040AAAGAG,Tramadol 50mg modified-release capsules,oral,Discrete,1,capsule,50,mg,,,,50,0.1,1,5
+108505002,Tramadol hydrochloride,42017811000001106,040702040AAAAAA,Tramadol 50mg capsules,oral,Discrete,1,capsule,50,mg,,,,50,0.1,1,5
+108505002,Tramadol hydrochloride,7386811000001106,040702040AAAUAU,Tramadol 37.5mg / Paracetamol 325mg tablets,oral,Discrete,1,tablet,37.5,mg,,,,37.5,0.1,1,3.75
+108505002,Tramadol hydrochloride,17430011000001102,040702040AABABA,Tramadol 37.5mg / Paracetamol 325mg effervescent tablets sugar free,oral,Discrete,1,tablet,37.5,mg,,,,37.5,0.1,1,3.75
+108505002,Tramadol hydrochloride,39848411000001106,040702040AABEBE,Tramadol 50mg/5ml oral solution sugar free,oral,Discrete,5,ml,10,mg,1,ml,10,10,0.1,1,1

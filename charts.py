@@ -4,7 +4,7 @@ import pandas as pd
 from utils import get_filter_label
 
 
-def plot_decile_chart(deciles_df, level, rates_df=None, measure_name=None):
+def plot_decile_chart(deciles_df, level, rates_df=None, measure_name=None, y_format="%"):
     OP_COLOURS = [
         "#e41a1c", "#ff7f00", "#4daf4a", "#984ea3", "#a65628",
         "#f781bf", "#999999", "#b15928", "#66c2a5", "#fc8d62",
@@ -20,8 +20,9 @@ def plot_decile_chart(deciles_df, level, rates_df=None, measure_name=None):
     y_axis = alt.Y(
         "rate:Q",
         title="Rate",
-        axis=alt.Axis(format="%"),
+        axis=alt.Axis(format=y_format),
         scale=alt.Scale(zero=False),
+       
     )
 
     chart_type = st.radio(

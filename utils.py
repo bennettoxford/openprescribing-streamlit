@@ -90,6 +90,7 @@ def sidebar_nav():
             st.page_link("apps/tariff_price_changes/tariff_price_changes.py", label="Tariff Price Changes")
             st.page_link("apps/prescribing_topx/prescribing_topx.py", label="Top x Prescribing")
             st.page_link("apps/measure_aware/measure_aware.py", label="aWaRe")
+            st.page_link("apps/opioids_ome/opioids_ome.py", label="Opioids OME")
         st.divider()
         with st.expander("Developer Tools", expanded=False, icon=":material/build:"):
             st.page_link("pages/db_schema.py", label="Database schema")
@@ -236,7 +237,9 @@ def load_proportion_rates(table_name, value_col, numerator_condition, denominato
 
 
 @st.cache_data
-def load_per1000_rates(table_name, value_col, denom_table, denom_col):
+def load_per1000_rates(table_name, value_col, denom_table, denom_col, numerator_condition=None):
+    numer = f"CASE WHEN {numerator_condition} THEN {value_col} ELSE 0 END" if numerator_condition else value_col
+
     return query(f"""
         WITH orgs AS (
             SELECT
@@ -263,7 +266,7 @@ def load_per1000_rates(table_name, value_col, denom_table, denom_col):
                 WHEN o.icb_code      IS NOT NULL THEN 'icb'
                 WHEN o.region_code   IS NOT NULL THEN 'region'
             END AS org_type,
-            SUM(rx.{value_col})                AS numerator,
+            SUM({numer})                       AS numerator,
             SUM(d.{denom_col}) / 1000.0        AS denominator,
             numerator / NULLIF(denominator, 0) AS rate
         FROM {table_name} AS rx
