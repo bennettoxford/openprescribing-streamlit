@@ -10,7 +10,7 @@ SELECT
 FROM prescribing AS rx
 INNER JOIN medications
     ON medications.id = rx.snomed_code
-INNER JOIN read_csv_auto('{data_dir}\ome_vmp.csv') AS ome
+INNER JOIN read_csv_auto('{data_dir}/ome_vmp.csv') AS ome
     ON ome.vmp_id = medications.vmp_id
 INNER JOIN vpi
     ON medications.vmp_id = vpi.vpid
