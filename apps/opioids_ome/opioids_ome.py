@@ -128,18 +128,15 @@ with st.expander(
 aware_details_df = query(
     f"""
     SELECT
-        vtm.nm AS vtm_name,
+        bs_name AS bs_name,
         SUM(total_ome) AS total_ome
     FROM {tool_name}_ome_prescribing AS rx
     INNER JOIN medications
     ON rx.snomed_code = medications.id
-    INNER JOIN vtm
-    ON
-    medications.vtm_id = vtm.vtmid
     WHERE date >= (SELECT MAX(date) - INTERVAL '3 months' FROM date)
     AND rx.practice_code IN {sql_in}
     GROUP BY 
-        vtm.nm 
+        bs_name
     """
 ) # creates aware_df from materialised view
 
@@ -148,18 +145,15 @@ aware_details_breakdown_df = query(
     f"""
     SELECT
         rx.name AS name,
-        vtm.nm AS vtm_name,
+        bs_name AS bs_name,
         SUM(total_ome) AS total_ome
     FROM {tool_name}_ome_prescribing AS rx
     INNER JOIN medications
     ON rx.snomed_code = medications.id
-    INNER JOIN vtm
-    ON
-    medications.vtm_id = vtm.vtmid
     WHERE date >= (SELECT MAX(date) - INTERVAL '3 months' FROM date)
     AND rx.practice_code IN {sql_in}
     GROUP BY 
-        vtm.nm,
+        bs_name,
         rx.name
     ORDER BY total_ome DESC
     """
@@ -174,7 +168,7 @@ with st.expander(
 
     combined_df = combine_small_categories(
         aware_details_df,
-        category_col="vtm_name",
+        category_col="bs_name",
         value_col="total_ome",
         threshold=combine_threshold,
     )
@@ -182,7 +176,7 @@ with st.expander(
     selected_category = plot_breakdown_chart(
         combined_df,
         value_col="total_ome",
-        category_col="vtm_name",
+        category_col="bs_name",
         chart_type=chart_type,
         key="aware_breakdown_chart",
     )
@@ -191,9 +185,9 @@ with st.expander(
 
         filtered_df = (
             aware_details_breakdown_df[
-                aware_details_breakdown_df["vtm_name"] == selected_category
+                aware_details_breakdown_df["bs_name"] == selected_category
             ]
-            .drop(columns="vtm_name")
+            .drop(columns="bs_name")
             .sort_values("total_ome", ascending=False)
         )
 
