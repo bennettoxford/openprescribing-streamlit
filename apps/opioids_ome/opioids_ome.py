@@ -80,7 +80,7 @@ sidebar_nav()
 # calculate decile charts
 measure_df = load_per1000_rates(
     table_name=f"{tool_name}_ome_prescribing",
-    value_col="items",
+    value_col="total_ome",
     denom_table="list_size",
     denom_col="total"
 )
