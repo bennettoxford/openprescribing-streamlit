@@ -152,7 +152,7 @@ def _cascading_filter(df, col, label, key):
 
 
 def org_filter_sidebar():
-    df = load_practice_df()
+    df = load_practice_df() 
 
     with st.sidebar:
         with st.expander("Organisation Filter", expanded=False, icon=":material/corporate_fare:"):
@@ -179,9 +179,22 @@ def org_filter_sidebar():
 
     return practice_codes, sql_in, level
 
+def get_filter_label():
+    for key, label_col in [
+        ("sel_practice", "practice_name"),
+        ("sel_pcn",      "pcn_name"),
+        ("sel_icb",      "icb_name"),
+        ("sel_region",   "region_name"),
+    ]:
+        vals = st.session_state.get(key, [])
+        if vals:
+            return ", ".join(vals)
+    return "England"
 
 @st.cache_data
-def load_proportion_rates(table_name, value_col, numerator_condition):
+def load_proportion_rates(table_name, value_col, numerator_condition, denominator_condition=None):
+    denom = f"CASE WHEN {denominator_condition} THEN {value_col} ELSE 0 END" if denominator_condition else value_col
+
     return query(f"""
         WITH orgs AS (
             SELECT
@@ -209,7 +222,7 @@ def load_proportion_rates(table_name, value_col, numerator_condition):
                 WHEN o.region_code   IS NOT NULL THEN 'region'
             END AS org_type,
             SUM(CASE WHEN {numerator_condition} THEN {value_col} ELSE 0 END) AS numerator,
-            SUM({value_col}) AS denominator,
+            SUM({denom}) AS denominator,
             numerator / NULLIF(denominator, 0) AS rate
         FROM {table_name} AS rx
         JOIN orgs AS o ON rx.practice_code = o.practice_code
@@ -293,7 +306,16 @@ def load_deciles(rates_df):
 
 def filter_rates(rates_df, level, selected_practice_codes, practice_df):
     if level == "national":
-        return None  # or an empty df — nothing to overlay
+        national = (
+            rates_df[rates_df["org_type"] == "practice"]
+            .groupby("date")[["numerator", "denominator"]]
+            .sum()
+            .reset_index()
+        )
+        national["rate"] = national["numerator"] / national["denominator"].replace(0, pd.NA)
+        national["org_type"] = "national"
+        national["label"] = "National"
+        return national
 
     level_col = {
         "practice": "practice_code",
@@ -301,6 +323,8 @@ def filter_rates(rates_df, level, selected_practice_codes, practice_df):
         "icb":      "icb_code",
         "region":   "region_code",
     }[level]
+
+    name_col = level_col.replace("_code", "_name")
 
     selected_orgs = (
         practice_df[practice_df["practice_code"].isin(selected_practice_codes)]
@@ -310,10 +334,17 @@ def filter_rates(rates_df, level, selected_practice_codes, practice_df):
         .tolist()
     )
 
-    return rates_df[
+    filtered = rates_df[
         (rates_df["org_type"] == level) &
         (rates_df[level_col].isin(selected_orgs))
     ]
+
+    name_lookup = (
+        practice_df[[level_col, name_col]]
+        .drop_duplicates()
+    )
+
+    return filtered.merge(name_lookup, on=level_col, how="left")
 
 
 
@@ -380,3 +411,53 @@ def why_it_matters(base_path: Path, expanded: bool = True):
     ):
         with open(base_path / "content/why_it_matters.md") as f:
             st.markdown(f.read())
+
+def combine_threshold_slider(
+    label="Combine chemicals below (%) to 'Other'",
+    min_value=0,
+    max_value=10,
+    default=2,
+    step=1,
+    expanded=False,
+):
+    with st.sidebar.expander("Combine low use drugs", icon=":material/merge:", expanded=expanded):
+
+        return (
+            st.slider(
+                label,
+                min_value=min_value,
+                max_value=max_value,
+                value=default,
+                step=step,
+            )
+            / 100
+        )
+
+
+def combine_small_categories(
+    df,
+    category_col,
+    value_col,
+    threshold=0.02,
+    other_label="Other",
+):
+    total = df[value_col].sum()
+
+    df = df.copy()
+
+    df[category_col] = df.apply(
+        lambda row: (
+            row[category_col]
+            if row[value_col] / total >= threshold
+            else other_label
+        ),
+        axis=1,
+    )
+
+    combine_df = (
+        df.groupby(category_col, as_index=False)[value_col]
+        .sum()
+        .sort_values(value_col, ascending=False)
+    )
+
+    return combine_df

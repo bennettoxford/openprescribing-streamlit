@@ -5,8 +5,8 @@ import yaml
 import altair as alt
 
 from db import create_materialised_view, query
-from utils import sidebar_logo, sidebar_nav, org_filter_sidebar,gbp, render_pagination, global_styles, changelog, why_it_matters, load_proportion_rates, load_deciles, filter_rates, load_practice_df
-from charts import plot_decile_chart
+from utils import sidebar_logo, sidebar_nav, org_filter_sidebar,gbp, render_pagination, global_styles, changelog, why_it_matters, load_proportion_rates, load_deciles, filter_rates, load_practice_df, combine_threshold_slider, combine_small_categories
+from charts import plot_decile_chart, plot_stacked_area,     breakdown_chart_type_selector,     plot_breakdown_chart
 
 # This makes Streamlit use whole page -t his has to be the first line of code, and inserts the OP logo into the browser
 st.set_page_config(layout="wide", page_icon="content/OpenPrescribing.svg")
@@ -42,7 +42,7 @@ global_styles()
 # welcome banner
 st.info(
 """
-##### Hello!  This is a **very** early prototype of estimating the impact of .
+##### Hello!  This is a **very** early prototype of new visualisations for our measure on AWaRe antibiotics.
 Please let us know what you think, and what you'd like to see.  Email us at [bennett@phc.ox.ac.uk](mailto:bennett@phc.ox.ac.uk)
 """
 )
@@ -61,12 +61,13 @@ why_it_matters(app_path)
 
 # header
 with st.sidebar:
-    st.markdown("## ****")
+    st.markdown("### Antibiotic stewardship: Access, Watch and Reserve (AWaRe) antibiotics")
 
 
 # shows cascading organisation filter
 selected_practice_codes, sql_in, level = org_filter_sidebar()
 
+combine_threshold = combine_threshold_slider()
 
 # gives navigation to other tools
 sidebar_nav()
@@ -74,29 +75,29 @@ sidebar_nav()
 
 # Main app
 
+# Main meaure decile chart
 
-rates_df    = load_proportion_rates(
-    table_name="measure_aware_aware_prescribing",
-    value_col="items",
-    numerator_condition="aware_2024 = 'Access'"
+# calculate decile charts
+measure_df  = load_proportion_rates(
+    table_name="measure_aware_aware_prescribing", # materialised view for the data
+    value_col="items", # measure calculation type
+    numerator_condition="aware_2024 IN ('Watch', 'Reserve')" ,
+    denominator_condition="aware_2024 IN ('Access', 'Watch', 'Reserve')"
 )
 
-deciles_df = load_deciles(rates_df)
-practice_df = load_practice_df()
+deciles_df = load_deciles(measure_df)
+practice_df = load_practice_df() # get data from cascade filter
 
-decile_level = "practice" if level == "national" else level
-deciles_filtered = deciles_df[deciles_df["org_type"] == decile_level]
-rates_filtered = filter_rates(rates_df, level, selected_practice_codes, practice_df)
+decile_level = "icb" if level == "national" else level #sets the level of deciles being shown - if nothing selected, shows ICB level deciles
+deciles_filtered = deciles_df[deciles_df["org_type"] == decile_level] # filters the deciles to the correct level filtered in the cascade 
+measure_filtered = filter_rates(measure_df, level, selected_practice_codes, practice_df) # filters the measure to the correct level
 
-
-plot_decile_chart(deciles_filtered, level, rates_filtered)
-
-
+chart_title = "Percentage of antibiotic prescriptions that are for Watch and Reserve group antibiotics" # create chart title
+plot_decile_chart(deciles_filtered, level, measure_filtered, measure_name=chart_title) # plots decile charts
 
 
-
-
-aware_df = query(
+# creates aware_df from materialised view
+stacked_df = query(
     f"""
     SELECT
         date, 
@@ -107,26 +108,24 @@ aware_df = query(
     GROUP BY 
         date,
         aware_2024
+    ORDER BY items DESC
     """
-) # creates aware_df from materialised view
+) 
 
 #st.dataframe(aware_df)
 
 with st.expander(
-    "Click here to see a stacked time series", icon=":material/quick_reference:"
+    "Click here to see a stacked time chart of AWaRe categories", icon=":material/stacked_line_chart:"
 ):
-    chart = (
-        alt.Chart(aware_df)   
-        .mark_area()           
-        .encode(
-            x='date:T',          # x axis is date, :T means temporal (date/time) type
-            y=alt.Y('items:Q', stack=True),  # y axis is sum of items, :Q means quantitative (numeric) type
-            color='aware_2024:N' # one colour per aware category, :N means nominal (categorical) type
-        )
+    plot_stacked_area(
+        stacked_df,
+        x_col="date",
+        y_col="items",
+        color_col="aware_2024",
+        sort_order="descending"
     )
-    st.altair_chart(chart, use_container_width=True)
 
-aware_donut_df = query(
+aware_details_df = query(
     f"""
     SELECT
         vtm.nm AS vtm_name,
@@ -145,14 +144,8 @@ aware_donut_df = query(
     """
 ) # creates aware_df from materialised view
 
-total = aware_donut_df ['items'].sum()
-aware_donut_df ['vtm_name'] = aware_donut_df .apply(
-    lambda row: row['vtm_name'] if row['items'] / total >= 0.02 else 'Other',
-    axis=1
-)
-aware_donut_df  = aware_donut_df .groupby('vtm_name', as_index=False)['items'].sum()
 
-aware_donut_details_df = query(
+aware_details_breakdown_df = query(
     f"""
     SELECT
         rx.name AS name,
@@ -170,105 +163,56 @@ aware_donut_details_df = query(
     GROUP BY 
         vtm.nm,
         rx.name
+    ORDER BY items DESC
     """
 ) # creates aware_df from materialised view
 
-total = aware_donut_details_df ['items'].sum()
-aware_donut_details_df ['vtm_name'] = aware_donut_details_df .apply(
-    lambda row: row['vtm_name'] if row['items'] / total >= 0.02 else 'Other',
-    axis=1
-)
-aware_donut_details_df  = aware_donut_details_df .groupby(['vtm_name', 'name'], as_index=False)['items'].sum()
-
-def render_chart(data_df, details_df, value_col, category_col, chart_type="donut"):
-    selection_param = alt.selection_point(name='my_selection', fields=[category_col])
-
-    if chart_type == "donut":
-        chart = (
-            alt.Chart(data_df)
-            .mark_arc(innerRadius=50)
-            .encode(
-                theta=f'{value_col}:Q',
-                color=f'{category_col}:N'
-            )
-            .add_params(selection_param)
-        )
-    else:
-        chart = (
-            alt.Chart(data_df)
-            .mark_bar()
-            .encode(
-                x=f'{value_col}:Q',
-                y=f'{category_col}:N',
-                color=f'{category_col}:N'
-            )
-            .add_params(selection_param)
-        )
-
-    chart_selection = st.altair_chart(chart, on_select="rerun", use_container_width=True)
-
-    if chart_selection.selection.my_selection:
-        selected_category = chart_selection.selection.my_selection[0][category_col]
-        st.dataframe(details_df[details_df[category_col] == selected_category])
-
-
-
 with st.expander(
-    "Click here to see a breakdown", icon=":material/quick_reference:"
+    "Click here to see a breakdown of drugs in the numerator", icon=":material/donut_large:"
 ):
-    st.radio("Chart type", ["donut", "bar"], horizontal=True, key="chart_type")
-    render_chart(aware_donut_df, aware_donut_details_df, 'items', 'vtm_name', st.session_state.chart_type)
+    st.info("Click on drug in bar or donut chart to see breakdown by presentation")
 
+    chart_type = breakdown_chart_type_selector()
 
-test_org_df = query(
-    f"""
-    WITH orgs AS (
-        SELECT
-            prac.id AS practice_code,
-            MAX(CASE WHEN par.org_type = 'pcn' THEN par.id END) AS pcn_code,
-            MAX(CASE WHEN par.org_type = 'icb' THEN par.id END) AS icb_code,
-            MAX(CASE WHEN par.org_type = 'reg' THEN par.id END) AS region_code
-        FROM org AS prac
-        INNER JOIN org_relation AS rel ON prac.id = rel.child_id
-        INNER JOIN org AS par ON rel.parent_id = par.id
-        WHERE prac.org_type = 'pra'
-        AND prac.inactive = 0
-        GROUP BY prac.id
-    ),
-    base AS (
-        SELECT
-            date,
-            o.practice_code,
-            o.pcn_code,
-            o.icb_code,
-            o.region_code,
-            CASE 
-                WHEN o.practice_code IS NOT NULL THEN 'practice'
-                WHEN o.pcn_code      IS NOT NULL THEN 'pcn'
-                WHEN o.icb_code      IS NOT NULL THEN 'icb'
-                WHEN o.region_code   IS NOT NULL THEN 'region'
-            END AS org_type,
-            SUM(CASE WHEN aware_2024 = 'Access' THEN items ELSE 0 END) AS numerator,
-            SUM(items) AS denominator,
-            numerator / NULLIF(denominator, 0) AS rate
-        FROM {tool_name}_aware_prescribing AS rx
-        JOIN orgs AS o ON rx.practice_code = o.practice_code
-        GROUP BY GROUPING SETS (
-            (date, o.practice_code),
-            (date, o.pcn_code),
-            (date, o.icb_code),
-            (date, o.region_code)
-        )
+    combined_df = combine_small_categories(
+        aware_details_df,
+        category_col="vtm_name",
+        value_col="items",
+        threshold=combine_threshold,
     )
-    SELECT
-        *,
-        NTILE(10) OVER (
-            PARTITION BY org_type, date
-            ORDER BY rate
-        ) AS decile
-    FROM base
-    """
-)
+
+    selected_category = plot_breakdown_chart(
+        combined_df,
+        value_col="items",
+        category_col="vtm_name",
+        chart_type=chart_type,
+        key="aware_breakdown_chart",
+    )
+
+    if selected_category:
+
+        filtered_df = (
+            aware_details_breakdown_df[
+                aware_details_breakdown_df["vtm_name"] == selected_category
+            ]
+            .drop(columns="vtm_name")
+            .sort_values("items", ascending=False)
+        )
+
+        st.markdown(f"##### Products containing {selected_category} prescribed in the last three months")
+
+        st.dataframe(
+            filtered_df,
+            hide_index=True,
+            width="stretch",
+            column_config={
+                "name": "Medicine",
+                "items": st.column_config.NumberColumn(
+                    "Items",
+                    format="%,d",
+                ),
+            },
+        )
 
 # show changelog
 changelog(Path(__file__).parent)
