@@ -4,7 +4,7 @@ from pathlib import Path
 import duckdb
 import streamlit as st
 
-data_dir = Path(os.getenv("OPENPRESCRIBING_STREAMLIT_DATA_DIR", "data")).expanduser()
+data_dir = Path(os.getenv("OPENPRESCRIBING_STREAMLIT_DATA_DIR", "csvs")).expanduser()
 prescribing_db_path = data_dir / "prescribing.duckdb"
 sqlite_path = data_dir / "data.sqlite"
 materialised_views_db_path = data_dir / "materialised_views.duckdb"
