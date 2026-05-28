@@ -25,7 +25,7 @@ def recreate_materialised_views():
         app_file = app_dir / "app.py"
         materialised_views_dir = app_dir / "materialised_views"
 
-        if not app_file.exists() or not materialised_views_dir.is_dir():
+        if not materialised_views_dir.is_dir():
             continue
 
         for f in sorted(materialised_views_dir.iterdir()):
