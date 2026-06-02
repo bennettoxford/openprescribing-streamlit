@@ -2,7 +2,10 @@ SELECT
     date, 
     practice_code, 
     snomed_code,
-    COALESCE((SELECT nm FROM ing WHERE isid = vpi.bs_subid), ing.nm) as bs_name,
+    ingredient_id,
+    ing.nm AS ing_name,  
+    medications.vtm_id as vtm_id,
+    vtm.nm AS vtm_name,
     name, 
     SUM(items) AS items, 
     SUM(quantity) AS quantity, 
@@ -13,7 +16,9 @@ INNER JOIN medications
 INNER JOIN read_csv_auto('{data_dir}/ome_vmp.csv') AS ome
     ON ome.vmp_id = medications.vmp_id
 INNER JOIN vpi
-    ON medications.vmp_id = vpi.vpid
+    ON ingredient_id = COALESCE(vpi.bs_subid, vpi.isid)
 INNER JOIN ing
-    ON vpi.isid = ing.isid
-GROUP BY date, practice_code, snomed_code, bs_name, name
+    ON COALESCE(vpi.bs_subid, vpi.isid) = ing.isid
+INNER JOIN vtm
+    ON medications.vtm_id = vtm.vtmid
+GROUP BY date, practice_code, snomed_code, ingredient_id, ing_name, name, vtm_id, vtm_name

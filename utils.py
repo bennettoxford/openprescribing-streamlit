@@ -444,23 +444,38 @@ def combine_small_categories(
     threshold=0.02,
     other_label="Other",
 ):
-    total = df[value_col].sum()
-
     df = df.copy()
 
-    df[category_col] = df.apply(
-        lambda row: (
-            row[category_col]
-            if row[value_col] / total >= threshold
-            else other_label
-        ),
-        axis=1,
-    )
+    total = df[value_col].sum()
+    category_totals = df.groupby(category_col)[value_col].transform("sum")
+    keep_mask = category_totals / total >= threshold
 
-    combine_df = (
+    df[category_col] = df[category_col].where(keep_mask, other_label)
+
+    return (
         df.groupby(category_col, as_index=False)[value_col]
         .sum()
         .sort_values(value_col, ascending=False)
     )
 
-    return combine_df
+def combine_small_categories_by_date(
+    df,
+    date_col,
+    category_col,
+    value_col,
+    threshold=0.02,
+    other_label="Other",
+):
+    df = df.copy()
+
+    total = df[value_col].sum()
+    category_totals = df.groupby(category_col)[value_col].transform("sum")
+    keep_mask = category_totals / total >= threshold
+
+    df[category_col] = df[category_col].where(keep_mask, other_label)
+
+    return (
+        df.groupby([date_col, category_col], as_index=False)[value_col]
+        .sum()
+        .sort_values(value_col, ascending=False)
+    )

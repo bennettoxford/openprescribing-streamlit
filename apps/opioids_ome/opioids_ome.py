@@ -5,7 +5,7 @@ import yaml
 import altair as alt
 
 from db import create_materialised_view, query
-from utils import sidebar_logo, sidebar_nav, org_filter_sidebar,gbp, render_pagination, global_styles, changelog, why_it_matters, load_proportion_rates, load_deciles, filter_rates, load_practice_df, combine_threshold_slider, combine_small_categories, load_per1000_rates
+from utils import sidebar_logo, sidebar_nav, org_filter_sidebar,gbp, render_pagination, global_styles, changelog, why_it_matters, load_proportion_rates, load_deciles, filter_rates, load_practice_df, combine_threshold_slider, combine_small_categories, load_per1000_rates, combine_small_categories_by_date
 from charts import plot_decile_chart, plot_stacked_area,     breakdown_chart_type_selector,     plot_breakdown_chart
 
 # This makes Streamlit use whole page -t his has to be the first line of code, and inserts the OP logo into the browser
@@ -24,7 +24,7 @@ app_path = Path(__file__).parent
 # --- Initialisation ---
 
 
-create_materialised_view(name="ome_prescribing", tool_name=tool_name, app_file=__file__) # creates the aware table
+create_materialised_view(name="ome_prescribing", tool_name=tool_name, app_file=__file__) # creates the OME table
 
 # --- Data ---
 
@@ -97,38 +97,66 @@ plot_decile_chart(deciles_filtered, level, measure_filtered, measure_name=chart_
 
 
 # creates stacked_df from materialised view
-stacked_df = query(
-    f"""
-    SELECT
-        date, 
-        bs_name, 
-        SUM(total_ome) AS total_ome
-    FROM {tool_name}_ome_prescribing as rx
-    WHERE rx.practice_code IN {sql_in}
-    GROUP BY 
-        date,
-        bs_name
-    ORDER BY total_ome DESC
-    """
-) 
-
-#st.dataframe(aware_df)
 
 with st.expander(
-    "Click here to see a stacked time chart of opioids", icon=":material/stacked_line_chart:"
+    "Click here to see a stacked time chart of opioids",
+    icon=":material/stacked_line_chart:",
 ):
+
+    mode = st.radio(
+        "Group by",
+        ["ing", "vtm"],
+        horizontal=True,
+        key="stacked_chart_groupby",
+    )
+
+    groupings = {
+        "ing": {
+            "cols": "ingredient_id, ing_name",
+            "color_col": "ing_name",
+        },
+        "vtm": {
+            "cols": "vtm_id, vtm_name",
+            "color_col": "vtm_name",
+        },
+    }
+
+    group_cols = groupings[mode]["cols"]
+    color_col = groupings[mode]["color_col"]
+
+    stacked_df = query(f"""
+        SELECT
+            date,
+            {group_cols},
+            SUM(total_ome) AS total_ome
+        FROM {tool_name}_ome_prescribing AS rx
+        WHERE rx.practice_code IN {sql_in}
+        GROUP BY
+            date,
+            {group_cols}
+        ORDER BY total_ome DESC
+    """)
+
+    stacked_df = combine_small_categories_by_date(
+        stacked_df,
+        date_col="date",
+        category_col=color_col,
+        value_col="total_ome",
+        threshold=combine_threshold,
+    )
+
+
     plot_stacked_area(
         stacked_df,
         x_col="date",
         y_col="total_ome",
-        color_col="bs_name",
-        sort_order="descending"
+        color_col=color_col,
     )
 
 aware_details_df = query(
     f"""
     SELECT
-        bs_name AS bs_name,
+        ing_name AS ing_name,
         SUM(total_ome) AS total_ome
     FROM {tool_name}_ome_prescribing AS rx
     INNER JOIN medications
@@ -136,7 +164,7 @@ aware_details_df = query(
     WHERE date >= (SELECT MAX(date) - INTERVAL '3 months' FROM date)
     AND rx.practice_code IN {sql_in}
     GROUP BY 
-        bs_name
+        ing_name
     """
 ) # creates aware_df from materialised view
 
@@ -145,7 +173,7 @@ aware_details_breakdown_df = query(
     f"""
     SELECT
         rx.name AS name,
-        bs_name AS bs_name,
+        ing_name AS ing_name,
         SUM(total_ome) AS total_ome
     FROM {tool_name}_ome_prescribing AS rx
     INNER JOIN medications
@@ -153,7 +181,7 @@ aware_details_breakdown_df = query(
     WHERE date >= (SELECT MAX(date) - INTERVAL '3 months' FROM date)
     AND rx.practice_code IN {sql_in}
     GROUP BY 
-        bs_name,
+        ing_name,
         rx.name
     ORDER BY total_ome DESC
     """
@@ -168,7 +196,7 @@ with st.expander(
 
     combined_df = combine_small_categories(
         aware_details_df,
-        category_col="bs_name",
+        category_col="ing_name",
         value_col="total_ome",
         threshold=combine_threshold,
     )
@@ -176,20 +204,33 @@ with st.expander(
     selected_category = plot_breakdown_chart(
         combined_df,
         value_col="total_ome",
-        category_col="bs_name",
+        category_col="ing_name",
         chart_type=chart_type,
         key="aware_breakdown_chart",
     )
 
     if selected_category:
 
-        filtered_df = (
-            aware_details_breakdown_df[
-                aware_details_breakdown_df["bs_name"] == selected_category
-            ]
-            .drop(columns="bs_name")
-            .sort_values("total_ome", ascending=False)
-        )
+        if selected_category == "Other":
+            kept_categories = set(
+                combined_df.loc[combined_df["ing_name"] != "Other", "ing_name"]
+            )
+
+            filtered_df = (
+                aware_details_breakdown_df[
+                    ~aware_details_breakdown_df["ing_name"].isin(kept_categories)
+                ]
+                .drop(columns="ing_name")
+                .sort_values("total_ome", ascending=False)
+            )
+        else:
+            filtered_df = (
+                aware_details_breakdown_df[
+                    aware_details_breakdown_df["ing_name"] == selected_category
+                ]
+                .drop(columns="ing_name")
+                .sort_values("total_ome", ascending=False)
+            )
 
         st.markdown(f"##### Products containing {selected_category} prescribed in the last three months")
 
