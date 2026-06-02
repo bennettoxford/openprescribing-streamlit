@@ -195,7 +195,7 @@ def plot_stacked_area(
 
 def breakdown_chart_type_selector(
     label="Chart type",
-    options=("donut", "bar"),
+    options=("bar", "donut"),
     horizontal=True,
     key="chart_type",
 ):
@@ -211,7 +211,7 @@ def plot_breakdown_chart(
     data_df: pd.DataFrame,
     value_col: str,
     category_col: str,
-    chart_type: str = "donut",
+    chart_type: str = "bar",
     key: str | None = None,
 ):
     selection_param = alt.selection_point(
