@@ -3,7 +3,7 @@ from pathlib import Path
 import pandas as pd
 import yaml
 
-from db import create_materialised_view, query
+from db import query
 from utils import sidebar_logo, sidebar_nav, org_filter_sidebar,gbp, render_pagination, global_styles, changelog
 
 # This makes Streamlit use whole page -t his has to be the first line of code, and inserts the OP logo into the browser

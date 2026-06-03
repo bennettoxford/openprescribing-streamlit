@@ -27,5 +27,5 @@ docker-run:
 
     docker run --rm --publish "{{ host_port }}:8501" "{{ image_name }}"
 
-recreate_materialised_views:
-    uv run recreate_materialised_views.py
+refresh_materialised_views:
+    uv run refresh_materialised_views.py

@@ -1,8 +1,12 @@
+import hashlib
 import os
 from pathlib import Path
 
 import duckdb
 import streamlit as st
+
+BASE_DIR = Path(__file__).parent
+APPS_DIR = BASE_DIR / "apps"
 
 data_dir = Path(os.getenv("OPENPRESCRIBING_STREAMLIT_DATA_DIR", "data")).expanduser()
 prescribing_db_path = data_dir / "prescribing.duckdb"
@@ -44,10 +48,20 @@ def attach_materialised_views_db(connection, read_write=True):
         )
 
 
-@st.cache_data(ttl=3600)
-def query(
-    sql, dfs: dict = None
-):  # now includes dfs connection so that we can attached filter to it
+def query(sql, dfs: dict = None):
+    # A wrapper around the function that does the work, making use of Streamlit's
+    # caching functionality to ensure that the cached result is invalidated whenever any
+    # of the underlying databases is updated.
+    cache_key = tuple(
+        path.stat().st_mtime if path.exists() else None
+        for path in (prescribing_db_path, sqlite_path, materialised_views_db_path)
+    )
+    return _query(sql, cache_key, dfs)
+
+
+@st.cache_data
+def _query(sql, db_mtimes, dfs: dict = None):
+    print("Running _query")
     with duckdb.connect() as connection:
         attach_prescribing_and_sqlite_dbs(connection)
         if materialised_views_db_path.exists():
@@ -66,34 +80,74 @@ def _escape(value):
     # to escape them manually.
     return "'" + str(value).replace("'", "''") + "'"
 
-@st.cache_data
-def create_materialised_view(name, app_file, tool_name, max_age_hours=168, force=False):
-    materialised_views_dir = Path(app_file).parent / "materialised_views"
-    sql = (materialised_views_dir / f"{name}.sql").read_text()
-    full_name = f"{tool_name}_{name}"
 
-    data_dir = Path(app_file).parent / "csvs" # allows csvs stored in `data` to be used
-    sql = sql.replace('{data_dir}', str(data_dir))
+def refresh_materialised_views():
+    # If either of the two source databases have been updated more recently than the
+    # materialised view database, we want to force the refreshing of all views.
+    if materialised_views_db_path.exists():
+        mv_mtime = materialised_views_db_path.stat().st_mtime
+        force = any(
+            path.exists() and path.stat().st_mtime > mv_mtime
+            for path in (prescribing_db_path, sqlite_path)
+        )
+    else:
+        force = True
+
+    if force:
+        print("Refreshing all materialised views")
 
     with duckdb.connect() as connection:
         attach_prescribing_and_sqlite_dbs(connection)
         attach_materialised_views_db(connection, read_write=True)
+        connection.execute(
+            "CREATE TABLE IF NOT EXISTS view_metadata "
+            "(name VARCHAR PRIMARY KEY, sql_hash VARCHAR)"
+        )
 
-        if not force:
-            try:
-                result = connection.execute(f"""
-                    SELECT (NOW() - MAX(created_at)) < INTERVAL '{max_age_hours} hours'
-                    FROM {full_name}_meta
-                """).fetchone()
+        for app_dir in sorted(APPS_DIR.iterdir()):
+            if not app_dir.is_dir():
+                continue
 
-                if result and result[0]:
-                    return
+            app_file = app_dir / "app.py"
+            materialised_views_dir = app_dir / "materialised_views"
 
-            except Exception:
-                pass
+            if not materialised_views_dir.is_dir():
+                continue
 
-        connection.execute(f"CREATE OR REPLACE TABLE {full_name} AS {sql}")
-        connection.execute(f"""
-            CREATE OR REPLACE TABLE {full_name}_meta AS
-            SELECT NOW() AS created_at
-        """)
+            for f in sorted(materialised_views_dir.iterdir()):
+                name = f.name.removesuffix(".sql")
+                maybe_refresh_materialised_view(
+                    connection,
+                    name,
+                    app_file,
+                    app_dir.name,
+                    force=force,
+                )
+
+
+def maybe_refresh_materialised_view(connection, name, app_file, tool_name, force):
+    materialised_views_dir = Path(app_file).parent / "materialised_views"
+    sql = (materialised_views_dir / f"{name}.sql").read_text()
+    full_name = f"{tool_name}_{name}"
+
+    data_dir = Path(app_file).parent / "csvs"  # allows csvs stored in `data` to be used
+    sql = sql.replace("{data_dir}", str(data_dir))
+    sql_hash = hashlib.sha256(sql.encode()).hexdigest()
+
+    if not force:
+        result = connection.execute(
+            "SELECT count(*) FROM view_metadata WHERE name = ? AND sql_hash = ?",
+            [full_name, sql_hash],
+        ).fetchone()
+
+        if result[0] > 0:
+            return
+
+    print(f"Refreshing materialised view {name}")
+
+    connection.execute(f"CREATE OR REPLACE TABLE {full_name} AS {sql}")
+    connection.execute(
+        "INSERT INTO view_metadata VALUES (?, ?) "
+        "ON CONFLICT (name) DO UPDATE SET sql_hash = excluded.sql_hash",
+        [full_name, sql_hash],
+    )
