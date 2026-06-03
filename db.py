@@ -76,53 +76,56 @@ def recreate_materialised_views():
         materialised_views_db_path.unlink()
 
     print("Creating all materialised views")
-    for app_dir in sorted(APPS_DIR.iterdir()):
-        if not app_dir.is_dir():
-            continue
-
-        app_file = app_dir / "app.py"
-        materialised_views_dir = app_dir / "materialised_views"
-
-        if not materialised_views_dir.is_dir():
-            continue
-
-        for f in sorted(materialised_views_dir.iterdir()):
-            short_name = f.name.removesuffix(".sql")
-            print(f"Creating materialised view {short_name}")
-            create_materialised_view(
-                short_name,
-                app_file,
-                app_dir.name,
-                force=True,
-            )
-
-    print("All materialised views (re-)created")
-
-
-def create_materialised_view(name, app_file, tool_name, max_age_hours=168, force=False):
-    materialised_views_dir = Path(app_file).parent / "materialised_views"
-    sql = (materialised_views_dir / f"{name}.sql").read_text()
-    full_name = f"{tool_name}_{name}"
-
-    data_dir = Path(app_file).parent / "csvs" # allows csvs stored in `data` to be used
-    sql = sql.replace('{data_dir}', str(data_dir))
-
     with duckdb.connect() as connection:
         attach_prescribing_and_sqlite_dbs(connection)
         attach_materialised_views_db(connection, read_write=True)
 
-        if not force:
-            try:
-                result = connection.execute(f"""
-                    SELECT (NOW() - MAX(created_at)) < INTERVAL '{max_age_hours} hours'
-                    FROM {full_name}_meta
-                """).fetchone()
+        for app_dir in sorted(APPS_DIR.iterdir()):
+            if not app_dir.is_dir():
+                continue
 
-                if result and result[0]:
-                    return
+            app_file = app_dir / "app.py"
+            materialised_views_dir = app_dir / "materialised_views"
 
-            except Exception:
-                pass
+            if not materialised_views_dir.is_dir():
+                continue
+
+            for f in sorted(materialised_views_dir.iterdir()):
+                short_name = f.name.removesuffix(".sql")
+                print(f"Creating materialised view {short_name}")
+                create_materialised_view(
+                    connection,
+                    short_name,
+                    app_file,
+                    app_dir.name,
+                    force=True,
+                )
+
+    print("All materialised views (re-)created")
+
+
+def create_materialised_view(
+    connection, name, app_file, tool_name, max_age_hours=168, force=False
+):
+    materialised_views_dir = Path(app_file).parent / "materialised_views"
+    sql = (materialised_views_dir / f"{name}.sql").read_text()
+    full_name = f"{tool_name}_{name}"
+
+    data_dir = Path(app_file).parent / "csvs"  # allows csvs stored in `data` to be used
+    sql = sql.replace("{data_dir}", str(data_dir))
+
+    if not force:
+        try:
+            result = connection.execute(f"""
+                SELECT (NOW() - MAX(created_at)) < INTERVAL '{max_age_hours} hours'
+                FROM {full_name}_meta
+            """).fetchone()
+
+            if result and result[0]:
+                return
+
+        except Exception:
+            pass
 
         connection.execute(f"CREATE OR REPLACE TABLE {full_name} AS {sql}")
         connection.execute(f"""
