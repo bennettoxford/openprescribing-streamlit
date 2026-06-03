@@ -99,7 +99,6 @@ def recreate_materialised_views():
     print("All materialised views (re-)created")
 
 
-@st.cache_data
 def create_materialised_view(name, app_file, tool_name, max_age_hours=168, force=False):
     materialised_views_dir = Path(app_file).parent / "materialised_views"
     sql = (materialised_views_dir / f"{name}.sql").read_text()
