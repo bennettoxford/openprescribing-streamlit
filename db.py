@@ -73,6 +73,7 @@ def _escape(value):
 
 def recreate_materialised_views():
     print("Creating all materialised views")
+    rebuild_all = views_db_is_stale()
     with duckdb.connect() as connection:
         attach_prescribing_and_sqlite_dbs(connection)
         attach_materialised_views_db(connection, read_write=True)
@@ -98,7 +99,7 @@ def recreate_materialised_views():
                     name,
                     app_file,
                     app_dir.name,
-                    force=False,
+                    force=rebuild_all,
                 )
 
     print("All materialised views (re-)created")
@@ -130,4 +131,14 @@ def maybe_recreate_materialised_view(
         "INSERT INTO view_metadata VALUES (?, ?) "
         "ON CONFLICT (name) DO UPDATE SET sql_hash = excluded.sql_hash",
         [full_name, sql_hash],
+    )
+
+
+def views_db_is_stale():
+    if not materialised_views_db_path.exists():
+        return True
+    mv_mtime = materialised_views_db_path.stat().st_mtime
+    return any(
+        path.exists() and path.stat().st_mtime > mv_mtime
+        for path in (prescribing_db_path, sqlite_path)
     )
