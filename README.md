@@ -21,7 +21,7 @@ directory containing the databases.
 ## Running the app
 
 ```bash
-uv run streamlit run app.py
+uv run streamlit run hello.py
 ```
 
 (or `just run`)
