@@ -115,9 +115,7 @@ def recreate_materialised_views():
                 )
 
 
-def maybe_recreate_materialised_view(
-    connection, name, app_file, tool_name, force=False
-):
+def maybe_recreate_materialised_view(connection, name, app_file, tool_name, force):
     materialised_views_dir = Path(app_file).parent / "materialised_views"
     sql = (materialised_views_dir / f"{name}.sql").read_text()
     full_name = f"{tool_name}_{name}"
