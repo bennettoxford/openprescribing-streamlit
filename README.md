@@ -36,12 +36,12 @@ The views will be refreshed on deploy.
 To refresh manually, run:
 
 ```bash
-uv run recreate_materialised_views.py
+uv run refresh_materialised_views.py
 ```
 
-(or `just recreate_materialised_views`)
+(or `just refresh_materialised_views`)
 
-This will only recreate views whose SQL has changed.
+This will only refresh views whose SQL has changed.
 
 ## Docker
 

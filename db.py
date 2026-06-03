@@ -81,9 +81,9 @@ def _escape(value):
     return "'" + str(value).replace("'", "''") + "'"
 
 
-def recreate_materialised_views():
+def refresh_materialised_views():
     # If either of the two source databases have been updated more recently than the
-    # materialised view database, we want to force recreation of all views.
+    # materialised view database, we want to force the refreshing of all views.
     if materialised_views_db_path.exists():
         mv_mtime = materialised_views_db_path.stat().st_mtime
         force = any(
@@ -94,7 +94,7 @@ def recreate_materialised_views():
         force = True
 
     if force:
-        print("Recreating all materialised views")
+        print("Refreshing all materialised views")
 
     with duckdb.connect() as connection:
         attach_prescribing_and_sqlite_dbs(connection)
@@ -116,7 +116,7 @@ def recreate_materialised_views():
 
             for f in sorted(materialised_views_dir.iterdir()):
                 name = f.name.removesuffix(".sql")
-                maybe_recreate_materialised_view(
+                maybe_refresh_materialised_view(
                     connection,
                     name,
                     app_file,
@@ -125,7 +125,7 @@ def recreate_materialised_views():
                 )
 
 
-def maybe_recreate_materialised_view(connection, name, app_file, tool_name, force):
+def maybe_refresh_materialised_view(connection, name, app_file, tool_name, force):
     materialised_views_dir = Path(app_file).parent / "materialised_views"
     sql = (materialised_views_dir / f"{name}.sql").read_text()
     full_name = f"{tool_name}_{name}"
@@ -143,7 +143,7 @@ def maybe_recreate_materialised_view(connection, name, app_file, tool_name, forc
         if result[0] > 0:
             return
 
-    print(f"Recreating materialised view {name}")
+    print(f"Refreshing materialised view {name}")
 
     connection.execute(f"CREATE OR REPLACE TABLE {full_name} AS {sql}")
     connection.execute(
