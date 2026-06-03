@@ -72,8 +72,11 @@ def _escape(value):
 
 
 def recreate_materialised_views():
-    print("Creating all materialised views")
     rebuild_all = views_db_is_stale()
+
+    if rebuild_all:
+        print("Views database is stale: recreating all views")
+
     with duckdb.connect() as connection:
         attach_prescribing_and_sqlite_dbs(connection)
         attach_materialised_views_db(connection, read_write=True)
@@ -102,8 +105,6 @@ def recreate_materialised_views():
                     force=rebuild_all,
                 )
 
-    print("All materialised views (re-)created")
-
 
 def maybe_recreate_materialised_view(
     connection, name, app_file, tool_name, force=False
@@ -125,7 +126,7 @@ def maybe_recreate_materialised_view(
         if result[0] > 0:
             return
 
-    print(f"Creating materialised view {name}")
+    print(f"Recreating materialised view {name}")
     connection.execute(f"CREATE OR REPLACE TABLE {full_name} AS {sql}")
     connection.execute(
         "INSERT INTO view_metadata VALUES (?, ?) "
