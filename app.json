@@ -1,0 +1,9 @@
+{
+  "cron": [
+    {
+      "command": "uv run refresh_materialised_views.py",
+      "schedule": "15 * * * *",
+      "concurrency_policy": "forbid"
+    }
+  ]
+}
