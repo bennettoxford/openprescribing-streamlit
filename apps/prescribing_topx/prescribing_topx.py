@@ -5,7 +5,7 @@ from pathlib import Path
 import yaml
 
 from utils import sidebar_logo, sidebar_nav, org_filter_sidebar, gbp, global_styles, changelog
-from db import create_materialised_view, query
+from db import query
 
 # This makes Streamlit use whole page -t his has to be the first line of code, and inserts the OP logo into the browser
 st.set_page_config(layout="wide", page_icon="content/OpenPrescribing.svg")
@@ -17,10 +17,6 @@ tool_name = "prescribing_topx" # defines the tool name
 app_path = Path(__file__).parent # defines the path for content
 
 # --- Functions ---
-
-# --- Initialisation ---
-
-create_materialised_view(name="prescribing_2025", tool_name=tool_name, app_file=__file__) # creates the price changes table
 
 # --- Data ---
 

@@ -21,10 +21,27 @@ directory containing the databases.
 ## Running the app
 
 ```bash
-uv run streamlit run app.py
+uv run streamlit run hello.py
 ```
 
 (or `just run`)
+
+### Refreshing materialised views
+
+SQL files in apps/[app-name]/materliased\_views/ will be used to generate materialised
+views in `materialised_views.duckdb`.
+
+The views will be refreshed on deploy.
+
+To refresh manually, run:
+
+```bash
+uv run refresh_materialised_views.py
+```
+
+(or `just refresh_materialised_views`)
+
+This will only refresh views whose SQL has changed.
 
 ## Docker
 

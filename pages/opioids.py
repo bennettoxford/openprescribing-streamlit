@@ -5,7 +5,7 @@ import pandas as pd
 import streamlit as st
 import yaml
 
-from db import create_materialised_view, query
+from db import query
 from org_filter import org_filter_sidebar
 from page_formatting import gbp
 
