@@ -94,7 +94,7 @@ def recreate_materialised_views():
                     name,
                     app_file,
                     app_dir.name,
-                    force=True,
+                    force=False,
                 )
 
     print("All materialised views (re-)created")
