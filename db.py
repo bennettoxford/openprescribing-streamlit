@@ -48,10 +48,20 @@ def attach_materialised_views_db(connection, read_write=True):
         )
 
 
-@st.cache_data(ttl=3600)
-def query(
-    sql, dfs: dict = None
-):  # now includes dfs connection so that we can attached filter to it
+def query(sql, dfs: dict = None):
+    # A wrapper around the function that does the work, making use of Streamlit's
+    # caching functionality to ensure that the cached result is invalidated whenever any
+    # of the underlying databases is updated.
+    cache_key = tuple(
+        path.stat().st_mtime if path.exists() else None
+        for path in (prescribing_db_path, sqlite_path, materialised_views_db_path)
+    )
+    return _query(sql, cache_key, dfs)
+
+
+@st.cache_data
+def _query(sql, db_mtimes, dfs: dict = None):
+    print("Running _query")
     with duckdb.connect() as connection:
         attach_prescribing_and_sqlite_dbs(connection)
         if materialised_views_db_path.exists():
