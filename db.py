@@ -71,10 +71,6 @@ def _escape(value):
 
 
 def recreate_materialised_views():
-    print("Removing all materialised views")
-    if materialised_views_db_path.exists():
-        materialised_views_db_path.unlink()
-
     print("Creating all materialised views")
     for app_dir in sorted(APPS_DIR.iterdir()):
         if not app_dir.is_dir():
