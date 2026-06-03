@@ -20,8 +20,18 @@ directory containing the databases.
 
 ## Running the app
 
+The view-backed pages read from `data/materialised_views.duckdb`, which is built from
+the SQL files under `apps/*/materialised_views/`. Build (or rebuild) it with:
+
 ```bash
-uv run streamlit run app.py
+just recreate_materialised_views
+```
+
+This runs automatically on deploy via the Procfile `release` step. Then run the app
+with:
+
+```bash
+uv run streamlit run hello.py
 ```
 
 (or `just run`)
