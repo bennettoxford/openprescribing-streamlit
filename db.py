@@ -74,6 +74,17 @@ def _escape(value):
 def recreate_materialised_views():
     print("Creating all materialised views")
 
+    # If either of the two source databases have been updated more recently than the
+    # materialised view database, we want to force recreation of all views.
+    if materialised_views_db_path.exists():
+        mv_mtime = materialised_views_db_path.stat().st_mtime
+        force = any(
+            path.exists() and path.stat().st_mtime > mv_mtime
+            for path in (prescribing_db_path, sqlite_path)
+        )
+    else:
+        force = True
+
     with duckdb.connect() as connection:
         attach_prescribing_and_sqlite_dbs(connection)
         attach_materialised_views_db(connection, read_write=True)
@@ -100,7 +111,7 @@ def recreate_materialised_views():
                     name,
                     app_file,
                     app_dir.name,
-                    force=True,
+                    force=force,
                 )
 
     print("All materialised views (re-)created")
