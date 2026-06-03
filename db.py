@@ -99,7 +99,6 @@ def recreate_materialised_views():
     print("All materialised views (re-)created")
 
 
-@st.cache_data
 def maybe_recreate_materialised_view(
     name, app_file, tool_name, max_age_hours=168, force=False
 ):
