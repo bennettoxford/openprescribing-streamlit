@@ -26,6 +26,23 @@ uv run streamlit run hello.py
 
 (or `just run`)
 
+### Refreshing materialised views
+
+SQL files in apps/[app-name]/materliased\_views/ will be used to generate materialised
+views in `materialised_views.duckdb`.
+
+The views will be refreshed on deploy.
+
+To refresh manually, run:
+
+```bash
+uv run recreate_materialised_views.py
+```
+
+(or `just recreate_materialised_views`)
+
+This will only recreate views whose SQL has changed.
+
 ## Docker
 
 Build the image and run a smoke test with:
