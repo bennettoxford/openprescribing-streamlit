@@ -4,6 +4,9 @@ from pathlib import Path
 import duckdb
 import streamlit as st
 
+BASE_DIR = Path(__file__).parent
+APPS_DIR = BASE_DIR / "apps"
+
 data_dir = Path(os.getenv("OPENPRESCRIBING_STREAMLIT_DATA_DIR", "data")).expanduser()
 prescribing_db_path = data_dir / "prescribing.duckdb"
 sqlite_path = data_dir / "data.sqlite"
@@ -65,6 +68,36 @@ def _escape(value):
     # DuckDB doesn't accept parameter placeholders for filenames in queries so we have
     # to escape them manually.
     return "'" + str(value).replace("'", "''") + "'"
+
+
+def recreate_materialised_views():
+    print("Removing all materialised views")
+    if materialised_views_db_path.exists():
+        materialised_views_db_path.unlink()
+
+    print("Creating all materialised views")
+    for app_dir in sorted(APPS_DIR.iterdir()):
+        if not app_dir.is_dir():
+            continue
+
+        app_file = app_dir / "app.py"
+        materialised_views_dir = app_dir / "materialised_views"
+
+        if not materialised_views_dir.is_dir():
+            continue
+
+        for f in sorted(materialised_views_dir.iterdir()):
+            short_name = f.name.removesuffix(".sql")
+            print(f"Creating materialised view {short_name}")
+            create_materialised_view(
+                short_name,
+                app_file,
+                app_dir.name,
+                force=True,
+            )
+
+    print("All materialised views (re-)created")
+
 
 @st.cache_data
 def create_materialised_view(name, app_file, tool_name, max_age_hours=168, force=False):
