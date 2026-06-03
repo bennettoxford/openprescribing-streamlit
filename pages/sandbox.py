@@ -3,7 +3,7 @@ import streamlit as st
 import pandas as pd
 import duckdb
 from pathlib import Path
-from db import query, create_materialised_view
+from db import query
 from datetime import datetime
 
 from org_filter import org_filter_sidebar
@@ -38,8 +38,6 @@ st.write(rx_month)
  #   """)
 
 
-
-create_materialised_view(name="prescribing_2025")
 
 test_query = query(
     """
