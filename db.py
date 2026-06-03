@@ -93,7 +93,6 @@ def recreate_materialised_views():
 
             for f in sorted(materialised_views_dir.iterdir()):
                 name = f.name.removesuffix(".sql")
-                print(f"Creating materialised view {short_name}")
                 create_materialised_view(
                     connection,
                     name,
@@ -123,6 +122,7 @@ def create_materialised_view(connection, name, app_file, tool_name, force=False)
         if result[0] > 0:
             return
 
+    print(f"Creating materialised view {name}")
     connection.execute(f"CREATE OR REPLACE TABLE {full_name} AS {sql}")
     connection.execute(
         "INSERT INTO view_metadata VALUES (?, ?) "
