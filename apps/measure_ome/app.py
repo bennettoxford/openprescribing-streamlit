@@ -186,6 +186,8 @@ aware_details_breakdown_df = query(
     SELECT
         rx.name AS name,
         ing_name AS ing_name,
+        SUM(items) AS items,
+        SUM(quantity) AS quantity,
         SUM(total_ome) AS total_ome
     FROM {tool_name}_ome_prescribing AS rx
     INNER JOIN medications
@@ -258,8 +260,16 @@ with st.expander(
             column_config={
                 "name": "Medicine",
                 "items": st.column_config.NumberColumn(
-                    "total_ome",
+                    "Items",
                     format="%,d",
+                ),
+                "quantity": st.column_config.NumberColumn(
+                    "Quantity",
+                    format="%,d",
+                ),
+                "total_ome": st.column_config.NumberColumn(
+                    "Total OME",
+                    format="%,.1f",
                 ),
             },
         )

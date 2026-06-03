@@ -221,18 +221,30 @@ def plot_breakdown_chart(
 
     base = alt.Chart(data_df)
 
+    theta = alt.Theta(f"{value_col}:Q", stack=True)
+
     if chart_type == "donut":
         chart = (
-            base.mark_arc(innerRadius=50)
+            base
+            .transform_joinaggregate(total=f"sum({value_col})")
+            .transform_calculate(
+                pct=f"format(datum['{value_col}'] / datum.total * 100, '.1f') + '%'"
+            )
+            .mark_arc(innerRadius=50)
             .encode(
                 theta=alt.Theta(f"{value_col}:Q"),
                 color=alt.Color(
                     f"{category_col}:N",
                     legend=alt.Legend(title=None),
                 ),
+                tooltip=[
+                    alt.Tooltip(f"{category_col}:N", title="Drug"),
+                    alt.Tooltip("pct:N", title="Share"),
+                ],
             )
             .add_params(selection_param)
         )
+
     else:
         chart = (
             base.mark_bar()
