@@ -13,7 +13,7 @@ st.set_page_config(layout="wide", page_icon="content/OpenPrescribing.svg")
 
 # --- Constants ---
 
-tool_name = "measure_aware" # defines the tool name
+tool_name = Path(__file__).parent.name # defines the tool name
 app_path = Path(__file__).parent
 
 # --- Functions ---

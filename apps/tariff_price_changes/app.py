@@ -11,7 +11,7 @@ st.set_page_config(layout="wide", page_icon="content/OpenPrescribing.svg")
 
 # --- Constants ---
 
-tool_name = "tariff_price_changes" # defines the tool name
+tool_name = Path(__file__).parent.name
 
 app_path = Path(__file__).parent # defines the path for content
 

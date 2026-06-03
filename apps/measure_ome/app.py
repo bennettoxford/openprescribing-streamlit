@@ -12,8 +12,7 @@ from charts import plot_decile_chart, plot_stacked_area,     breakdown_chart_typ
 st.set_page_config(layout="wide", page_icon="content/OpenPrescribing.svg")
 
 # --- Constants ---
-
-tool_name = "opioids_ome" # defines the tool name
+tool_name = Path(__file__).parent.name
 app_path = Path(__file__).parent
 
 # --- Functions ---

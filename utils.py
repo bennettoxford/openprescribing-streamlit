@@ -87,10 +87,10 @@ def sidebar_nav():
         st.divider()
         with st.expander("More Tools", expanded=False, icon=":material/handyman:"):
             st.page_link("pages/home.py", label="Home page")
-            st.page_link("apps/tariff_price_changes/tariff_price_changes.py", label="Tariff Price Changes")
-            st.page_link("apps/prescribing_topx/prescribing_topx.py", label="Top x Prescribing")
-            st.page_link("apps/measure_aware/measure_aware.py", label="aWaRe")
-            st.page_link("apps/opioids_ome/opioids_ome.py", label="Opioids OME")
+            st.page_link("apps/tariff_price_changes/app.py", label="Tariff Price Changes")
+            st.page_link("apps/prescribing_topx/app.py", label="Top x Prescribing")
+            st.page_link("apps/measure_aware/app.py", label="aWaRe")
+            st.page_link("apps/measure_ome/app.py", label="Opioids OME")
         st.divider()
         with st.expander("Developer Tools", expanded=False, icon=":material/build:"):
             st.page_link("pages/db_schema.py", label="Database schema")
