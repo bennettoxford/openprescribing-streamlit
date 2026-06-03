@@ -18,13 +18,16 @@ app_path = Path(__file__).parent
 
 # --- Functions ---
 
-
+# gets dates for the data selector
+@st.cache_data
+def get_dates():
+    return query(f"SELECT DISTINCT date FROM {tool_name}_ome_prescribing ORDER BY date ASC")["date"].tolist()
 
 
 # --- Initialisation ---
 
-
 create_materialised_view(name="ome_prescribing", tool_name=tool_name, app_file=__file__) # creates the OME table
+
 
 # --- Data ---
 
@@ -67,6 +70,21 @@ with st.sidebar:
 # shows cascading organisation filter
 selected_practice_codes, sql_in, level = org_filter_sidebar()
 
+# get dates
+dates_asc = get_dates()
+
+# creates date slider, defaulting to latest 3 months
+with st.sidebar:
+    with st.expander(
+        "Change time period for breakdown", icon=":material/calendar_month:", expanded=False
+        ):
+            start_date, end_date = st.select_slider(
+                "Date range",
+                options=dates_asc,
+                value=(dates_asc[-3], dates_asc[-1]),  # defaults to latest 3 months
+                format_func=lambda d: d.strftime("%b %Y"),
+            )
+
 combine_threshold = combine_threshold_slider()
 
 # gives navigation to other tools
@@ -93,7 +111,7 @@ deciles_filtered = deciles_df[deciles_df["org_type"] == decile_level] # filters 
 measure_filtered = filter_rates(measure_df, level, selected_practice_codes, practice_df) # filters the measure to the correct level
 
 chart_title = "Oral Morphine Equivalence (mg) per 1000 patients" # create chart title
-plot_decile_chart(deciles_filtered, level, measure_filtered, measure_name=chart_title, y_format=".1f") # plots decile charts
+plot_decile_chart(deciles_filtered, level, measure_filtered, measure_name=chart_title, y_format=".0f") # plots decile charts
 
 
 # creates stacked_df from materialised view
@@ -161,7 +179,7 @@ aware_details_df = query(
     FROM {tool_name}_ome_prescribing AS rx
     INNER JOIN medications
     ON rx.snomed_code = medications.id
-    WHERE date >= (SELECT MAX(date) - INTERVAL '3 months' FROM date)
+    WHERE date BETWEEN '{start_date}' AND '{end_date}'
     AND rx.practice_code IN {sql_in}
     GROUP BY 
         ing_name
@@ -178,7 +196,7 @@ aware_details_breakdown_df = query(
     FROM {tool_name}_ome_prescribing AS rx
     INNER JOIN medications
     ON rx.snomed_code = medications.id
-    WHERE date >= (SELECT MAX(date) - INTERVAL '3 months' FROM date)
+    WHERE date BETWEEN '{start_date}' AND '{end_date}'
     AND rx.practice_code IN {sql_in}
     GROUP BY 
         ing_name,
@@ -188,9 +206,14 @@ aware_details_breakdown_df = query(
 ) # creates aware_df from materialised view
 
 with st.expander(
-    "Click here to see a breakdown of drugs prescribed", icon=":material/donut_large:"
+    f"Click here to see a breakdown of drugs prescribed between {start_date.strftime('%b %Y')} and {end_date.strftime('%b %Y')}", icon=":material/donut_large:"
 ):
-    st.info("Click on drug in bar or donut chart to see breakdown by presentation")
+    st.info("""
+        Click on drug in bar or donut chart to see breakdown by presentation.
+
+        You can change the date range by using the slide in the sidebar.
+        """
+    )
 
     chart_type = breakdown_chart_type_selector()
 
@@ -232,7 +255,7 @@ with st.expander(
                 .sort_values("total_ome", ascending=False)
             )
 
-        st.markdown(f"##### Products containing {selected_category} prescribed in the last three months")
+        st.markdown(f"##### Products containing {selected_category} prescribed between {start_date.strftime('%b %Y')} and {end_date.strftime('%b %Y')}")
 
         st.dataframe(
             filtered_df,

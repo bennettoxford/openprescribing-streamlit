@@ -78,7 +78,7 @@ def plot_decile_chart(deciles_df, level, rates_df=None, measure_name=None, y_for
                 y=alt.Y(
                     "d1:Q",
                     title="Rate",
-                    axis=alt.Axis(format="%"),
+                    axis=alt.Axis(format=y_format),
                     scale=alt.Scale(zero=False),
                 ),
                 y2=alt.Y2("d9:Q"),
