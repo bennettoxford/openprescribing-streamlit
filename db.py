@@ -72,31 +72,37 @@ def _escape(value):
 
 def recreate_materialised_views():
     print("Creating all materialised views")
-    for app_dir in sorted(APPS_DIR.iterdir()):
-        if not app_dir.is_dir():
-            continue
 
-        app_file = app_dir / "app.py"
-        materialised_views_dir = app_dir / "materialised_views"
+    with duckdb.connect() as connection:
+        attach_prescribing_and_sqlite_dbs(connection)
+        attach_materialised_views_db(connection, read_write=True)
 
-        if not materialised_views_dir.is_dir():
-            continue
+        for app_dir in sorted(APPS_DIR.iterdir()):
+            if not app_dir.is_dir():
+                continue
 
-        for f in sorted(materialised_views_dir.iterdir()):
-            name = f.name.removesuffix(".sql")
-            print(f"Creating materialised view {name}")
-            maybe_recreate_materialised_view(
-                name,
-                app_file,
-                app_dir.name,
-                force=True,
-            )
+            app_file = app_dir / "app.py"
+            materialised_views_dir = app_dir / "materialised_views"
+
+            if not materialised_views_dir.is_dir():
+                continue
+
+            for f in sorted(materialised_views_dir.iterdir()):
+                name = f.name.removesuffix(".sql")
+                print(f"Creating materialised view {name}")
+                maybe_recreate_materialised_view(
+                    connection,
+                    name,
+                    app_file,
+                    app_dir.name,
+                    force=True,
+                )
 
     print("All materialised views (re-)created")
 
 
 def maybe_recreate_materialised_view(
-    name, app_file, tool_name, max_age_hours=168, force=False
+    connection, name, app_file, tool_name, max_age_hours=168, force=False
 ):
     materialised_views_dir = Path(app_file).parent / "materialised_views"
     sql = (materialised_views_dir / f"{name}.sql").read_text()
@@ -105,25 +111,21 @@ def maybe_recreate_materialised_view(
     data_dir = Path(app_file).parent / "csvs"  # allows csvs stored in `data` to be used
     sql = sql.replace("{data_dir}", str(data_dir))
 
-    with duckdb.connect() as connection:
-        attach_prescribing_and_sqlite_dbs(connection)
-        attach_materialised_views_db(connection, read_write=True)
+    if not force:
+        try:
+            result = connection.execute(f"""
+                SELECT (NOW() - MAX(created_at)) < INTERVAL '{max_age_hours} hours'
+                FROM {full_name}_meta
+            """).fetchone()
 
-        if not force:
-            try:
-                result = connection.execute(f"""
-                    SELECT (NOW() - MAX(created_at)) < INTERVAL '{max_age_hours} hours'
-                    FROM {full_name}_meta
-                """).fetchone()
+            if result and result[0]:
+                return
 
-                if result and result[0]:
-                    return
+        except Exception:
+            pass
 
-            except Exception:
-                pass
-
-        connection.execute(f"CREATE OR REPLACE TABLE {full_name} AS {sql}")
-        connection.execute(f"""
-            CREATE OR REPLACE TABLE {full_name}_meta AS
-            SELECT NOW() AS created_at
-        """)
+    connection.execute(f"CREATE OR REPLACE TABLE {full_name} AS {sql}")
+    connection.execute(f"""
+        CREATE OR REPLACE TABLE {full_name}_meta AS
+        SELECT NOW() AS created_at
+    """)
