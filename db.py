@@ -89,7 +89,7 @@ def recreate_materialised_views():
         for f in sorted(materialised_views_dir.iterdir()):
             name = f.name.removesuffix(".sql")
             print(f"Creating materialised view {name}")
-            create_materialised_view(
+            maybe_recreate_materialised_view(
                 name,
                 app_file,
                 app_dir.name,
@@ -100,7 +100,9 @@ def recreate_materialised_views():
 
 
 @st.cache_data
-def create_materialised_view(name, app_file, tool_name, max_age_hours=168, force=False):
+def maybe_recreate_materialised_view(
+    name, app_file, tool_name, max_age_hours=168, force=False
+):
     materialised_views_dir = Path(app_file).parent / "materialised_views"
     sql = (materialised_views_dir / f"{name}.sql").read_text()
     full_name = f"{tool_name}_{name}"
