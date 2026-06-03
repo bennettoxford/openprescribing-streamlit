@@ -87,10 +87,10 @@ def recreate_materialised_views():
             continue
 
         for f in sorted(materialised_views_dir.iterdir()):
-            short_name = f.name.removesuffix(".sql")
-            print(f"Creating materialised view {short_name}")
+            name = f.name.removesuffix(".sql")
+            print(f"Creating materialised view {name}")
             create_materialised_view(
-                short_name,
+                name,
                 app_file,
                 app_dir.name,
                 force=True,
