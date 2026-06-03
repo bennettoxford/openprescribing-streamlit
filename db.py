@@ -1,3 +1,4 @@
+import hashlib
 import os
 from pathlib import Path
 
@@ -75,6 +76,10 @@ def recreate_materialised_views():
     with duckdb.connect() as connection:
         attach_prescribing_and_sqlite_dbs(connection)
         attach_materialised_views_db(connection, read_write=True)
+        connection.execute(
+            "CREATE TABLE IF NOT EXISTS view_metadata "
+            "(name VARCHAR PRIMARY KEY, sql_hash VARCHAR)"
+        )
 
         for app_dir in sorted(APPS_DIR.iterdir()):
             if not app_dir.is_dir():
@@ -100,31 +105,27 @@ def recreate_materialised_views():
     print("All materialised views (re-)created")
 
 
-def create_materialised_view(
-    connection, name, app_file, tool_name, max_age_hours=168, force=False
-):
+def create_materialised_view(connection, name, app_file, tool_name, force=False):
     materialised_views_dir = Path(app_file).parent / "materialised_views"
     sql = (materialised_views_dir / f"{name}.sql").read_text()
     full_name = f"{tool_name}_{name}"
 
     data_dir = Path(app_file).parent / "csvs"  # allows csvs stored in `data` to be used
     sql = sql.replace("{data_dir}", str(data_dir))
+    sql_hash = hashlib.sha256(sql.encode()).hexdigest()
 
     if not force:
-        try:
-            result = connection.execute(f"""
-                SELECT (NOW() - MAX(created_at)) < INTERVAL '{max_age_hours} hours'
-                FROM {full_name}_meta
-            """).fetchone()
+        result = connection.execute(
+            "SELECT count(*) FROM view_metadata WHERE name = ? AND sql_hash = ?",
+            [full_name, sql_hash],
+        ).fetchone()
 
-            if result and result[0]:
-                return
+        if result[0] > 0:
+            return
 
-        except Exception:
-            pass
-
-        connection.execute(f"CREATE OR REPLACE TABLE {full_name} AS {sql}")
-        connection.execute(f"""
-            CREATE OR REPLACE TABLE {full_name}_meta AS
-            SELECT NOW() AS created_at
-        """)
+    connection.execute(f"CREATE OR REPLACE TABLE {full_name} AS {sql}")
+    connection.execute(
+        "INSERT INTO view_metadata VALUES (?, ?) "
+        "ON CONFLICT (name) DO UPDATE SET sql_hash = excluded.sql_hash",
+        [full_name, sql_hash],
+    )
