@@ -1,7 +1,7 @@
 WITH gbg AS (
     SELECT *
     FROM medications
-    WHERE SUBSTR(bnf_code, 9, 2) = 'AA'
+    WHERE SUBSTR(bnf_code, 10, 2) = 'AA'
       AND id != vmp_id
 )
 SELECT
