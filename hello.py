@@ -6,6 +6,7 @@ pages = st.navigation([
     st.Page("apps/prescribing_topx/app.py",         title="Top x Prescribing",     url_path="prescribing-topx"),
     st.Page("apps/measure_aware/app.py",            title="aWaRe",                 url_path="measure-aware"),
     st.Page("apps/measure_ome/app.py",              title="Opioids OME",           url_path="measure-ome"),
+    st.Page("apps/gbg/app.py",                      title="Ghost Branded Generics",url_path="gbg"),
     st.Page("pages/db_schema.py",                   title="Database schema"),
     st.Page("pages/sql_checker.py",                 title="Code tests")
 ])

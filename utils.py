@@ -91,6 +91,7 @@ def sidebar_nav():
             st.page_link("apps/prescribing_topx/app.py", label="Top x Prescribing")
             st.page_link("apps/measure_aware/app.py", label="aWaRe")
             st.page_link("apps/measure_ome/app.py", label="Opioids OME")
+            st.page_link("apps/gbg/app.py", label="Ghost Branded Generics")
         st.divider()
         with st.expander("Developer Tools", expanded=False, icon=":material/build:"):
             st.page_link("pages/db_schema.py", label="Database schema")
