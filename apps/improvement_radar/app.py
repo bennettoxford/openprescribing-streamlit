@@ -6,7 +6,7 @@ import json
 from io import StringIO
 from db import query
 from charts import plot_improvement_chart
-from utils import sidebar_logo, global_styles, sidebar_nav
+from utils import sidebar_logo, global_styles, sidebar_nav, changelog
 
 # This makes Streamlit use whole page -t his has to be the first line of code, and inserts the OP logo into the browser
 st.set_page_config(layout="wide", page_icon="content/OpenPrescribing.svg")
@@ -252,3 +252,6 @@ cols = ['Organisation'] + [c for c in table_df.columns if c != 'Organisation']
 table_df = table_df[cols]
 
 st.dataframe(table_df, hide_index=True)
+
+# show changelog
+changelog(Path(__file__).parent)

@@ -45,12 +45,6 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Methodology explainer
-with st.expander(
-    "Click here to read our methodology", icon=":material/quick_reference:"
-):
-    with open(Path(__file__).parent / "content/methodology.md") as f:
-        st.markdown(f.read())
         
 # Sidebar 
 
@@ -117,9 +111,15 @@ df_topx_ranked = (
 
 
 for _, row in df_topx_ranked.iterrows():
-    label = (
-        f"{row['vtm_name']} — £{row['actual_cost']:,.2f} ({row['items']:,.0f} items)"
-    )
+    if sort_col == "actual_cost":
+        label = (
+            f"{row['vtm_name']} — £{row['actual_cost']:,.2f} ({row['items']:,.0f} items)"
+        )
+    else:
+        label = (
+            f"{row['vtm_name']} — {row['items']:,.0f} items (£{row['actual_cost']:,.2f})"
+        )
+
     vtm_breakdown = df_topx_detail[df_topx_detail["vtm_id"] == row["vtm_id"]]
 
     with st.expander(label):
