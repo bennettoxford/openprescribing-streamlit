@@ -9,6 +9,18 @@ st.set_page_config(layout="wide")
 # inserts logo into sidebar
 sidebar_logo()
 
+with st.sidebar:
+    st.info(
+        """ℹ️ The majority of these tools allow you to select multiple organisations at different levels in the NHS, including
+
+- NHS Region
+- Integrated Care Board (ICB)
+- Sub-ICB level (former CCGs)
+- Primary Care Networks (PCNs)
+- GP Practices
+"""
+    )
+
 # applies CSS for navigation bar
 global_styles()
 
@@ -51,12 +63,3 @@ st.markdown("##### Quality improvement tools")
 st.page_link("apps/improvement_radar/app.py", label="Sub-ICB Level Improvement Radar", icon=":material/radar:")
 st.markdown('<p style="margin-left: 2.2rem; margin-top: -0.8rem; font-size: 0.875rem;">See whether other Sub-ICB level organisations have made improvements on their prescribing, to encourage sharing of ideas</p>', unsafe_allow_html=True)
 
-st.info(
-""""ℹ️ The majority of these tools allow you to select multiple organisations at different levels in the NHS, including
-- NHS Region
-- Integrated Care Board (ICB)
-- Sub-ICB level (former CCGs)
-- Primary Care Networks (PCNs)
-- GP Practices
-"""
-)
