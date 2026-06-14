@@ -105,10 +105,9 @@ deciles_filtered = deciles_df[deciles_df["org_type"] == decile_level] # filters 
 measure_filtered = filter_rates(measure_df, level, selected_practice_codes, practice_df) # filters the measure to the correct level
 
 chart_title = "Oral Morphine Equivalence (mg) per 1000 patients" # create chart title
-plot_decile_chart(deciles_filtered, level, measure_filtered, measure_name=chart_title, y_format=".0f") # plots decile charts
+plot_decile_chart(deciles_filtered, level, measure_filtered, measure_name=chart_title, y_format=".0f", y_title="OME per 1000 patients (mg)") # plots decile charts
 
 
-# creates stacked_df from materialised view
 
 with st.expander(
     "Click here to see a stacked time chart of opioids",
@@ -118,6 +117,7 @@ with st.expander(
     mode = st.radio(
         "Group by",
         ["ing", "vtm"],
+        format_func=lambda x: {"ing": "Ingredient", "vtm": "Chemical Substance"}[x],
         horizontal=True,
         key="stacked_chart_groupby",
     )
@@ -163,43 +163,8 @@ with st.expander(
         x_col="date",
         y_col="total_ome",
         color_col=color_col,
+        y_title="Total OME (mg)"
     )
-
-aware_details_df = query(
-    f"""
-    SELECT
-        ing_name AS ing_name,
-        SUM(total_ome) AS total_ome
-    FROM {tool_name}_ome_prescribing AS rx
-    INNER JOIN medications
-    ON rx.snomed_code = medications.id
-    WHERE date BETWEEN '{start_date}' AND '{end_date}'
-    AND rx.practice_code IN {sql_in}
-    GROUP BY 
-        ing_name
-    """
-) # creates aware_df from materialised view
-
-
-aware_details_breakdown_df = query(
-    f"""
-    SELECT
-        rx.name AS name,
-        ing_name AS ing_name,
-        SUM(items) AS items,
-        SUM(quantity) AS quantity,
-        SUM(total_ome) AS total_ome
-    FROM {tool_name}_ome_prescribing AS rx
-    INNER JOIN medications
-    ON rx.snomed_code = medications.id
-    WHERE date BETWEEN '{start_date}' AND '{end_date}'
-    AND rx.practice_code IN {sql_in}
-    GROUP BY 
-        ing_name,
-        rx.name
-    ORDER BY total_ome DESC
-    """
-) # creates aware_df from materialised view
 
 with st.expander(
     f"Click here to see a breakdown of drugs prescribed between {start_date.strftime('%b %Y')} and {end_date.strftime('%b %Y')}", icon=":material/donut_large:"
@@ -211,11 +176,75 @@ with st.expander(
         """
     )
 
+    mode_breakdown = st.radio(
+        "Group by",
+        ["ing", "vtm"],
+        format_func=lambda x: {"ing": "Ingredient", "vtm": "Chemical Substance"}[x],
+        horizontal=True,
+        key="stacked_chart_groupby_breakdown",
+    )
+
+    groupings = {
+        "ing": {
+            "cols": "ingredient_id, ing_name",
+            "group_by": "rx.ingredient_id, rx.ing_name",
+            "color_col": "ing_name",
+            "id_col": "ingredient_id",
+            "y_title": "Ingredient Name",
+        },
+        "vtm": {
+            "cols": "vtm_id, vtm_name",
+            "group_by": "rx.vtm_id, rx.vtm_name",
+            "color_col": "vtm_name",
+            "id_col": "vtm_id",
+            "y_title": "Chemical Substance",
+        },
+    }
+
+    group_cols_breakdown = groupings[mode_breakdown]["cols"]
+    color_col_breakdown = groupings[mode_breakdown]["color_col"]
+    group_by_breakdown = groupings[mode_breakdown]["group_by"]
+    id_col_breakdown = groupings[mode_breakdown]["id_col"]
+
+    details_df = query(
+    f"""
+    SELECT
+        {group_by_breakdown},
+        SUM(total_ome) AS total_ome
+    FROM {tool_name}_ome_prescribing AS rx
+    INNER JOIN medications
+    ON rx.snomed_code = medications.id
+    WHERE date BETWEEN '{start_date}' AND '{end_date}'
+    AND rx.practice_code IN {sql_in}
+    GROUP BY {group_by_breakdown}
+    """
+)
+
+    details_breakdown_df = query(
+        f"""
+        SELECT
+            rx.name AS name,
+            {group_by_breakdown},
+            SUM(items) AS items,
+            SUM(quantity) AS quantity,
+            SUM(total_ome) AS total_ome
+        FROM {tool_name}_ome_prescribing AS rx
+        INNER JOIN medications
+        ON rx.snomed_code = medications.id
+        WHERE date BETWEEN '{start_date}' AND '{end_date}'
+        AND rx.practice_code IN {sql_in}
+        GROUP BY
+            {group_by_breakdown},
+            rx.name
+        ORDER BY total_ome DESC
+        """
+    )
+
     chart_type = breakdown_chart_type_selector()
 
     combined_df = combine_small_categories(
-        aware_details_df,
-        category_col="ing_name",
+        details_df,
+        category_col=color_col_breakdown,
         value_col="total_ome",
         threshold=combine_threshold,
     )
@@ -223,31 +252,33 @@ with st.expander(
     selected_category = plot_breakdown_chart(
         combined_df,
         value_col="total_ome",
-        category_col="ing_name",
+        category_col=color_col_breakdown,
         chart_type=chart_type,
-        key="aware_breakdown_chart",
+        key=f"aware_breakdown_chart_{mode_breakdown}",
+        y_title=groupings[mode_breakdown]["y_title"],
+        x_title="Total OME (mg)"
     )
 
     if selected_category:
 
         if selected_category == "Other":
             kept_categories = set(
-                combined_df.loc[combined_df["ing_name"] != "Other", "ing_name"]
+                combined_df.loc[combined_df[color_col_breakdown] != "Other", color_col_breakdown]
             )
 
             filtered_df = (
-                aware_details_breakdown_df[
-                    ~aware_details_breakdown_df["ing_name"].isin(kept_categories)
+                details_breakdown_df[
+                    ~details_breakdown_df[color_col_breakdown].isin(kept_categories)
                 ]
-                .drop(columns="ing_name")
+                .drop(columns=color_col_breakdown)
                 .sort_values("total_ome", ascending=False)
             )
         else:
             filtered_df = (
-                aware_details_breakdown_df[
-                    aware_details_breakdown_df["ing_name"] == selected_category
+                details_breakdown_df[
+                    details_breakdown_df[color_col_breakdown] == selected_category
                 ]
-                .drop(columns="ing_name")
+                .drop(columns=[color_col_breakdown, id_col_breakdown])
                 .sort_values("total_ome", ascending=False)
             )
 

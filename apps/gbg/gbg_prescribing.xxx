@@ -1,0 +1,33 @@
+WITH gbg AS (
+    SELECT *
+    FROM medications
+    WHERE SUBSTR(bnf_code, 10, 2) = 'AA'
+      AND id != vmp_id
+),
+ranked AS (
+    SELECT
+        dt,
+        vpid,
+        (price / 100.0) / qtyval AS unit_price,
+        ROW_NUMBER() OVER (PARTITION BY dt, vpid ORDER BY (price / 100.0) / qtyval DESC) AS rn
+    FROM dtinfo
+    INNER JOIN vmpp ON dtinfo.vppid = vmpp.vppid
+    WHERE dt IS NOT NULL
+)
+SELECT
+    date,
+    practice_code,
+    snomed_code,
+    SUM(quantity) AS quantity,
+    SUM(items) AS items,
+    SUM(net_cost) AS nic,
+    round(SUM(net_cost/100) / SUM(quantity),2) AS nic_per_q,
+    r.unit_price
+FROM prescribing
+INNER JOIN gbg
+    ON gbg.id = prescribing.snomed_code
+INNER JOIN ranked r
+    ON r.vpid = gbg.vmp_id
+    AND r.dt = prescribing.date
+WHERE r.rn = 1
+GROUP BY date, practice_code, snomed_code

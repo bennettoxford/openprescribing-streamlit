@@ -4,7 +4,7 @@ import pandas as pd
 from utils import get_filter_label
 
 
-def plot_decile_chart(deciles_df, level, rates_df=None, measure_name=None, y_format="%"):
+def plot_decile_chart(deciles_df, level, rates_df=None, measure_name=None, y_format="%", y_title="Rate"):
     OP_COLOURS = [
         "#e41a1c", "#ff7f00", "#4daf4a", "#984ea3", "#a65628",
         "#f781bf", "#999999", "#b15928", "#66c2a5", "#fc8d62",
@@ -19,7 +19,7 @@ def plot_decile_chart(deciles_df, level, rates_df=None, measure_name=None, y_for
 
     y_axis = alt.Y(
         "rate:Q",
-        title="Rate",
+        title=y_title,
         axis=alt.Axis(format=y_format),
         scale=alt.Scale(zero=False),
        
@@ -52,7 +52,7 @@ def plot_decile_chart(deciles_df, level, rates_df=None, measure_name=None, y_for
             alt.Chart(df_deciles)
             .mark_line(color="steelblue", strokeDash=[2, 4], size=1)
             .encode(
-                x=alt.X("date:T", title="Date"),
+                x=alt.X('date:T', title='Month',axis=alt.Axis(format='%b %Y', tickCount=alt.TimeIntervalStep('month', 3))),
                 y=y_axis,
                 detail="decile:N",
             )
@@ -74,10 +74,10 @@ def plot_decile_chart(deciles_df, level, rates_df=None, measure_name=None, y_for
             alt.Chart(deciles_df)
             .mark_area(opacity=0.2, color="steelblue")
             .encode(
-                x=alt.X("date:T", title="Date"),
+                x=alt.X('date:T', title='Month',axis=alt.Axis(format='%b %Y', tickCount=alt.TimeIntervalStep('month', 3))),
                 y=alt.Y(
                     "d1:Q",
-                    title="Rate",
+                    title=y_title,
                     axis=alt.Axis(format=y_format),
                     scale=alt.Scale(zero=False),
                 ),
@@ -174,14 +174,15 @@ def plot_stacked_area(
     x_col,
     y_col,
     color_col,
+    y_title,
     sort_order=None,
 ):
     chart = (
         alt.Chart(stacked_df)
         .mark_area()
         .encode(
-            x=alt.X(f"{x_col}:T"),
-            y=alt.Y(f"{y_col}:Q", stack=True),
+            x=alt.X(f"{x_col}:T", title="Month",axis=alt.Axis(format='%b %Y', tickCount=alt.TimeIntervalStep('month', 3))),
+            y=alt.Y(f"{y_col}:Q", title=y_title,stack=True),
             color=alt.Color(
                 f"{color_col}:N",
                 sort=sort_order,
@@ -213,6 +214,8 @@ def plot_breakdown_chart(
     category_col: str,
     chart_type: str = "bar",
     key: str | None = None,
+    y_title: str = "Name",
+    x_title: str = "",
 ):
     selection_param = alt.selection_point(
         name="my_selection",
@@ -249,11 +252,11 @@ def plot_breakdown_chart(
         chart = (
             base.mark_bar()
             .encode(
-                x=alt.X(f"{value_col}:Q"),
-                y=alt.Y(f"{category_col}:N", sort="-x"),
+                x=alt.X(f"{value_col}:Q", title=x_title),
+                y=alt.Y(f"{category_col}:N", sort="-x", axis=alt.Axis(labelLimit=500),title=y_title),
                 color=alt.Color(
                     f"{category_col}:N",
-                    legend=alt.Legend(title=None),
+                    legend=None,
                 ),
             )
             .add_params(selection_param)
@@ -265,7 +268,6 @@ def plot_breakdown_chart(
         width="stretch",
         key=key,
     )
-
     if chart_selection.selection.my_selection:
         return chart_selection.selection.my_selection[0][category_col]
 

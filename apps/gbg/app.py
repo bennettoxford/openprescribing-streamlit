@@ -3,6 +3,7 @@ from pathlib import Path
 import pandas as pd
 import yaml
 import altair as alt
+import time
 
 from db import query
 from utils import sidebar_logo, sidebar_nav, org_filter_sidebar,gbp, render_pagination, global_styles, changelog, why_it_matters, load_proportion_rates, load_deciles, filter_rates, load_practice_df, combine_threshold_slider, combine_small_categories, load_per1000_rates, combine_small_categories_by_date
@@ -83,27 +84,92 @@ sidebar_nav()
 
 # Main app
 
-gbg_details_df = query(
-    f"""
-    SELECT
-        snomed_code as dmd_code,
-        medications.name as name,
-        SUM(items) AS total_items
-    FROM {tool_name}_gbg_prescribing AS rx
-    INNER JOIN medications
-    ON rx.snomed_code = medications.id
-    WHERE date BETWEEN '{start_date}' AND '{end_date}'
-    AND rx.practice_code IN {sql_in}
-    GROUP BY 
-        dmd_code,
-        name
-    ORDER BY 
-        total_items DESC
-    """
-) # creates gbg breakdown
 
+medications_query = """
+    SELECT DISTINCT
+        id
+    FROM medications
+    WHERE SUBSTR(bnf_code, 10, 2) = 'AA'
+    AND id != vmp_id
+    AND vmp_id IN (
+        SELECT DISTINCT vmp_id
+        FROM medications
+        INNER JOIN vmpp
+            ON vmpp.vpid = medications.vmp_id
+        INNER JOIN data_tariffprice
+            ON data_tariffprice.vmpp_id = vmpp.vppid
+        WHERE data_tariffprice.date>= '2024-04-01'
+    )
+    AND id IN (
+        SELECT DISTINCT snomed_code
+        FROM prescribing
+    )
+"""
 
-st.dataframe(gbg_details_df)
+start = time.perf_counter()
+medications_df = query(medications_query)
+elapsed = time.perf_counter() - start
+
+with st.expander("Query info"):
+    st.write(f"Rows returned: {len(medications_df)}")
+    st.write(f"Time: {elapsed:.3f}s")
+
+st.dataframe(medications_df)
 
 # show changelog
 changelog(Path(__file__).parent)
+
+medications_df = query(medications_query)
+snomed_codes = medications_df["id"].to_list()
+prescribing_query = """
+SELECT *
+FROM prescribing
+WHERE snomed_code IN (    SELECT DISTINCT
+        id
+    FROM medications
+    WHERE SUBSTR(bnf_code, 10, 2) = 'AA'
+    AND id != vmp_id
+    AND vmp_id IN (
+        SELECT DISTINCT vmp_id
+        FROM medications
+        INNER JOIN vmpp
+            ON vmpp.vpid = medications.vmp_id
+        INNER JOIN data_tariffprice
+            ON data_tariffprice.vmpp_id = vmpp.vppid
+        WHERE data_tariffprice.date>= '2024-04-01'
+    )
+    AND id IN (
+        SELECT DISTINCT snomed_code
+        FROM prescribing
+    ))
+"""
+
+start = time.perf_counter()
+prescribing_df = query(prescribing_query)
+elapsed = time.perf_counter() - start
+
+with st.expander("Query info"):
+    st.write(f"Rows returned: {len(prescribing_df)}")
+    st.write(f"Time: {elapsed:.3f}s")
+
+st.dataframe(prescribing_df)
+
+prescribingnm_query = f"""
+SELECT *
+FROM prescribing
+INNER JOIN medications
+ON
+medications.id = prescribing.snomed_code
+WHERE snomed_code IN ({", ".join(f"'{c}'" for c in snomed_codes)})
+AND practice_code = 'L83081'
+"""
+
+start = time.perf_counter()
+#prescribingnm_df = query(prescribingnm_query)
+elapsed = time.perf_counter() - start
+
+with st.expander("Query info"):
+    st.write(f"Rows returned: {len(prescribingnm_df)}")
+    st.write(f"Time: {elapsed:.3f}s")
+
+st.dataframe(prescribing_df)

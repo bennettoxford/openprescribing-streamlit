@@ -18,7 +18,9 @@ app_path = Path(__file__).parent
 
 # --- Functions ---
 
-
+@st.cache_data
+def get_dates():
+    return query(f"SELECT DISTINCT date FROM {tool_name}_aware_prescribing ORDER BY date ASC")["date"].tolist()
 
 
 # --- Data ---
@@ -62,6 +64,21 @@ with st.sidebar:
 # shows cascading organisation filter
 selected_practice_codes, sql_in, level = org_filter_sidebar()
 
+# get dates
+dates_asc = get_dates()
+
+# creates date slider, defaulting to latest 3 months
+with st.sidebar:
+    with st.expander(
+        "Change time period for breakdown", icon=":material/calendar_month:", expanded=False
+        ):
+            start_date, end_date = st.select_slider(
+                "Date range",
+                options=dates_asc,
+                value=(dates_asc[-3], dates_asc[-1]),  # defaults to latest 3 months
+                format_func=lambda d: d.strftime("%b %Y"),
+            )
+
 combine_threshold = combine_threshold_slider()
 
 # gives navigation to other tools
@@ -74,7 +91,7 @@ sidebar_nav()
 
 # calculate decile charts
 measure_df  = load_proportion_rates(
-    table_name="measure_aware_aware_prescribing", # materialised view for the data
+    table_name=f"{tool_name}_aware_prescribing", # materialised view for the data
     value_col="items", # measure calculation type
     numerator_condition="aware_2024 IN ('Watch', 'Reserve')" ,
     denominator_condition="aware_2024 IN ('Access', 'Watch', 'Reserve')"
@@ -117,7 +134,8 @@ with st.expander(
         x_col="date",
         y_col="items",
         color_col="aware_2024",
-        sort_order="descending"
+        sort_order="descending",
+        y_title="Percentage of items as blah"
     )
 
 aware_details_df = query(
@@ -131,14 +149,13 @@ aware_details_df = query(
     INNER JOIN vtm
     ON
     medications.vtm_id = vtm.vtmid
-    WHERE date >= (SELECT MAX(date) - INTERVAL '3 months' FROM date)
+    WHERE date BETWEEN '{start_date}' AND '{end_date}'
     AND rx.practice_code IN {sql_in}
-    AND aware_2024 = 'Watch'
+    AND aware_2024 IN ('Watch','Reserve')
     GROUP BY 
         vtm.nm 
     """
-) # creates aware_df from materialised view
-
+)
 
 aware_details_breakdown_df = query(
     f"""
@@ -152,22 +169,79 @@ aware_details_breakdown_df = query(
     INNER JOIN vtm
     ON
     medications.vtm_id = vtm.vtmid
-    WHERE date >= (SELECT MAX(date) - INTERVAL '3 months' FROM date)
+    WHERE date BETWEEN '{start_date}' AND '{end_date}'
     AND rx.practice_code IN {sql_in}
-    AND aware_2024 = 'Watch'
+    AND aware_2024 IN ('Watch','Reserve')
     GROUP BY 
         vtm.nm,
         rx.name
     ORDER BY items DESC
     """
-) # creates aware_df from materialised view
+)
 
 with st.expander(
-    "Click here to see a breakdown of drugs in the numerator", icon=":material/donut_large:"
+    f"Click here to see a breakdown of drugs in the numerator between {start_date.strftime('%b %Y')} and {end_date.strftime('%b %Y')}", icon=":material/donut_large:"
 ):
-    st.info("Click on drug in bar or donut chart to see breakdown by presentation")
+    st.info("""
+        Click on drug in bar or donut chart to see breakdown by presentation.
+
+        You can change the date range by using the slider in the sidebar.
+    """)
+
+    include_watch, include_reserve, *_ = st.columns([1, 1, 8])
+    include_watch = include_watch.checkbox("Watch", value=True)
+    include_reserve = include_reserve.checkbox("Reserve", value=True)
+
+
+    selected_aware = [c for c, selected in [("Watch", include_watch), ("Reserve", include_reserve)] if selected]
+    if not selected_aware:
+        st.warning("Please select at least one category.")
+        st.stop()
+    sql_aware = str(tuple(selected_aware)) if len(selected_aware) > 1 else f"('{selected_aware[0]}')"
+
 
     chart_type = breakdown_chart_type_selector()
+
+    aware_details_df = query(
+    f"""
+    SELECT
+        vtm.nm AS vtm_name,
+        SUM(items) AS items 
+    FROM {tool_name}_aware_prescribing AS rx
+    INNER JOIN medications
+    ON rx.snomed_code = medications.id
+    INNER JOIN vtm
+    ON
+    medications.vtm_id = vtm.vtmid
+    WHERE date BETWEEN '{start_date}' AND '{end_date}'
+    AND rx.practice_code IN {sql_in}
+    AND aware_2024 IN {sql_aware}
+    GROUP BY 
+        vtm.nm 
+    """
+)
+
+    aware_details_breakdown_df = query(
+    f"""
+    SELECT
+        rx.name AS name,
+        vtm.nm AS vtm_name,
+        SUM(items) AS items 
+    FROM {tool_name}_aware_prescribing AS rx
+    INNER JOIN medications
+    ON rx.snomed_code = medications.id
+    INNER JOIN vtm
+    ON
+    medications.vtm_id = vtm.vtmid
+    WHERE date BETWEEN '{start_date}' AND '{end_date}'
+    AND rx.practice_code IN {sql_in}
+    AND aware_2024 IN {sql_aware}
+    GROUP BY 
+        vtm.nm,
+        rx.name
+    ORDER BY items DESC
+    """
+)
 
     combined_df = combine_small_categories(
         aware_details_df,
@@ -182,19 +256,35 @@ with st.expander(
         category_col="vtm_name",
         chart_type=chart_type,
         key="aware_breakdown_chart",
+        y_title = "Chemical Substance",
+        x_title = "Items",
     )
 
     if selected_category:
 
-        filtered_df = (
-            aware_details_breakdown_df[
-                aware_details_breakdown_df["vtm_name"] == selected_category
-            ]
-            .drop(columns="vtm_name")
-            .sort_values("items", ascending=False)
-        )
+        if selected_category == "Other":
+            kept_categories = set(
+                combined_df.loc[combined_df["vtm_name"] != "Other", "vtm_name"]
+            )
 
-        st.markdown(f"##### Products containing {selected_category} prescribed in the last three months")
+            filtered_df = (
+                aware_details_breakdown_df[
+                    ~aware_details_breakdown_df["vtm_name"].isin(kept_categories)
+                ]
+                .drop(columns="vtm_name")
+                .sort_values("items", ascending=False)
+            )
+
+        else:
+            filtered_df = (
+                aware_details_breakdown_df[
+                    aware_details_breakdown_df["vtm_name"] == selected_category
+                ]
+                .drop(columns="vtm_name")
+                .sort_values("items", ascending=False)
+            )
+
+        st.markdown(f"##### Products containing {selected_category} prescribed between {start_date.strftime('%b %Y')} and {end_date.strftime('%b %Y')}")
 
         st.dataframe(
             filtered_df,
