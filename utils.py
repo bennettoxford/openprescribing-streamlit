@@ -89,9 +89,10 @@ def sidebar_nav():
             st.page_link("pages/home.py", label="Home page")
             st.page_link("apps/tariff_price_changes/app.py", label="Tariff Price Changes")
             st.page_link("apps/prescribing_topx/app.py", label="Top x Prescribing")
-            st.page_link("apps/measure_aware/app.py", label="aWaRe")
-            st.page_link("apps/measure_ome/app.py", label="Opioids OME")
-            st.page_link("apps/gbg/app.py", label="Ghost Branded Generics")
+            st.page_link("apps/measure_aware/app.py", label="Measure: aWaRe")
+            st.page_link("apps/measure_hypnotics/app.py", label="Measure: Hypnotics & Anxiolytics")
+            st.page_link("apps/measure_ome/app.py", label="Measure: Opioids OME")
+            #st.page_link("apps/gbg/app.py", label="Ghost Branded Generics")
             st.page_link("apps/improvement_radar/app.py", label="Improvement Radar"),
         st.divider()
         with st.expander("Developer Tools", expanded=False, icon=":material/build:"):
@@ -289,7 +290,7 @@ def load_deciles(rates_df):
     return (
         rates_df
         .groupby(["date", "org_type"])["rate"]
-        .quantile([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.25, 0.75])
+        .quantile([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.25, 0.75])
         .unstack()
         .reset_index()
         .rename(columns={
@@ -302,7 +303,6 @@ def load_deciles(rates_df):
             0.7:  "d7",
             0.8:  "d8",
             0.9:  "d9",
-            1.0:  "d10",
             0.25: "q25",
             0.75: "q75",
         })

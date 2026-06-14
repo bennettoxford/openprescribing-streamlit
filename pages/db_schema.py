@@ -3,6 +3,21 @@ import streamlit as st
 
 from db import query
 
+from utils import sidebar_logo, global_styles, sidebar_nav
+
+st.set_page_config(layout="wide")
+
+# --- App ---
+
+# inserts logo into sidebar
+sidebar_logo()
+
+# applies CSS for navigation bar
+global_styles()
+
+# gives navigation to other tools
+sidebar_nav()
+
 st.title("DuckDB Schema Explorer")
 
 tables = query("""

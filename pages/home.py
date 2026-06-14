@@ -1,9 +1,20 @@
 import streamlit as st
 from pathlib import Path
+from utils import sidebar_logo, global_styles, sidebar_nav
 
 st.set_page_config(layout="wide")
 
-st.image(Path("content/OpenPrescribing.svg"))
+# --- App ---
+
+# inserts logo into sidebar
+sidebar_logo()
+
+# applies CSS for navigation bar
+global_styles()
+
+# gives navigation to other tools
+sidebar_nav()
+
 st.info(
 """#### Hello!  You've found our streamlit prototyping page
 ##### This is where we're testing new tools that we think may be useful.

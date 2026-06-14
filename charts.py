@@ -37,7 +37,7 @@ def plot_decile_chart(deciles_df, level, rates_df=None, measure_name=None, y_for
     )
 
     if chart_type == "deciles":
-        decile_cols = ["d1", "d2", "d3", "d4", "d5", "d6", "d7", "d8", "d9", "d10"]
+        decile_cols = ["d1", "d2", "d3", "d4", "d5", "d6", "d7", "d8", "d9"]
         df_long = deciles_df.melt(
             id_vars=["date", "org_type"],
             value_vars=decile_cols,
@@ -272,3 +272,41 @@ def plot_breakdown_chart(
         return chart_selection.selection.my_selection[0][category_col]
 
     return None
+
+def plot_improvement_chart(deciles_df, org_df):
+    y_axis = alt.Y("rate:Q", title="Rate", scale=alt.Scale(zero=False))
+
+    decile_df = deciles_df[deciles_df["percentile"] != 0.5]
+    median_df = deciles_df[deciles_df["percentile"] == 0.5]
+
+    decile_layer = (
+        alt.Chart(decile_df)
+        .mark_line(color="steelblue", strokeDash=[2, 4], size=1)
+        .encode(
+            x=alt.X("month:T", title="Month", axis=alt.Axis(format="%b %Y", tickCount=alt.TimeIntervalStep("month", 3))),
+            y=y_axis,
+            detail="percentile:Q",
+        )
+    )
+
+    median_layer = (
+        alt.Chart(median_df)
+        .mark_line(color="steelblue", strokeDash=[8, 4], size=2)
+        .encode(
+            x=alt.X("month:T"),
+            y=y_axis,
+        )
+    )
+
+    org_layer = (
+        alt.Chart(org_df)
+        .mark_line(size=2)
+        .encode(
+            x=alt.X("month:T"),
+            y=alt.Y("calc_value:Q", scale=alt.Scale(zero=False)),
+            color=alt.Color("sicbl_name:N", legend=alt.Legend(title=None)),
+        )
+    )
+
+    chart = decile_layer + median_layer + org_layer
+    st.altair_chart(chart, use_container_width=True)
