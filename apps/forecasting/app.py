@@ -22,7 +22,7 @@ app_path = Path(__file__).parent
 
 def ensure_extensions():
     con = duckdb.connect()
-    con.execute("INSTALL anofox_forecast FROM community")
+    #con.execute("INSTALL anofox_forecast FROM community")
     con.close()
 
 # --- Data ---
