@@ -10,7 +10,11 @@ pages = st.navigation([
     #st.Page("apps/gbg/app.py",                      title="Ghost Branded Generics",url_path="gbg"),
     st.Page("apps/improvement_radar/app.py",        title="Improvement Radar",                  url_path="improvement_radar"),
     st.Page("pages/db_schema.py",                   title="Database schema"),
-    st.Page("pages/sql_checker.py",                 title="Code tests")
+    st.Page("pages/sql_checker.py",                 title="Code tests"),
+    st.Page("apps/growth/app.py",                  title="Growth", url_path="growth"),
+    st.Page("apps/forecasting/app.py",              title="Forecasting", url_path="forecasting"),
+    st.Page("apps/measure_denosumab/app.py",        title="Measure- denosumab", url_path="measure_denosumab")
 ])
+
 
 pages.run()

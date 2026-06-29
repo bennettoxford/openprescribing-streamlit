@@ -100,6 +100,7 @@ measure_df = load_per1000_rates(
 deciles_df = load_deciles(measure_df)
 practice_df = load_practice_df() # get data from cascade filter
 
+
 decile_level = "icb" if level == "national" else level #sets the level of deciles being shown - if nothing selected, shows ICB level deciles
 deciles_filtered = deciles_df[deciles_df["org_type"] == decile_level] # filters the deciles to the correct level filtered in the cascade 
 measure_filtered = filter_rates(measure_df, level, selected_practice_codes, practice_df) # filters the measure to the correct level
@@ -107,6 +108,7 @@ measure_filtered = filter_rates(measure_df, level, selected_practice_codes, prac
 chart_title = "Oral Morphine Equivalence (mg) per 1000 patients" # create chart title
 plot_decile_chart(deciles_filtered, level, measure_filtered, measure_name=chart_title, y_format=".0f", y_title="OME per 1000 patients (mg)") # plots decile charts
 
+st.write(measure_filtered)
 
 
 with st.expander(

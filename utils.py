@@ -92,12 +92,16 @@ def sidebar_nav():
             st.page_link("apps/measure_aware/app.py", label="Measure: aWaRe")
             st.page_link("apps/measure_hypnotics/app.py", label="Measure: Hypnotics & Anxiolytics")
             st.page_link("apps/measure_ome/app.py", label="Measure: Opioids OME")
+
             #st.page_link("apps/gbg/app.py", label="Ghost Branded Generics")
             st.page_link("apps/improvement_radar/app.py", label="Improvement Radar"),
         st.divider()
         with st.expander("Developer Tools", expanded=False, icon=":material/build:"):
             st.page_link("pages/db_schema.py", label="Database schema")
             st.page_link("pages/sql_checker.py", label="Code tests")
+            st.page_link("apps/forecasting/app.py", label="Forecasting")
+            st.page_link("apps/measure_denosumab/app.py", label="Measure - denosumab")
+            st.page_link("apps/growth/app.py", label="Measure: Growth")
 
 
 
@@ -240,8 +244,10 @@ def load_proportion_rates(table_name, value_col, numerator_condition, denominato
 
 
 @st.cache_data
-def load_per1000_rates(table_name, value_col, denom_table, denom_col, numerator_condition=None):
+def load_per1000_rates(table_name, value_col, denom_table, denom_col, numerator_condition=None, scale=1000.0):
     numer = f"CASE WHEN {numerator_condition} THEN {value_col} ELSE 0 END" if numerator_condition else value_col
+    denom_join = f"JOIN {denom_table} AS d ON rx.practice_code = d.practice_code AND rx.date = d.date" if denom_table else ""
+    denom_ref = "d" if denom_table else "rx"
 
     return query(f"""
         WITH orgs AS (
@@ -269,14 +275,12 @@ def load_per1000_rates(table_name, value_col, denom_table, denom_col, numerator_
                 WHEN o.icb_code      IS NOT NULL THEN 'icb'
                 WHEN o.region_code   IS NOT NULL THEN 'region'
             END AS org_type,
-            SUM({numer})                       AS numerator,
-            SUM(d.{denom_col}) / 1000.0        AS denominator,
-            numerator / NULLIF(denominator, 0) AS rate
+            SUM({numer})                              AS numerator,
+            MAX({denom_ref}.{denom_col}) / {scale} AS denominator,
+            numerator / NULLIF(denominator, 0)        AS rate
         FROM {table_name} AS rx
         JOIN orgs AS o ON rx.practice_code = o.practice_code
-        JOIN {denom_table} AS d
-            ON rx.practice_code = d.practice_code
-            AND rx.date = d.date
+        {denom_join}
         GROUP BY GROUPING SETS (
             (rx.date, o.practice_code),
             (rx.date, o.pcn_code),
