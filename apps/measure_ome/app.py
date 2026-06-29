@@ -108,9 +108,6 @@ measure_filtered = filter_rates(measure_df, level, selected_practice_codes, prac
 chart_title = "Oral Morphine Equivalence (mg) per 1000 patients" # create chart title
 plot_decile_chart(deciles_filtered, level, measure_filtered, measure_name=chart_title, y_format=".0f", y_title="OME per 1000 patients (mg)") # plots decile charts
 
-st.write(measure_filtered)
-
-
 with st.expander(
     "Click here to see a stacked time chart of opioids",
     icon=":material/stacked_line_chart:",

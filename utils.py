@@ -246,8 +246,14 @@ def load_proportion_rates(table_name, value_col, numerator_condition, denominato
 @st.cache_data
 def load_per1000_rates(table_name, value_col, denom_table, denom_col, numerator_condition=None, scale=1000.0):
     numer = f"CASE WHEN {numerator_condition} THEN {value_col} ELSE 0 END" if numerator_condition else value_col
-    denom_join = f"JOIN {denom_table} AS d ON rx.practice_code = d.practice_code AND rx.date = d.date" if denom_table else ""
-    denom_ref = "d" if denom_table else "rx"
+    org_type = """
+        CASE
+            WHEN o.practice_code IS NOT NULL THEN 'practice'
+            WHEN o.pcn_code      IS NOT NULL THEN 'pcn'
+            WHEN o.icb_code      IS NOT NULL THEN 'icb'
+            WHEN o.region_code   IS NOT NULL THEN 'region'
+        END
+    """
 
     return query(f"""
         WITH orgs AS (
@@ -260,35 +266,62 @@ def load_per1000_rates(table_name, value_col, denom_table, denom_col, numerator_
             INNER JOIN org_relation AS rel ON prac.id = rel.child_id
             INNER JOIN org AS par ON rel.parent_id = par.id
             WHERE prac.org_type = 'pra'
-            AND prac.inactive = 0
+              AND prac.inactive = 0
             GROUP BY prac.id
+        ),
+        n AS (
+            SELECT
+                rx.date,
+                o.practice_code,
+                o.pcn_code,
+                o.icb_code,
+                o.region_code,
+                {org_type} AS org_type,
+                SUM({numer}) AS numerator
+            FROM {table_name} AS rx
+            JOIN orgs AS o ON rx.practice_code = o.practice_code
+            GROUP BY GROUPING SETS (
+                (rx.date, o.practice_code),
+                (rx.date, o.pcn_code),
+                (rx.date, o.icb_code),
+                (rx.date, o.region_code)
+            )
+        ),
+        d AS (
+            SELECT
+                dd.date,
+                o.practice_code,
+                o.pcn_code,
+                o.icb_code,
+                o.region_code,
+                {org_type} AS org_type,
+                SUM(dd.{denom_col}) / {scale} AS denominator
+            FROM {denom_table} AS dd
+            JOIN orgs AS o ON dd.practice_code = o.practice_code
+            GROUP BY GROUPING SETS (
+                (dd.date, o.practice_code),
+                (dd.date, o.pcn_code),
+                (dd.date, o.icb_code),
+                (dd.date, o.region_code)
+            )
         )
         SELECT
-            rx.date,
-            o.practice_code,
-            o.pcn_code,
-            o.icb_code,
-            o.region_code,
-            CASE 
-                WHEN o.practice_code IS NOT NULL THEN 'practice'
-                WHEN o.pcn_code      IS NOT NULL THEN 'pcn'
-                WHEN o.icb_code      IS NOT NULL THEN 'icb'
-                WHEN o.region_code   IS NOT NULL THEN 'region'
-            END AS org_type,
-            SUM({numer})                              AS numerator,
-            MAX({denom_ref}.{denom_col}) / {scale} AS denominator,
-            numerator / NULLIF(denominator, 0)        AS rate
-        FROM {table_name} AS rx
-        JOIN orgs AS o ON rx.practice_code = o.practice_code
-        {denom_join}
-        GROUP BY GROUPING SETS (
-            (rx.date, o.practice_code),
-            (rx.date, o.pcn_code),
-            (rx.date, o.icb_code),
-            (rx.date, o.region_code)
-        )
+            n.date,
+            n.practice_code,
+            n.pcn_code,
+            n.icb_code,
+            n.region_code,
+            n.org_type,
+            n.numerator,
+            d.denominator,
+            n.numerator / NULLIF(d.denominator, 0) AS rate
+        FROM n
+        JOIN d
+          ON n.date = d.date
+         AND n.org_type = d.org_type
+         AND COALESCE(n.practice_code, n.pcn_code, n.icb_code, n.region_code)
+           = COALESCE(d.practice_code, d.pcn_code, d.icb_code, d.region_code)
     """)
-
 
 def load_deciles(rates_df):
     return (
