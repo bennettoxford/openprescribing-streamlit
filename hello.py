@@ -13,7 +13,8 @@ pages = st.navigation([
     st.Page("pages/sql_checker.py",                 title="Code tests"),
     st.Page("apps/growth/app.py",                  title="Growth", url_path="growth"),
     st.Page("apps/forecasting/app.py",              title="Forecasting", url_path="forecasting"),
-    st.Page("apps/measure_denosumab/app.py",        title="Measure- denosumab", url_path="measure_denosumab")
+    st.Page("apps/measure_denosumab/app.py",        title="Measure- denosumab", url_path="measure_denosumab"),
+    st.Page("apps/hospital_fp10/app.py",        title="Hospital in community", url_path="hospital_fp10")
 ])
 
 
