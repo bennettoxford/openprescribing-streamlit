@@ -102,7 +102,6 @@ def sidebar_nav():
             st.page_link("apps/forecasting/app.py", label="Forecasting")
             st.page_link("apps/measure_denosumab/app.py", label="Measure - denosumab")
             st.page_link("apps/growth/app.py", label="Measure: Growth")
-            st.page_link("apps/hospital_fp10/app.py", label="Hospital FP10")
 
 
 
