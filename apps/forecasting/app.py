@@ -17,19 +17,19 @@ st.set_page_config(layout="wide", page_icon="content/OpenPrescribing.svg")
 
 # --- Constants ---
 
-tool_name = Path(__file__).parent.name # defines the tool name
+tool_name = Path(__file__).parent.name  # defines the tool name
 app_path = Path(__file__).parent
 
 # --- Functions ---
 
+
 def ensure_extensions():
     con = duckdb.connect()
-    #con.execute("INSTALL anofox_forecast FROM community")
+    # con.execute("INSTALL anofox_forecast FROM community")
     con.close()
 
+
 # --- Data ---
-
-
 
 
 # --- App ---
@@ -42,12 +42,11 @@ global_styles()
 
 # welcome banner
 st.info(
-"""
+    """
 ##### Hello!  This is a **very** early prototype of understanding forecasting!
 Please let us know what you think, and what you'd like to see.  Email us at [bennett@phc.ox.ac.uk](mailto:bennett@phc.ox.ac.uk)
 """
 )
-
 
 
 ensure_extensions()
@@ -98,7 +97,9 @@ timing_df = pd.DataFrame(timings).sort_values("seconds", ascending=False)
 st.write(f"Total: {overall_elapsed:.1f}s across {len(icb_codes)} ICBs")
 st.dataframe(timing_df)
 
-forecast[["icb_code", "snomed_code"]] = forecast["unique_id"].str.split("_", n=1, expand=True)
+forecast[["icb_code", "snomed_code"]] = forecast["unique_id"].str.split(
+    "_", n=1, expand=True
+)
 
 icb_check = forecast[forecast["icb_code"] == "QJK"]
 
@@ -128,13 +129,10 @@ actuals_full = query(f"""
     WHERE unique_id LIKE '{icb}\\_%' ESCAPE '\\'
 """)
 
-comparison = (
-    actuals_full
-    .merge(
-        forecast_icb[["unique_id", "ds", "yhat"]],
-        on=["unique_id", "ds"],
-        how="left",
-    )
+comparison = actuals_full.merge(
+    forecast_icb[["unique_id", "ds", "yhat"]],
+    on=["unique_id", "ds"],
+    how="left",
 )
 
 comparison = comparison[comparison["unique_id"].isin(top50["unique_id"])]
@@ -172,10 +170,7 @@ for uid in comparison["unique_id"].unique():
     charts.append(chart)
 
 n_cols = 5
-rows = [
-    alt.hconcat(*charts[i : i + n_cols])
-    for i in range(0, len(charts), n_cols)
-]
+rows = [alt.hconcat(*charts[i : i + n_cols]) for i in range(0, len(charts), n_cols)]
 grid = alt.vconcat(*rows)
 
 st.altair_chart(grid, use_container_width=False)

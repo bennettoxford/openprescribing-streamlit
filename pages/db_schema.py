@@ -73,4 +73,6 @@ for _, row in all_tables.iterrows():
     with st.expander(f"{icons[kind]} {table_name} — {db_name} ({kind})"):
         st.dataframe(table_cols, use_container_width=True, hide_index=True)
         st.markdown("**Sample data**")
-        st.dataframe(get_sample_data(table_name), use_container_width=True, hide_index=True)
+        st.dataframe(
+            get_sample_data(table_name), use_container_width=True, hide_index=True
+        )

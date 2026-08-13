@@ -13,19 +13,20 @@ st.set_page_config(layout="wide", page_icon="content/OpenPrescribing.svg")
 
 # --- Constants ---
 
-tool_name = Path(__file__).parent.name # defines the tool name
+tool_name = Path(__file__).parent.name  # defines the tool name
 app_path = Path(__file__).parent
 
 # --- Functions ---
 
+
 @st.cache_data
 def get_dates():
-    return query(f"SELECT DISTINCT date FROM {tool_name}_aware_prescribing ORDER BY date ASC")["date"].tolist()
+    return query(
+        f"SELECT DISTINCT date FROM {tool_name}_aware_prescribing ORDER BY date ASC"
+    )["date"].tolist()
 
 
 # --- Data ---
-
-
 
 
 # --- App ---
@@ -38,7 +39,7 @@ global_styles()
 
 # welcome banner
 st.info(
-"""
+    """
 ##### Hello!  This is a **very** early prototype of understanding growth in cost and items.
 Please let us know what you think, and what you'd like to see.  Email us at [bennett@phc.ox.ac.uk](mailto:bennett@phc.ox.ac.uk)
 """
@@ -133,4 +134,4 @@ growth = query(
     FROM grouped
     """
 )
-st.write(growth) 
+st.write(growth)

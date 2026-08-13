@@ -15,21 +15,15 @@ st.set_page_config(layout="wide", page_icon="content/OpenPrescribing.svg")
 
 # --- Constants ---
 
-tool_name = "tariff_price_changes" # defines the tool name
+tool_name = "tariff_price_changes"  # defines the tool name
 
 # --- Functions ---
-
-
 
 
 # --- Initialisation ---
 
 
-
-
 # --- Data ---
-
-
 
 
 # --- App ---
@@ -42,19 +36,22 @@ global_styles()
 
 # welcome banner
 st.info(
-"""
+    """
 ##### Hello!  This is a **very** early prototype of estimating the impact of .
 Please let us know what you think, and what you'd like to see.  Email us at [bennett@phc.ox.ac.uk](mailto:bennett@phc.ox.ac.uk)
 """
 )
 
 # Methodology explainer
-with st.expander(
-    "Click here to read our methodology", icon=":material/quick_reference:"
-), open(Path(__file__).parent / "content/methodology.md") as f:
+with (
+    st.expander(
+        "Click here to read our methodology", icon=":material/quick_reference:"
+    ),
+    open(Path(__file__).parent / "content/methodology.md") as f,
+):
     st.markdown(f.read())
 
-# Sidebar 
+# Sidebar
 
 # header
 with st.sidebar:
@@ -72,8 +69,9 @@ sidebar_nav()
 # Main app
 
 
-date_filtered_df = get_date_filtered(tool_name, prescribing_date, selected_date) # filters data
-
+date_filtered_df = get_date_filtered(
+    tool_name, prescribing_date, selected_date
+)  # filters data
 
 
 # show changelog

@@ -34,15 +34,16 @@ app_path = Path(__file__).parent
 
 # --- Functions ---
 
+
 # gets dates for the data selector
 @st.cache_data
 def get_dates():
-    return query(f"SELECT DISTINCT date FROM {tool_name}_ome_prescribing ORDER BY date ASC")["date"].tolist()
+    return query(
+        f"SELECT DISTINCT date FROM {tool_name}_ome_prescribing ORDER BY date ASC"
+    )["date"].tolist()
 
 
 # --- Data ---
-
-
 
 
 # --- App ---
@@ -55,26 +56,31 @@ global_styles()
 
 # welcome banner
 st.info(
-"""
+    """
 ##### Hello!  This is a **very** early prototype of new visualisations for our measure on Oral Morphine Equivalance per 1000 patients.
 Please let us know what you think, and what you'd like to see.  Email us at [bennett@phc.ox.ac.uk](mailto:bennett@phc.ox.ac.uk)
 """
 )
 
 # Methodology explainer
-with st.expander(
-    "Click here to read our methodology", icon=":material/quick_reference:"
-), open(Path(__file__).parent / "content/methodology.md") as f:
+with (
+    st.expander(
+        "Click here to read our methodology", icon=":material/quick_reference:"
+    ),
+    open(Path(__file__).parent / "content/methodology.md") as f,
+):
     st.markdown(f.read())
 
 # show why_it_matters
 why_it_matters(app_path)
 
-# Sidebar 
+# Sidebar
 
 # header
 with st.sidebar:
-    st.markdown("### Total opioid prescribing (as oral morphine equivalence) per 1000 patients")
+    st.markdown(
+        "### Total opioid prescribing (as oral morphine equivalence) per 1000 patients"
+    )
 
 
 # shows cascading organisation filter
@@ -84,15 +90,20 @@ selected_practice_codes, sql_in, level = org_filter_sidebar()
 dates_asc = get_dates()
 
 # creates date slider, defaulting to latest 3 months
-with st.sidebar, st.expander(
-    "Change time period for breakdown", icon=":material/calendar_month:", expanded=False
-    ):
-        start_date, end_date = st.select_slider(
-            "Date range",
-            options=dates_asc,
-            value=(dates_asc[-3], dates_asc[-1]),  # defaults to latest 3 months
-            format_func=lambda d: d.strftime("%b %Y"),
-        )
+with (
+    st.sidebar,
+    st.expander(
+        "Change time period for breakdown",
+        icon=":material/calendar_month:",
+        expanded=False,
+    ),
+):
+    start_date, end_date = st.select_slider(
+        "Date range",
+        options=dates_asc,
+        value=(dates_asc[-3], dates_asc[-1]),  # defaults to latest 3 months
+        format_func=lambda d: d.strftime("%b %Y"),
+    )
 
 combine_threshold = combine_threshold_slider()
 
@@ -109,25 +120,37 @@ measure_df = load_per1000_rates(
     table_name=f"{tool_name}_ome_prescribing",
     value_col="total_ome",
     denom_table="list_size",
-    denom_col="total"
+    denom_col="total",
 )
 
 deciles_df = load_deciles(measure_df)
-practice_df = load_practice_df() # get data from cascade filter
+practice_df = load_practice_df()  # get data from cascade filter
 
 
-decile_level = "icb" if level == "national" else level #sets the level of deciles being shown - if nothing selected, shows ICB level deciles
-deciles_filtered = deciles_df[deciles_df["org_type"] == decile_level] # filters the deciles to the correct level filtered in the cascade 
-measure_filtered = filter_rates(measure_df, level, selected_practice_codes, practice_df) # filters the measure to the correct level
+decile_level = (
+    "icb" if level == "national" else level
+)  # sets the level of deciles being shown - if nothing selected, shows ICB level deciles
+deciles_filtered = deciles_df[
+    deciles_df["org_type"] == decile_level
+]  # filters the deciles to the correct level filtered in the cascade
+measure_filtered = filter_rates(
+    measure_df, level, selected_practice_codes, practice_df
+)  # filters the measure to the correct level
 
-chart_title = "Oral Morphine Equivalence (mg) per 1000 patients" # create chart title
-plot_decile_chart(deciles_filtered, level, measure_filtered, measure_name=chart_title, y_format=".0f", y_title="OME per 1000 patients (mg)") # plots decile charts
+chart_title = "Oral Morphine Equivalence (mg) per 1000 patients"  # create chart title
+plot_decile_chart(
+    deciles_filtered,
+    level,
+    measure_filtered,
+    measure_name=chart_title,
+    y_format=".0f",
+    y_title="OME per 1000 patients (mg)",
+)  # plots decile charts
 
 with st.expander(
     "Click here to see a stacked time chart of opioids",
     icon=":material/stacked_line_chart:",
 ):
-
     mode = st.radio(
         "Group by",
         ["ing", "vtm"],
@@ -171,24 +194,23 @@ with st.expander(
         threshold=combine_threshold,
     )
 
-
     plot_stacked_area(
         stacked_df,
         x_col="date",
         y_col="total_ome",
         color_col=color_col,
-        y_title="Total OME (mg)"
+        y_title="Total OME (mg)",
     )
 
 with st.expander(
-    f"Click here to see a breakdown of drugs prescribed between {start_date.strftime('%b %Y')} and {end_date.strftime('%b %Y')}", icon=":material/donut_large:"
+    f"Click here to see a breakdown of drugs prescribed between {start_date.strftime('%b %Y')} and {end_date.strftime('%b %Y')}",
+    icon=":material/donut_large:",
 ):
     st.info("""
         Click on drug in bar or donut chart to see breakdown by presentation.
 
         You can change the date range by using the slide in the sidebar.
-        """
-    )
+        """)
 
     mode_breakdown = st.radio(
         "Group by",
@@ -221,7 +243,7 @@ with st.expander(
     id_col_breakdown = groupings[mode_breakdown]["id_col"]
 
     details_df = query(
-    f"""
+        f"""
     SELECT
         {group_by_breakdown},
         SUM(total_ome) AS total_ome
@@ -232,7 +254,7 @@ with st.expander(
     AND rx.practice_code IN {sql_in}
     GROUP BY {group_by_breakdown}
     """
-)
+    )
 
     details_breakdown_df = query(
         f"""
@@ -270,14 +292,15 @@ with st.expander(
         chart_type=chart_type,
         key=f"aware_breakdown_chart_{mode_breakdown}",
         y_title=groupings[mode_breakdown]["y_title"],
-        x_title="Total OME (mg)"
+        x_title="Total OME (mg)",
     )
 
     if selected_category:
-
         if selected_category == "Other":
             kept_categories = set(
-                combined_df.loc[combined_df[color_col_breakdown] != "Other", color_col_breakdown]
+                combined_df.loc[
+                    combined_df[color_col_breakdown] != "Other", color_col_breakdown
+                ]
             )
 
             filtered_df = (
@@ -296,7 +319,9 @@ with st.expander(
                 .sort_values("total_ome", ascending=False)
             )
 
-        st.markdown(f"##### Products containing {selected_category} prescribed between {start_date.strftime('%b %Y')} and {end_date.strftime('%b %Y')}")
+        st.markdown(
+            f"##### Products containing {selected_category} prescribed between {start_date.strftime('%b %Y')} and {end_date.strftime('%b %Y')}"
+        )
 
         st.dataframe(
             filtered_df,

@@ -1,4 +1,3 @@
-
 import streamlit as st
 
 from db import query
@@ -25,4 +24,3 @@ if st.button("Go"):
         st.dataframe(result)
     except Exception as e:
         st.error(f"Query failed: {e}")
-        

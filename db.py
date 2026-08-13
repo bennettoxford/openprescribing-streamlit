@@ -67,8 +67,8 @@ def _query(sql, db_mtimes, dfs: dict | None = None):
         if materialised_views_db_path.exists():
             attach_materialised_views_db(connection, read_write=False)
 
-        #connection.execute("LOAD anofox_forecast")
-        #connection.execute("SET enable_external_access = false")
+        # connection.execute("LOAD anofox_forecast")
+        # connection.execute("SET enable_external_access = false")
 
         if dfs:
             for name, df in dfs.items():
