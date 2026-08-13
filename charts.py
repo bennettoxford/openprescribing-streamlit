@@ -227,7 +227,7 @@ def plot_breakdown_chart(
 
     base = alt.Chart(data_df)
 
-    theta = alt.Theta(f"{value_col}:Q", stack=True)
+    alt.Theta(f"{value_col}:Q", stack=True)
 
     if chart_type == "donut":
         chart = (

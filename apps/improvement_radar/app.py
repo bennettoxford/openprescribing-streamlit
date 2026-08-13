@@ -48,11 +48,11 @@ def get_measure_list():
         measure_list.to_csv(MEASURE_LIST_CACHE, index=False)
         return measure_list
 
-    except Exception as e:
+    except Exception:
         if MEASURE_LIST_CACHE.exists():
             st.warning("Could not fetch latest measure list from GitHub, using cached version.")
             return pd.read_csv(MEASURE_LIST_CACHE)
-        raise e
+        raise
 
 # get SICBL names from cached csv
 @st.cache_data

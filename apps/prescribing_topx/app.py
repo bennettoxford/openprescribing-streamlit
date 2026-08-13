@@ -1,11 +1,15 @@
-import altair as alt
-import pandas as pd
-import streamlit as st
 from pathlib import Path
-import yaml
 
-from utils import sidebar_logo, sidebar_nav, org_filter_sidebar, gbp, global_styles, changelog
+import streamlit as st
+
 from db import query
+from utils import (
+    changelog,
+    global_styles,
+    org_filter_sidebar,
+    sidebar_logo,
+    sidebar_nav,
+)
 
 # This makes Streamlit use whole page -t his has to be the first line of code, and inserts the OP logo into the browser
 st.set_page_config(layout="wide", page_icon="content/OpenPrescribing.svg")
