@@ -1,10 +1,11 @@
-import streamlit as st
-import pandas as pd
-from pathlib import Path
 import re
-from db import query 
+from pathlib import Path
+
+import pandas as pd
+import streamlit as st
 import yaml
 
+from db import query
 
 
 def sidebar_logo():
@@ -450,9 +451,8 @@ def changelog(base_path: Path, expanded: bool = False):
 def why_it_matters(base_path: Path, expanded: bool = True):
     with st.expander(
         "Why It Matters", icon=":material/admin_meds:", expanded=expanded
-    ):
-        with open(base_path / "content/why_it_matters.md") as f:
-            st.markdown(f.read())
+    ), open(base_path / "content/why_it_matters.md") as f:
+        st.markdown(f.read())
 
 def combine_threshold_slider(
     label="Combine chemicals below (%) to 'Other'",

@@ -1,10 +1,14 @@
-import streamlit as st
 from pathlib import Path
-import pandas as pd
-import yaml
 
-from db import query
-from utils import sidebar_logo, sidebar_nav, org_filter_sidebar,gbp, render_pagination, global_styles, changelog
+import streamlit as st
+
+from utils import (
+    changelog,
+    global_styles,
+    org_filter_sidebar,
+    sidebar_logo,
+    sidebar_nav,
+)
 
 # This makes Streamlit use whole page -t his has to be the first line of code, and inserts the OP logo into the browser
 st.set_page_config(layout="wide", page_icon="content/OpenPrescribing.svg")
@@ -47,9 +51,8 @@ Please let us know what you think, and what you'd like to see.  Email us at [ben
 # Methodology explainer
 with st.expander(
     "Click here to read our methodology", icon=":material/quick_reference:"
-):
-    with open(Path(__file__).parent / "content/methodology.md") as f:
-        st.markdown(f.read())
+), open(Path(__file__).parent / "content/methodology.md") as f:
+    st.markdown(f.read())
 
 # Sidebar 
 

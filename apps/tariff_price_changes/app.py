@@ -1,10 +1,18 @@
-import streamlit as st
 from pathlib import Path
+
 import pandas as pd
-import yaml
+import streamlit as st
 
 from db import query
-from utils import sidebar_logo, sidebar_nav, org_filter_sidebar,gbp, render_pagination, global_styles, changelog
+from utils import (
+    changelog,
+    gbp,
+    global_styles,
+    org_filter_sidebar,
+    render_pagination,
+    sidebar_logo,
+    sidebar_nav,
+)
 
 # This makes Streamlit use whole page -t his has to be the first line of code, and inserts the OP logo into the browser
 st.set_page_config(layout="wide", page_icon="content/OpenPrescribing.svg")
@@ -118,9 +126,8 @@ with st.expander(
 # Methodology explainer
 with st.expander(
     "Click here to read our methodology", icon=":material/quick_reference:"
-):
-    with open(app_path  / "content/methodology.md") as f:
-        st.markdown(f.read())
+), open(app_path  / "content/methodology.md") as f:
+    st.markdown(f.read())
 
 # Sidebar 
 
@@ -138,7 +145,7 @@ with st.sidebar:
     )
 
 # creates either selected date, or maximum prescribing date if actual prescribing date not available
-prescribing_date = selected_date if selected_date <= max_rx_date else max_rx_date
+prescribing_date = min(selected_date, max_rx_date)
 
 # returns month used for estimate
 with st.sidebar:

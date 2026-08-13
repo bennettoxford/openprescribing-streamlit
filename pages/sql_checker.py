@@ -1,9 +1,8 @@
+
 import streamlit as st
-import pandas as pd
-import duckdb
-from pathlib import Path
+
 from db import query
-from utils import sidebar_logo, global_styles, sidebar_nav
+from utils import global_styles, sidebar_logo, sidebar_nav
 
 st.set_page_config(layout="wide")
 

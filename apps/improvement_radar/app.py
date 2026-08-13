@@ -1,12 +1,13 @@
-import streamlit as st
-import requests
-import pandas as pd
-from pathlib import Path
 import json
 from io import StringIO
-from db import query
+from pathlib import Path
+
+import pandas as pd
+import streamlit as st
+
 from charts import plot_improvement_chart
-from utils import sidebar_logo, global_styles, sidebar_nav, changelog
+from db import query
+from utils import changelog, global_styles, sidebar_logo, sidebar_nav
 
 # This makes Streamlit use whole page -t his has to be the first line of code, and inserts the OP logo into the browser
 st.set_page_config(layout="wide", page_icon="content/OpenPrescribing.svg")

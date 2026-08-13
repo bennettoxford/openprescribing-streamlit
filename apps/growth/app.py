@@ -1,12 +1,12 @@
-import streamlit as st
 from pathlib import Path
-import pandas as pd
-import yaml
-import altair as alt
+
+import streamlit as st
 
 from db import query
-from utils import sidebar_logo, sidebar_nav, org_filter_sidebar,gbp, render_pagination, global_styles, changelog, why_it_matters, load_proportion_rates, load_deciles, filter_rates, load_practice_df, combine_threshold_slider, combine_small_categories
-from charts import plot_decile_chart, plot_stacked_area,     breakdown_chart_type_selector,     plot_breakdown_chart
+from utils import (
+    global_styles,
+    sidebar_logo,
+)
 
 # This makes Streamlit use whole page -t his has to be the first line of code, and inserts the OP logo into the browser
 st.set_page_config(layout="wide", page_icon="content/OpenPrescribing.svg")

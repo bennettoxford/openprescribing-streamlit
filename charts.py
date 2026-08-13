@@ -1,6 +1,7 @@
-import streamlit as st
 import altair as alt
 import pandas as pd
+import streamlit as st
+
 from utils import get_filter_label
 
 
