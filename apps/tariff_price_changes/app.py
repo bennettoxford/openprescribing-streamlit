@@ -38,7 +38,7 @@ def get_date_filtered(tool_name, prescribing_date, selected_date):
             dt.tariff_cat,
             rx.quantity * dt.price_diff_pu * dt.is_max_price_diff_pu AS price_difference
         FROM {tool_name}_prescribing AS rx
-        INNER JOIN {tool_name}_price_changes AS dt 
+        INNER JOIN {tool_name}_price_changes AS dt
             ON rx.snomed_code = dt.vpid
             AND dt.date = '{selected_date}'
         INNER JOIN medications AS med ON rx.snomed_code = med.id
