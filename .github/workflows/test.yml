@@ -10,8 +10,24 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v6
+      # with:
+      #   lfs: true
+    - name: Create LFS file list
+      run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
+    - name: show LFS file list
+      run: cat .lfs-assets-id
+
+    - name: Restore LFS cache
+      uses: actions/cache@v4
+      id: lfs-cache
       with:
-        lfs: true
+        path: .git/lfs
+        key: lfs-${{ hashFiles('.lfs-assets-id') }}
+
+    - name: Git LFS pull
+      run: |
+        git lfs pull
+
     - name: Set up Just
       uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff
     - name: Install uv
