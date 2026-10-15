@@ -9,6 +9,9 @@ default:
 run:
     uv run streamlit run hello.py
 
+test:
+    uv run pytest
+
 docker-build:
     #!/usr/bin/env bash
     set -euo pipefail

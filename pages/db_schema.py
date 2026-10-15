@@ -2,8 +2,7 @@ import pandas as pd
 import streamlit as st
 
 from db import query
-
-from utils import sidebar_logo, global_styles, sidebar_nav
+from utils import global_styles, sidebar_logo, sidebar_nav
 
 st.set_page_config(layout="wide")
 
@@ -74,4 +73,6 @@ for _, row in all_tables.iterrows():
     with st.expander(f"{icons[kind]} {table_name} — {db_name} ({kind})"):
         st.dataframe(table_cols, use_container_width=True, hide_index=True)
         st.markdown("**Sample data**")
-        st.dataframe(get_sample_data(table_name), use_container_width=True, hide_index=True)
+        st.dataframe(
+            get_sample_data(table_name), use_container_width=True, hide_index=True
+        )

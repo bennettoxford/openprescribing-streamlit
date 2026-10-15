@@ -1,0 +1,40 @@
+name: Test
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    name: Test
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+      # with:
+      #   lfs: true
+    - name: Create LFS file list
+      run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
+    - name: show LFS file list
+      run: cat .lfs-assets-id
+
+    - name: Restore LFS cache
+      uses: actions/cache@v4
+      id: lfs-cache
+      with:
+        path: .git/lfs
+        key: lfs-${{ hashFiles('.lfs-assets-id') }}
+
+    - name: Git LFS pull
+      run: |
+        git lfs pull
+
+    - name: Set up Just
+      uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff
+    - name: Install uv
+      uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884
+    - name: pin python
+      run: uv python pin 3.13
+    - name: copy in test data files
+      run: cp tests/fixtures/*  /home/runner/work/openprescribing-streamlit/openprescribing-streamlit/data/
+    - name: Run tests
+      run: just test

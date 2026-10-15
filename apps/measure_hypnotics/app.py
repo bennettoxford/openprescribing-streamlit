@@ -1,12 +1,29 @@
-import streamlit as st
 from pathlib import Path
-import pandas as pd
-import yaml
-import altair as alt
 
+import streamlit as st
+
+from charts import (
+    breakdown_chart_type_selector,
+    plot_breakdown_chart,
+    plot_decile_chart,
+    plot_stacked_area,
+)
 from db import query
-from utils import sidebar_logo, sidebar_nav, org_filter_sidebar,gbp, render_pagination, global_styles, changelog, why_it_matters, load_proportion_rates, load_deciles, filter_rates, load_practice_df, combine_threshold_slider, combine_small_categories, load_per1000_rates, combine_small_categories_by_date
-from charts import plot_decile_chart, plot_stacked_area,     breakdown_chart_type_selector,     plot_breakdown_chart
+from utils import (
+    changelog,
+    combine_small_categories,
+    combine_small_categories_by_date,
+    combine_threshold_slider,
+    filter_rates,
+    global_styles,
+    load_deciles,
+    load_per1000_rates,
+    load_practice_df,
+    org_filter_sidebar,
+    sidebar_logo,
+    sidebar_nav,
+    why_it_matters,
+)
 
 # This makes Streamlit use whole page -t his has to be the first line of code, and inserts the OP logo into the browser
 st.set_page_config(layout="wide", page_icon="content/OpenPrescribing.svg")
@@ -17,15 +34,16 @@ app_path = Path(__file__).parent
 
 # --- Functions ---
 
+
 # gets dates for the data selector
 @st.cache_data
 def get_dates():
-    return query(f"SELECT DISTINCT date FROM {tool_name}_hypnotic_prescribing ORDER BY date ASC")["date"].tolist()
+    return query(
+        f"SELECT DISTINCT date FROM {tool_name}_hypnotic_prescribing ORDER BY date ASC"
+    )["date"].tolist()
 
 
 # --- Data ---
-
-
 
 
 # --- App ---
@@ -38,23 +56,25 @@ global_styles()
 
 # welcome banner
 st.info(
-"""
+    """
 ##### Hello!  This is a **very** early prototype of new visualisations for our measure on Hypnotic and Anxiolytic Average Daily Quantities (ADQs).
 Please let us know what you think, and what you'd like to see.  Email us at [bennett@phc.ox.ac.uk](mailto:bennett@phc.ox.ac.uk)
 """
 )
 
 # Methodology explainer
-with st.expander(
-    "Click here to read our methodology", icon=":material/quick_reference:"
+with (
+    st.expander(
+        "Click here to read our methodology", icon=":material/quick_reference:"
+    ),
+    open(Path(__file__).parent / "content/methodology.md") as f,
 ):
-    with open(Path(__file__).parent / "content/methodology.md") as f:
-        st.markdown(f.read())
+    st.markdown(f.read())
 
 # show why_it_matters
 why_it_matters(app_path)
 
-# Sidebar 
+# Sidebar
 
 # header
 with st.sidebar:
@@ -68,16 +88,20 @@ selected_practice_codes, sql_in, level = org_filter_sidebar()
 dates_asc = get_dates()
 
 # creates date slider, defaulting to latest 3 months
-with st.sidebar:
-    with st.expander(
-        "Change time period for breakdown", icon=":material/calendar_month:", expanded=False
-        ):
-            start_date, end_date = st.select_slider(
-                "Date range",
-                options=dates_asc,
-                value=(dates_asc[-3], dates_asc[-1]),  # defaults to latest 3 months
-                format_func=lambda d: d.strftime("%b %Y"),
-            )
+with (
+    st.sidebar,
+    st.expander(
+        "Change time period for breakdown",
+        icon=":material/calendar_month:",
+        expanded=False,
+    ),
+):
+    start_date, end_date = st.select_slider(
+        "Date range",
+        options=dates_asc,
+        value=(dates_asc[-3], dates_asc[-1]),  # defaults to latest 3 months
+        format_func=lambda d: d.strftime("%b %Y"),
+    )
 
 combine_threshold = combine_threshold_slider()
 
@@ -94,27 +118,37 @@ measure_df = load_per1000_rates(
     table_name=f"{tool_name}_hypnotic_prescribing",
     value_col="total_adq",
     denom_table="list_size",
-    denom_col="total"
+    denom_col="total",
 )
 
 deciles_df = load_deciles(measure_df)
-practice_df = load_practice_df() # get data from cascade filter
+practice_df = load_practice_df()  # get data from cascade filter
 
-decile_level = "icb" if level == "national" else level #sets the level of deciles being shown - if nothing selected, shows ICB level deciles
-deciles_filtered = deciles_df[deciles_df["org_type"] == decile_level] # filters the deciles to the correct level filtered in the cascade 
-measure_filtered = filter_rates(measure_df, level, selected_practice_codes, practice_df) # filters the measure to the correct level
+decile_level = (
+    "icb" if level == "national" else level
+)  # sets the level of deciles being shown - if nothing selected, shows ICB level deciles
+deciles_filtered = deciles_df[
+    deciles_df["org_type"] == decile_level
+]  # filters the deciles to the correct level filtered in the cascade
+measure_filtered = filter_rates(
+    measure_df, level, selected_practice_codes, practice_df
+)  # filters the measure to the correct level
 
-chart_title = "Hypnotic and anxiolytic Average Daily Quantity (ADQ) per 1000 patients" # create chart title
-plot_decile_chart(deciles_filtered, level, measure_filtered, measure_name=chart_title, y_format=".1f", y_title="OME per 1000 patients (mg)") # plots decile charts
-
+chart_title = "Hypnotic and anxiolytic Average Daily Quantity (ADQ) per 1000 patients"  # create chart title
+plot_decile_chart(
+    deciles_filtered,
+    level,
+    measure_filtered,
+    measure_name=chart_title,
+    y_format=".1f",
+    y_title="OME per 1000 patients (mg)",
+)  # plots decile charts
 
 
 with st.expander(
     "Click here to see a stacked time chart of anxiolyics and hypnotics",
     icon=":material/stacked_line_chart:",
 ):
-
-
     stacked_df = query(f"""
         SELECT
             date,
@@ -138,27 +172,26 @@ with st.expander(
         threshold=combine_threshold,
     )
 
-
     plot_stacked_area(
         stacked_df,
         x_col="date",
         y_col="total_adq",
         color_col="vtm_name",
-        y_title="Total ADQ"
+        y_title="Total ADQ",
     )
 
 with st.expander(
-    f"Click here to see a breakdown of drugs prescribed between {start_date.strftime('%b %Y')} and {end_date.strftime('%b %Y')}", icon=":material/donut_large:"
+    f"Click here to see a breakdown of drugs prescribed between {start_date.strftime('%b %Y')} and {end_date.strftime('%b %Y')}",
+    icon=":material/donut_large:",
 ):
     st.info("""
         Click on drug in bar or donut chart to see breakdown by presentation.
 
         You can change the date range by using the slide in the sidebar.
-        """
-    )
+        """)
 
     details_df = query(
-    f"""
+        f"""
     SELECT
         vtm.nm AS vtm_name,
         SUM(total_adq) AS total_adq 
@@ -173,7 +206,7 @@ with st.expander(
     GROUP BY 
     vtm.nm 
     """
-)
+    )
 
     details_breakdown_df = query(
         f"""
@@ -213,11 +246,10 @@ with st.expander(
         category_col="vtm_name",
         chart_type=chart_type,
         y_title="Chemical Substance",
-        x_title="Total ADQ"
+        x_title="Total ADQ",
     )
 
     if selected_category:
-
         if selected_category == "Other":
             kept_categories = set(
                 combined_df.loc[combined_df["vtm_name"] != "Other", "vtm_name"]
@@ -239,9 +271,13 @@ with st.expander(
                 .sort_values("total_adq", ascending=False)
             )
 
-        filtered_df["percent_adq"] = filtered_df["total_adq"] / filtered_df["total_adq"].sum() * 100
+        filtered_df["percent_adq"] = (
+            filtered_df["total_adq"] / filtered_df["total_adq"].sum() * 100
+        )
 
-        st.markdown(f"##### Products containing {selected_category} prescribed between {start_date.strftime('%b %Y')} and {end_date.strftime('%b %Y')}")
+        st.markdown(
+            f"##### Products containing {selected_category} prescribed between {start_date.strftime('%b %Y')} and {end_date.strftime('%b %Y')}"
+        )
 
         st.dataframe(
             filtered_df,

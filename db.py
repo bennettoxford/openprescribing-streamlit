@@ -48,7 +48,7 @@ def attach_materialised_views_db(connection, read_write=True):
         )
 
 
-def query(sql, dfs: dict = None):
+def query(sql, dfs: dict | None = None):
     # A wrapper around the function that does the work, making use of Streamlit's
     # caching functionality to ensure that the cached result is invalidated whenever any
     # of the underlying databases is updated.
@@ -60,15 +60,15 @@ def query(sql, dfs: dict = None):
 
 
 @st.cache_data
-def _query(sql, db_mtimes, dfs: dict = None):
+def _query(sql, db_mtimes, dfs: dict | None = None):
     print("Running _query")
     with duckdb.connect() as connection:
         attach_prescribing_and_sqlite_dbs(connection)
         if materialised_views_db_path.exists():
             attach_materialised_views_db(connection, read_write=False)
 
-        #connection.execute("LOAD anofox_forecast")
-        #connection.execute("SET enable_external_access = false")
+        # connection.execute("LOAD anofox_forecast")
+        # connection.execute("SET enable_external_access = false")
 
         if dfs:
             for name, df in dfs.items():

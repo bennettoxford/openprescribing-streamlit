@@ -1,11 +1,15 @@
-import altair as alt
-import pandas as pd
-import streamlit as st
 from pathlib import Path
-import yaml
 
-from utils import sidebar_logo, sidebar_nav, org_filter_sidebar, gbp, global_styles, changelog
+import streamlit as st
+
 from db import query
+from utils import (
+    changelog,
+    global_styles,
+    org_filter_sidebar,
+    sidebar_logo,
+    sidebar_nav,
+)
 
 # This makes Streamlit use whole page -t his has to be the first line of code, and inserts the OP logo into the browser
 st.set_page_config(layout="wide", page_icon="content/OpenPrescribing.svg")
@@ -14,7 +18,7 @@ st.set_page_config(layout="wide", page_icon="content/OpenPrescribing.svg")
 
 tool_name = Path(__file__).parent.name
 
-app_path = Path(__file__).parent # defines the path for content
+app_path = Path(__file__).parent  # defines the path for content
 
 # --- Functions ---
 
@@ -30,7 +34,7 @@ global_styles()
 
 # Header
 st.info(
-"""
+    """
 ##### Hello!  This is a **very** early prototype of displaying the top drugs used (by both items and cost) in 2025.  
 Please let us know what you think, and what you'd like to see.  Email us at [bennett@phc.ox.ac.uk](mailto:bennett@phc.ox.ac.uk)
 """
@@ -45,8 +49,8 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-        
-# Sidebar 
+
+# Sidebar
 
 # header
 with st.sidebar:
@@ -57,23 +61,13 @@ with st.sidebar:
 selected_practice_codes, _, _ = org_filter_sidebar()
 
 with st.sidebar:
-
     # Select number of items
-        with st.expander("Number of drugs to show", expanded=False, icon=":material/tune:"):
-            top_n = st.slider(
-                "Top N items", 
-                min_value=5, 
-                max_value=100, 
-                value=20
-            )
+    with st.expander("Number of drugs to show", expanded=False, icon=":material/tune:"):
+        top_n = st.slider("Top N items", min_value=5, max_value=100, value=20)
 
     # sort by radio buttons
-        with st.expander("Sort options", expanded=False, icon=":material/sort:"):
-            sort_by = st.radio(
-                "Sort by", 
-                ["Cost", "Items"], 
-                horizontal=True
-            )
+    with st.expander("Sort options", expanded=False, icon=":material/sort:"):
+        sort_by = st.radio("Sort by", ["Cost", "Items"], horizontal=True)
 
 
 sort_col = "actual_cost" if sort_by == "Cost" else "items"
@@ -112,13 +106,9 @@ df_topx_ranked = (
 
 for _, row in df_topx_ranked.iterrows():
     if sort_col == "actual_cost":
-        label = (
-            f"{row['vtm_name']} — £{row['actual_cost']:,.2f} ({row['items']:,.0f} items)"
-        )
+        label = f"{row['vtm_name']} — £{row['actual_cost']:,.2f} ({row['items']:,.0f} items)"
     else:
-        label = (
-            f"{row['vtm_name']} — {row['items']:,.0f} items (£{row['actual_cost']:,.2f})"
-        )
+        label = f"{row['vtm_name']} — {row['items']:,.0f} items (£{row['actual_cost']:,.2f})"
 
     vtm_breakdown = df_topx_detail[df_topx_detail["vtm_id"] == row["vtm_id"]]
 
