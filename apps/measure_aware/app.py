@@ -140,6 +140,8 @@ plot_decile_chart(
     deciles_filtered, level, measure_filtered, measure_name=chart_title
 )  # plots decile charts
 
+st.dataframe(deciles_filtered)
+
 
 # creates aware_df from materialised view
 stacked_df = query(

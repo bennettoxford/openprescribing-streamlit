@@ -28,7 +28,7 @@ uv run streamlit run hello.py
 
 ### Refreshing materialised views
 
-SQL files in apps/[app-name]/materliased\_views/ will be used to generate materialised
+SQL files in apps/[app-name]/materialised\_views/ will be used to generate materialised
 views in `materialised_views.duckdb`.
 
 The views will be refreshed on deploy.
