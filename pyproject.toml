@@ -7,5 +7,5 @@ requires-python = ">=3.13"
 dependencies = [
     "duckdb>=1.5.1",
     "pyyaml>=6.0.3",
-    "streamlit>=1.55.0",
+    "streamlit>=1.65.0",
 ]
